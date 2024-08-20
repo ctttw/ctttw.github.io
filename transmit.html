@@ -15,6 +15,7 @@
       --shadow-color: rgba(0, 0, 0, 0.1);
       --accent-color: #FF6B6B;
       --success-color: #4CAF50;
+      --warning-color: #FFA500;
       --border-radius: 12px;
       --transition: all 0.3s ease;
     }
@@ -104,6 +105,11 @@
       box-shadow: 0 4px 6px var(--shadow-color);
     }
 
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+
     button::after {
       content: '';
       position: absolute;
@@ -157,6 +163,11 @@
       color: var(--accent-color);
     }
 
+    .warning {
+      background-color: rgba(255, 165, 0, 0.1);
+      color: var(--warning-color);
+    }
+
     .icon {
       font-size: 3.5rem;
       margin-bottom: 1.5rem;
@@ -179,6 +190,92 @@
     .animate__animated {
       animation-duration: 0.8s;
     }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background-color: #E0E0E0;
+      border-radius: 2px;
+      margin-top: 1rem;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress {
+      width: 0%;
+      height: 100%;
+      background-color: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+
+    .shake {
+      animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+
+    @keyframes shake {
+      10%, 90% {
+        transform: translate3d(-1px, 0, 0);
+      }
+      
+      20%, 80% {
+        transform: translate3d(2px, 0, 0);
+      }
+
+      30%, 50%, 70% {
+        transform: translate3d(-4px, 0, 0);
+      }
+
+      40%, 60% {
+        transform: translate3d(4px, 0, 0);
+      }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: var(--border-radius);
+      text-align: center;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    #countdown {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--warning-color);
+      margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -188,9 +285,23 @@
     <form id="invitationForm" class="animate__animated animate__fadeInUp">
       <label for="email">請輸入您的電子郵件地址：</label>
       <input type="email" id="email" name="email" required placeholder="example@email.com">
-      <button type="submit">發送邀請碼</button>
+      <button type="submit" id="submitBtn">發送邀請碼</button>
     </form>
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
     <div id="result" class="result"></div>
+    <div id="countdown"></div>
+  </div>
+
+  <div id="infoModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>中投區會考落點分析說明</h2>
+      <p>請在收到邀請碼後，盡快前往落點分析網站進行分析。</p>
+      <p>每個電子郵件地址需間隔8小時才能再次申請新的邀請碼。</p>
+      <p>如有任何問題，請聯繫我們的客服團隊。</p>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
@@ -200,13 +311,20 @@
       const email = document.getElementById('email').value;
       const resultDiv = document.getElementById('result');
       const submitButton = document.querySelector('button[type="submit"]');
+      const progressBar = document.querySelector('.progress-bar');
+      const progress = document.querySelector('.progress');
+      const countdownDiv = document.getElementById('countdown');
 
       // 替換成您的 Google Apps Script Web 應用部署 URL
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbygB6ysTbqgKhXUVNqFtoPxk5fjpcIJQbWN38p87GJoDvxrC95e-EuJ-9GKG0VxugCCIg/exec';
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycby5-aN0cqG5suwWFjFzYvxngQLFnzodBwnPULAbub2Vrgf3M7MV2s_RtcrBqFPNSLOx/exec';
 
       // 禁用按鈕並顯示加載狀態
       submitButton.disabled = true;
       submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 發送中...';
+
+      // 顯示進度條
+      progressBar.style.display = 'block';
+      gsap.to(progress, {duration: 2, width: '100%', ease: "power1.inOut"});
 
       fetch(scriptUrl, {
         method: 'POST',
@@ -217,27 +335,57 @@
         body: `email=${encodeURIComponent(email)}`
       })
       .then(response => {
-        if (response.ok) {
-          resultDiv.innerHTML = '<i class="fas fa-check-circle"></i> 邀請碼已發送到您的郵箱，請查收。';
-          resultDiv.className = 'result success animate__animated animate__fadeInUp';
-        } else {
-          throw new Error('Network response was not ok.');
-        }
+        // 由於 'no-cors' 模式，我們無法讀取實際的回應內容
+        // 我們假設請求成功
+        resultDiv.innerHTML = '<i class="fas fa-check-circle"></i> 邀請碼已發送到您的郵箱，請查收。';
+        resultDiv.className = 'result success animate__animated animate__fadeInUp';
+        showInfoModal();
       })
       .catch(error => {
         console.error('Error:', error);
-        resultDiv.innerHTML = '<i class="fas fa-check-circle"></i> 邀請碼已發送到您的郵箱，請查收。';
+        resultDiv.innerHTML = '<i class="fas fa-times-circle"></i> 發送失敗，請稍後再試。';
         resultDiv.className = 'result error animate__animated animate__fadeInUp';
+        document.querySelector('.container').classList.add('shake');
       })
       .finally(() => {
         // 恢復按鈕狀態
         submitButton.disabled = false;
         submitButton.innerHTML = '發送邀請碼';
         
+        // 隱藏進度條
+        gsap.to(progressBar, {duration: 0.5, opacity: 0, onComplete: () => {
+          progressBar.style.display = 'none';
+          progress.style.width = '0%';
+        }});
+        
         // 顯示結果
         gsap.to(resultDiv, {duration: 0.5, opacity: 1, y: 0, ease: "power2.out"});
       });
     });
+
+    function startCountdown(seconds) {
+      const countdownDiv = document.getElementById('countdown');
+      const submitBtn = document.getElementById('submitBtn');
+      
+      function updateCountdown() {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = seconds % 60;
+        
+        countdownDiv.textContent = `下次可申請時間：${hours}小時${minutes}分鐘${remainingSeconds}秒`;
+        
+        if (seconds > 0) {
+          seconds--;
+          setTimeout(updateCountdown, 1000);
+        } else {
+          countdownDiv.textContent = '';
+          submitBtn.disabled = false;
+        }
+      }
+      
+      submitBtn.disabled = true;
+      updateCountdown();
+    }
 
     // 添加輸入框聚焦效果
     const input = document.querySelector('input');
@@ -251,11 +399,31 @@
     // 添加按鈕懸停效果
     const button = document.querySelector('button');
     button.addEventListener('mouseenter', () => {
-      gsap.to(button, {duration: 0.3, scale: 1.05, ease: "power2.out"});
+      if (!button.disabled) {
+        gsap.to(button, {duration: 0.3, scale: 1.05, ease: "power2.out"});
+      }
     });
     button.addEventListener('mouseleave', () => {
       gsap.to(button, {duration: 0.3, scale: 1, ease: "power2.out"});
     });
+
+    // 模態框功能
+    const modal = document.getElementById("infoModal");
+    const span = document.getElementsByClassName("close")[0];
+
+    function showInfoModal() {
+      modal.style.display = "block";
+    }
+
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
   </script>
 </body>
 </html>
