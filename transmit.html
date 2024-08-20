@@ -276,6 +276,50 @@
       color: var(--warning-color);
       margin-top: 1rem;
     }
+
+    .captcha-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    #captcha-image {
+      flex: 0 0 auto;
+      width: 120px;
+      height: 40px;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: #333;
+      user-select: none;
+      border-radius: var(--border-radius);
+      margin-left: 1rem;
+    }
+
+    #refresh-captcha {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-left: 0.5rem;
+    }
+
+    #refresh-captcha:hover {
+      background-color: #3AC1A0;
+    }
+
+    #captcha-input {
+      flex: 1;
+    }
   </style>
 </head>
 <body>
@@ -285,6 +329,16 @@
     <form id="invitationForm" class="animate__animated animate__fadeInUp">
       <label for="email">請輸入您的電子郵件地址：</label>
       <input type="email" id="email" name="email" required placeholder="example@email.com">
+      
+      <label for="captcha-input">請輸入驗證碼：</label>
+      <div class="captcha-container">
+        <input type="text" id="captcha-input" name="captcha" required placeholder="驗證碼">
+        <div id="captcha-image"></div>
+        <button type="button" id="refresh-captcha">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+      </div>
+      
       <button type="submit" id="submitBtn">發送邀請碼</button>
     </form>
     <div class="progress-bar">
@@ -306,14 +360,38 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
   <script>
+    let captchaText = '';
+
+    function generateCaptcha() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+      captchaText = '';
+      for (let i = 0; i < 6; i++) {
+        captchaText += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById('captcha-image').textContent = captchaText;
+    }
+
+    document.getElementById('refresh-captcha').addEventListener('click', generateCaptcha);
+
+    generateCaptcha();
+
     document.getElementById('invitationForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const email = document.getElementById('email').value;
+      const captchaInput = document.getElementById('captcha-input').value;
       const resultDiv = document.getElementById('result');
       const submitButton = document.querySelector('button[type="submit"]');
       const progressBar = document.querySelector('.progress-bar');
       const progress = document.querySelector('.progress');
       const countdownDiv = document.getElementById('countdown');
+
+      if (captchaInput.toLowerCase() !== captchaText.toLowerCase()) {
+        resultDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 驗證碼錯誤，請重新輸入。';
+        resultDiv.className = 'result error animate__animated animate__fadeInUp';
+        document.querySelector('.container').classList.add('shake');
+        generateCaptcha();
+        return;
+      }
 
       // 替換成您的 Google Apps Script Web 應用部署 URL
       const scriptUrl = 'https://script.google.com/macros/s/AKfycbxZlxQi1zrGXuFhk1pLMS7pRtrNsnKsU19dD0Nocr5eVcHQjjFiDrrH98AosW6Rk-B3bg/exec';
@@ -340,6 +418,7 @@
         resultDiv.innerHTML = '<i class="fas fa-check-circle"></i> 邀請碼已發送到您的郵箱，請查收。';
         resultDiv.className = 'result success animate__animated animate__fadeInUp';
         showInfoModal();
+        startCountdown(28800); // 8小時倒計時
       })
       .catch(error => {
         console.error('Error:', error);
@@ -360,6 +439,9 @@
         
         // 顯示結果
         gsap.to(resultDiv, {duration: 0.5, opacity: 1, y: 0, ease: "power2.out"});
+
+        // 重新生成驗證碼
+        generateCaptcha();
       });
     });
 
@@ -388,16 +470,18 @@
     }
 
     // 添加輸入框聚焦效果
-    const input = document.querySelector('input');
-    input.addEventListener('focus', () => {
-      gsap.to(input, {duration: 0.3, scale: 1.05, ease: "power2.out"});
-    });
-    input.addEventListener('blur', () => {
-      gsap.to(input, {duration: 0.3, scale: 1, ease: "power2.out"});
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        gsap.to(input, {duration: 0.3, scale: 1.05, ease: "power2.out"});
+      });
+      input.addEventListener('blur', () => {
+        gsap.to(input, {duration: 0.3, scale: 1, ease: "power2.out"});
+      });
     });
 
     // 添加按鈕懸停效果
-    const button = document.querySelector('button');
+    const button = document.querySelector('button[type="submit"]');
     button.addEventListener('mouseenter', () => {
       if (!button.disabled) {
         gsap.to(button, {duration: 0.3, scale: 1.05, ease: "power2.out"});
