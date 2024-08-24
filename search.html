@@ -1,4 +1,4 @@
-<html><head></head><body>
+<html><head</head><body>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
@@ -9,12 +9,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <style>
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #50e3c2;
-            --background-color: #f7f9fc;
-            --text-color: #333333;
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #ecf0f1;
+            --text-color: #34495e;
             --card-background: #ffffff;
-            --accent-color: #ff6b6b;
+            --accent-color: #e74c3c;
             --header-bg: #2c3e50;
             --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -55,10 +55,17 @@
         }
 
         .header h1 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .header h1 i {
+            margin-right: 10px;
+            font-size: 2.2rem;
         }
 
         .header h1:hover {
@@ -67,17 +74,24 @@
 
         .menu {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .menu-item {
             color: #ffffff;
             text-decoration: none;
             padding: 0.5rem 1rem;
-            border-radius: 4px;
+            border-radius: 25px;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item i {
+            margin-right: 8px;
         }
 
         .menu-item:before {
@@ -124,52 +138,85 @@
             color: var(--primary-color);
             margin-bottom: 1.5rem;
             text-align: center;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 i {
+            margin-right: 15px;
+            font-size: 2.8rem;
         }
 
         form {
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
+            gap: 1.5rem;
         }
 
         label {
             font-weight: 500;
             color: var(--text-color);
             font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        label i {
+            margin-right: 10px;
+            color: var(--primary-color);
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 0.9rem;
+            padding: 1rem 1rem 1rem 2.5rem;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 25px;
             font-size: 1rem;
             transition: all 0.3s ease;
+            background-repeat: no-repeat;
+            background-position: 10px center;
+            background-size: 20px;
         }
 
         input[type="text"]:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        #reportCode {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="%233498db" d="M336 256c0-20.9-13.4-38.7-32-45.3V160c0-17.7-14.3-32-32-32H96c-17.7 0-32 14.3-32 32v192c0 17.7 14.3 32 32 32h176c17.7 0 32-14.3 32-32v-50.7c18.6-6.6 32-24.4 32-45.3zm-144-64h64v32h-64v-32zm0 160v-64h64v64h-64zm128-64c0 13.3-10.7 24-24 24s-24-10.7-24-24 10.7-24 24-24 24 10.7 24 24z"/></svg>');
+        }
+
+        #captchaInput {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="%233498db" d="M480 256c0 123.4-100.5 223.9-223.9 223.9-48.86 0-95.19-15.58-134.2-44.86-14.14-10.59-17-30.66-6.391-44.81 10.61-14.09 30.69-16.97 44.8-6.375 27.84 20.91 61 31.94 95.89 31.94C344.3 415.8 416 344.1 416 256S344.3 96.2 256.1 96.2C167.8 96.2 96.21 167.8 96.21 256c0 10.24 .9824 20.66 2.936 30.82 1.788 9.513-3.695 18.83-13.01 22.14L68.51 312.5c-11.33 4.047-23.76-1.906-27.77-13.25C36.09 083.1 32.05 269.4 32.05 256C32.05 132.6 132.6 32.05 256 32.05S480 132.6 480 256z"/></svg>');
         }
 
         button {
             background-color: var(--secondary-color);
             color: white;
-            padding: 0.9rem;
+            padding: 1rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 1.1rem;
             font-weight: 500;
             transition: all 0.3s ease;
             box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button i {
+            margin-right: 10px;
         }
 
         button:hover {
-            background-color: #3ad1af;
+            background-color: #27ae60;
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
@@ -177,21 +224,36 @@
         #result {
             margin-top: 2rem;
             background-color: var(--card-background);
-            padding: 1.8rem;
-            border-radius: 12px;
+            padding: 2rem;
+            border-radius: 15px;
             box-shadow: var(--box-shadow);
             transition: all 0.3s ease;
         }
 
         #result h2 {
             color: var(--primary-color);
-            margin-bottom: 1.2rem;
-            font-size: 1.7rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        #result h2 i {
+            margin-right: 10px;
         }
 
         #result p {
-            margin-bottom: 0.8rem;
-            font-size: 1.05rem;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        #result p i {
+            margin-right: 10px;
+            color: var(--primary-color);
+            width: 20px;
+            text-align: center;
         }
 
         #result strong {
@@ -201,13 +263,20 @@
 
         .error-message {
             color: var(--accent-color);
-            background-color: #fff0f0;
+            background-color: #fdeaea;
             padding: 1.2rem;
-            border-radius: 8px;
+            border-radius: 15px;
             text-align: center;
             font-weight: 500;
-            font-size: 1.05rem;
-            box-shadow: 0 2px 5px rgba(255, 107, 107, 0.2);
+            font-size: 1.1rem;
+            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-message i {
+            margin-right: 10px;
         }
 
         .loader {
@@ -231,7 +300,7 @@
             text-align: center;
             padding: 1.5rem;
             margin-top: auto;
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
 
         .captcha-container {
@@ -243,7 +312,7 @@
 
         #captchaImage {
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 15px;
             transition: transform 0.3s ease;
         }
 
@@ -256,14 +325,14 @@
             color: white;
             border: none;
             padding: 0.5rem 1rem;
-            border-radius: 4px;
+            border-radius: 25px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
 
         #refreshCaptcha:hover {
-            background-color: #3a7bc8;
+            background-color: #2980b9;
             transform: translateY(-2px);
         }
 
@@ -316,7 +385,7 @@
             }
 
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
             .captcha-container {
@@ -325,7 +394,6 @@
             }
         }
 
-        /* 新增動畫效果 */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -357,39 +425,39 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <h1 class="fade-in">CTTW</h1>
+            <h1 class="fade-in"><i class="fas fa-database"></i> CTTW</h1>
             <button class="menu-toggle" id="menuToggle">
                 <i class="fas fa-bars"></i>
             </button>
             <nav class="menu" id="menu">
-                <a href="#" class="menu-item active slide-in-left" style="animation-delay: 0.1s;">回報查詢</a>
-                <a href="https://ctttw.github.io/report_form.html" class="menu-item slide-in-left" style="animation-delay: 0.2s;">新增回報</a>
-                <a href="https://sites.google.com/view/ctttw/%E9%A6%96%E9%A0%81" class="menu-item slide-in-left" style="animation-delay: 0.3s;">更多資訊</a>
+                <a href="https://ctttw.github.io/report_query.html" class="menu-item active slide-in-left" style="animation-delay: 0.1s;"><i class="fas fa-search"></i> 回報查詢</a>
+                <a href="https://ctttw.github.io/report_form.html" class="menu-item slide-in-left" style="animation-delay: 0.2s;"><i class="fas fa-plus-circle"></i> 新增回報</a>
+                <a href="https://sites.google.com/view/ctttw/%E9%A6%96%E9%A0%81" class="menu-item slide-in-left" style="animation-delay: 0.3s;"><i class="fas fa-info-circle"></i> 更多資訊</a>
             </nav>
         </div>
     </header>
 
     <div class="container" data-aos="fade-up">
-        <h1>CTTW 系統異常回報查詢</h1>
+        <h1><i class="fas fa-search"></i> CTTW 系統異常回報查詢</h1>
         
         <form id="queryForm">
-            <label for="reportCode">回報代碼：</label>
+            <label for="reportCode"><i class="fas fa-key"></i> 回報代碼：</label>
             <input type="text" id="reportCode" name="reportCode" required placeholder="請輸入您的回報代碼" data-aos="fade-right">
             
-            <label for="captchaInput">驗證碼：</label>
+            <label for="captchaInput"><i class="fas fa-shield-alt"></i> 驗證碼：</label>
             <input type="text" id="captchaInput" name="captchaInput" required placeholder="請輸入驗證碼" data-aos="fade-right">
             <div class="captcha-container" data-aos="fade-up">
                 <img id="captchaImage" src="" alt="驗證碼" width="150" height="50">
-                <button type="button" id="refreshCaptcha">刷新驗證碼</button>
+                <button type="button" id="refreshCaptcha"><i class="fas fa-sync-alt"></i> 刷新驗證碼</button>
             </div>
-            <button type="submit" data-aos="fade-up">查詢紀錄</button>
+            <button type="submit" data-aos="fade-up"><i class="fas fa-search"></i> 查詢紀錄</button>
         </form>
 
         <div id="result"></div>
     </div>
 
     <footer data-aos="fade-up">
-        &copy; 2024 CTTW系統異常回報紀錄查詢 All rights reserved.
+        <i class="far fa-copyright"></i> 2024 CTTW異常回報紀錄查詢 All rights reserved.
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
@@ -413,12 +481,12 @@
             canvas.height = 50;
 
             // 背景
-            ctx.fillStyle = '#f7f9fc';
+            ctx.fillStyle = '#f0f3f6';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // 文字
             ctx.font = 'bold 30px Noto Sans TC';
-            ctx.fillStyle = '#333333';
+            ctx.fillStyle = '#34495e';
             ctx.textBaseline = 'middle';
             ctx.textAlign = 'center';
             
@@ -437,7 +505,7 @@
                 ctx.beginPath();
                 ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
                 ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-                ctx.strokeStyle = `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.5)`;
+                ctx.strokeStyle = `rgba(52, 152, 219, 0.5)`;
                 ctx.stroke();
             }
 
@@ -497,15 +565,15 @@
                     setTimeout(() => {
                         if (data.found) {
                             resultDiv.innerHTML = `
-                                <h2 class="slide-in-left">回報紀錄詳情</h2>
-                                <p class="slide-in-right"><strong>時間戳記：</strong> ${data.timestamp}</p>
-                                <p class="slide-in-left"><strong>回報者電子郵件：</strong> ${data.email}</p>
-                                <p class="slide-in-right"><strong>問題類別：</strong> ${data.category}</p>
-                                <p class="slide-in-left"><strong>問題描述：</strong> ${data.description}</p>
-                                <p class="slide-in-right"><strong>回報代碼：</strong> ${data.reportCode}</p>
+                                <h2 class="slide-in-left"><i class="fas fa-clipboard-list"></i> 回報紀錄詳情</h2>
+                                <p class="slide-in-right"><i class="far fa-clock"></i> <strong>時間戳記：</strong> ${data.timestamp}</p>
+                                <p class="slide-in-left"><i class="far fa-envelope"></i> <strong>回報者電子郵件：</strong> ${data.email}</p>
+                                <p class="slide-in-right"><i class="fas fa-tag"></i> <strong>問題類別：</strong> ${data.category}</p>
+                                <p class="slide-in-left"><i class="fas fa-comment-alt"></i> <strong>問題描述：</strong> ${data.description}</p>
+                                <p class="slide-in-right"><i class="fas fa-key"></i> <strong>回報代碼：</strong> ${data.reportCode}</p>
                             `;
                         } else {
-                            resultDiv.innerHTML = '<p class="error-message fade-in">找不到相關回報紀錄。請確認回報代碼是否正確。</p>';
+                            resultDiv.innerHTML = '<p class="error-message fade-in"><i class="fas fa-exclamation-triangle"></i> 找不到相關回報紀錄。請確認回報代碼是否正確。</p>';
                         }
                         resultDiv.style.opacity = '1';
                         refreshCaptcha();
@@ -516,7 +584,7 @@
                     console.error('Error:', error);
                     resultDiv.style.opacity = '0';
                     setTimeout(() => {
-                        resultDiv.innerHTML = '<p class="error-message fade-in">查詢時發生錯誤。請稍後再試。</p>';
+                        resultDiv.innerHTML = '<p class="error-message fade-in"><i class="fas fa-exclamation-circle"></i> 查詢時發生錯誤。請稍後再試。</p>';
                         resultDiv.style.opacity = '1';
                         refreshCaptcha();
                         document.getElementById('captchaInput').value = '';
