@@ -1,19 +1,22 @@
 <html><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>系統異常回報 5.2</title>
+<title>CTTW系統異常回報 8.0</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary-color: #3498db;
-  --secondary-color: #2ecc71;
-  --background-color: #ecf0f1;
-  --text-color: #34495e;
+  --primary-color: #6c5ce7;
+  --secondary-color: #00b894;
+  --background-color: #f0f2f5;
+  --text-color: #2d3436;
   --card-background: #ffffff;
-  --input-background: #f5f6fa;
-  --box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  --error-color: #e74c3c;
+  --input-background: #e4e6e9;
+  --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --error-color: #d63031;
+  --success-color: #00b894;
+  --gradient-start: #6c5ce7;
+  --gradient-end: #00b894;
 }
 
 * {
@@ -23,18 +26,22 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins', sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
-  background-color: var(--primary-color);
+  background-color: var(--card-background);
   padding: 1rem 0;
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .header-content {
@@ -47,7 +54,7 @@ body {
 }
 
 .logo {
-  color: #ffffff;
+  color: var(--primary-color);
   font-size: 1.5rem;
   font-weight: 700;
   text-decoration: none;
@@ -61,7 +68,7 @@ body {
 }
 
 .logo:hover {
-  opacity: 0.8;
+  transform: scale(1.05);
 }
 
 .nav-menu {
@@ -74,13 +81,13 @@ body {
 }
 
 .nav-link {
-  color: #ffffff;
+  color: var(--text-color);
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
   transition: all 0.3s ease;
   padding: 0.5rem 1rem;
-  border-radius: 5px;
+  border-radius: 25px;
   display: flex;
   align-items: center;
 }
@@ -90,26 +97,31 @@ body {
 }
 
 .nav-link:hover {
-  background-color: rgba(255,255,255,0.2);
+  background-color: var(--input-background);
+  color: var(--primary-color);
 }
 
 .main-content {
-  max-width: 800px;
-  margin: 3rem auto;
-  padding: 0 2rem;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2rem;
 }
 
 .container {
   background-color: var(--card-background);
-  border-radius: 10px;
+  border-radius: 20px;
   box-shadow: var(--box-shadow);
   padding: 3rem;
   transition: all 0.4s ease;
+  max-width: 800px;
+  width: 100%;
 }
 
 h2 {
   color: var(--primary-color);
-  font-size: 2rem;
+  font-size: 2.5rem;
   margin-bottom: 2rem;
   text-align: center;
   display: flex;
@@ -139,7 +151,7 @@ textarea {
   width: 100%;
   padding: 0.75rem;
   border: 2px solid var(--input-background);
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 1rem;
   transition: all 0.3s ease;
   background-color: var(--input-background);
@@ -151,7 +163,7 @@ select:focus,
 textarea:focus {
   border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
 }
 
 textarea {
@@ -160,12 +172,12 @@ textarea {
 }
 
 button {
-  background-color: var(--primary-color);
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -183,17 +195,18 @@ button i {
 }
 
 button:hover {
-  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 button:disabled {
-  background-color: #bdc3c7;
+  background: linear-gradient(135deg, #bdc3c7, #95a5a6);
   cursor: not-allowed;
 }
 
 .success-message, .error-message {
   padding: 1rem;
-  border-radius: 5px;
+  border-radius: 10px;
   margin-top: 1.5rem;
   text-align: center;
   display: none;
@@ -203,20 +216,21 @@ button:disabled {
 .success-message {
   background-color: #d4edda;
   border: 1px solid #c3e6cb;
-  color: #155724;
+  color: var(--success-color);
 }
 
 .error-message {
   background-color: #f8d7da;
   border: 1px solid #f5c6cb;
-  color: #721c24;
+  color: var(--error-color);
 }
 
 .copyright {
   text-align: center;
   font-size: 0.9rem;
-  color: #7f8c8d;
-  margin-top: 2rem;
+  color: var(--text-color);
+  padding: 1rem 0;
+  background-color: var(--card-background);
 }
 
 .error {
@@ -235,7 +249,7 @@ button:disabled {
 .captcha-image {
   background-color: var(--input-background);
   padding: 0.75rem;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 1.2rem;
   font-weight: bold;
   letter-spacing: 5px;
@@ -249,7 +263,7 @@ button:disabled {
   color: white;
   border: none;
   padding: 0.75rem;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-left: 0.5rem;
@@ -258,7 +272,7 @@ button:disabled {
 }
 
 .refresh-captcha:hover {
-  background-color: #27ae60;
+  background-color: #00a382;
 }
 
 .menu-toggle {
@@ -266,7 +280,7 @@ button:disabled {
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #ffffff;
+  color: var(--text-color);
   cursor: pointer;
 }
 
@@ -286,11 +300,12 @@ button:disabled {
     top: 100%;
     left: 0;
     right: 0;
-    background-color: var(--primary-color);
+    background-color: var(--card-background);
     flex-direction: column;
     align-items: center;
     padding: 1rem 0;
     display: none;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   }
 
   .nav-menu.show {
@@ -310,7 +325,7 @@ button:disabled {
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
 }
 
@@ -371,7 +386,7 @@ button:disabled {
 <div class="container fade-in">
   <h2>
     <i class="fas fa-exclamation-triangle"></i>
-    CTTW系統異常回報表單
+    CTTW系統異常回報
   </h2>
   <form id="reportForm">
     <div class="form-group">
