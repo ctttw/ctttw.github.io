@@ -8,21 +8,20 @@
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
 
     :root {
-      --primary-color: #7209b7;
-      --secondary-color: #3f37c9;
+      --primary-color: #4361ee;
+      --secondary-color: #3a0ca3;
       --background-color: #f8f9fa;
       --text-color: #2b2d42;
       --card-background: #ffffff;
       --shadow-color: rgba(0, 0, 0, 0.08);
-      --accent-color: #f72585;
-      --success-color: #4cc9f0;
-      --border-radius: 16px;
+      --accent-color: #ff006e;
+      --success-color: #38b000;
+      --border-radius: 20px;
       --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
     body {
       font-family: 'Noto Sans TC', sans-serif;
-      background-color: var(--background-color);
       margin: 0;
       padding: 0;
       display: flex;
@@ -32,12 +31,25 @@
       min-height: 100vh;
       color: var(--text-color);
       line-height: 1.6;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      background: linear-gradient(135deg, #8ecae6 0%, #219ebc 100%);
       background-attachment: fixed;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+      z-index: -1;
     }
 
     .container {
-      background: var(--card-background);
+      background: rgba(255, 255, 255, 0.9);
       padding: 3rem;
       border-radius: var(--border-radius);
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
@@ -49,13 +61,24 @@
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(10px);
-      animation: fadeInScale 0.8s ease-out;
+      animation: slideUp 0.8s ease-out;
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    @keyframes fadeInScale {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+    .container::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent-color), var(--primary-color), var(--secondary-color));
+      z-index: 10;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     h1, h2 {
@@ -63,15 +86,15 @@
       position: relative;
       display: inline-block;
       margin-bottom: 2rem;
+      font-weight: 700;
     }
 
     h1 { 
       font-size: 2.2rem; 
-      font-weight: 700; 
       background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 2px 10px rgba(114, 9, 183, 0.3);
+      text-shadow: 0 2px 10px rgba(67, 97, 238, 0.3);
     }
     
     h2 { 
@@ -88,6 +111,7 @@
       border-radius: var(--border-radius);
       overflow: hidden;
       position: relative;
+      background: #f1f1f1;
     }
 
     .invitation-code {
@@ -95,10 +119,9 @@
       font-weight: bold;
       color: var(--primary-color);
       padding: 1.2rem 1.5rem;
-      background-color: rgba(114, 9, 183, 0.1);
+      background-color: rgba(67, 97, 238, 0.1);
       display: inline-block;
-      border: 2px solid var(--primary-color);
-      border-right: none;
+      border: none;
       border-radius: var(--border-radius) 0 0 var(--border-radius);
       position: relative;
       overflow: hidden;
@@ -147,17 +170,33 @@
       box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
     }
     
+    .copy-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+      transition: all 0.6s;
+    }
+    
+    .copy-button:hover::before {
+      left: 100%;
+    }
+    
     .timer {
       font-size: 1.3rem;
       margin-bottom: 2.5rem;
       color: var(--accent-color);
-      background-color: rgba(247, 37, 133, 0.1);
+      background-color: rgba(255, 0, 110, 0.1);
       padding: 0.8rem 1.5rem;
       border-radius: 50px;
       display: inline-block;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 4px 6px rgba(247, 37, 133, 0.1);
+      box-shadow: 0 4px 6px rgba(255, 0, 110, 0.1);
+      font-weight: 500;
     }
 
     .timer i {
@@ -184,9 +223,32 @@
     .progress-bar {
       width: 0;
       height: 100%;
-      background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      background: linear-gradient(90deg, var(--accent-color) 0%, var(--primary-color) 50%, var(--secondary-color) 100%);
       transition: width 1s linear;
       border-radius: 50px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.4) 50%,
+        rgba(255,255,255,0) 100%
+      );
+      animation: progressShimmer 2s infinite;
+    }
+
+    @keyframes progressShimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
 
     .button-group {
@@ -198,9 +260,9 @@
     }
 
     .button {
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-      color: white;
-      border: none;
+      background: #fff;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
       padding: 0.8rem 1.5rem;
       font-size: 1rem;
       border-radius: 50px;
@@ -211,26 +273,18 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      font-weight: 500;
     }
 
     .button:hover {
+      background: var(--primary-color);
+      color: white;
       transform: translateY(-3px);
       box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
     }
 
     .button i {
       font-size: 1.1rem;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: var(--border-radius);
-      padding: 2rem;
-      box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-      margin-top: 2rem;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      transition: var(--transition);
     }
 
     .info {
@@ -256,6 +310,10 @@
       line-height: 1.6;
       position: relative;
       padding-left: 30px;
+    }
+
+    .info p:last-child {
+      margin-bottom: 0;
     }
 
     .icon {
@@ -328,16 +386,27 @@
       cursor: pointer;
       font-size: 1.5rem;
       color: white;
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      background: white;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
     }
 
     .floating-button:hover {
       transform: translateY(-5px) scale(1.05);
       box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.1);
+      background: var(--primary-color);
+      color: white;
     }
 
     #helpButton {
-      background: linear-gradient(135deg, #4cc9f0 0%, #06aed5 100%);
+      background: white;
+      color: var(--accent-color);
+      border: 2px solid var(--accent-color);
+    }
+    
+    #helpButton:hover {
+      background: var(--accent-color);
+      color: white;
     }
 
     .modal {
@@ -363,6 +432,18 @@
       width: 85%;
       animation: modalSlideUp 0.4s ease-out;
       border: 1px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+    }
+
+    .modal-content::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent-color), var(--primary-color), var(--secondary-color));
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
     }
 
     @keyframes modalSlideUp {
@@ -400,6 +481,7 @@
       display: inline-block;
       margin-top: 1rem;
       box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+      border: 1px solid #f1f1f1;
     }
     
     #qrCode:hover { 
@@ -409,8 +491,8 @@
 
     /* Dark mode styles */
     body.dark-mode {
-      --primary-color: #b5179e;
-      --secondary-color: #7209b7;
+      --primary-color: #4cc9f0;
+      --secondary-color: #4361ee;
       --background-color: #121212;
       --text-color: #e0e0e0;
       --card-background: #1e1e1e;
@@ -418,6 +500,32 @@
       --accent-color: #f72585;
       --success-color: #4cc9f0;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+
+    body.dark-mode .container,
+    body.dark-mode .info,
+    body.dark-mode .modal-content {
+      background: rgba(30, 30, 30, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    body.dark-mode .invitation-code {
+      background-color: rgba(76, 201, 240, 0.1);
+    }
+
+    body.dark-mode .button {
+      background: #1e1e1e;
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    body.dark-mode .floating-button {
+      background: #1e1e1e;
+      border-color: var(--primary-color);
+    }
+
+    body.dark-mode #helpButton {
+      border-color: var(--accent-color);
     }
 
     /* Spinner and animations */
@@ -473,6 +581,27 @@
       to { opacity: 1; }
     }
 
+    /* Custom icon */
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .copyright {
+      margin: 2rem 0;
+      font-size: 0.9rem;
+      color: white;
+      opacity: 0.7;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.1);
+      padding: 10px 20px;
+      border-radius: 50px;
+      backdrop-filter: blur(5px);
+    }
+
     /* Responsive styles */
     @media (max-width: 768px) {
       .container { padding: 2rem; }
@@ -492,7 +621,7 @@
         font-size: 1.3rem;
         padding: 0.8rem;
         border-radius: var(--border-radius) var(--border-radius) 0 0;
-        border-right: 2px solid var(--primary-color);
+        border-right: none;
         border-bottom: none;
       }
       .copy-button { 
@@ -511,14 +640,14 @@
 
   <div class="container">
     <h1>
-      <svg class="peach-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+      <svg class="logo-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="peachGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#b5179e" />
-            <stop offset="100%" stop-color="#7209b7" />
+          <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#4361ee" />
+            <stop offset="100%" stop-color="#3a0ca3" />
           </linearGradient>
         </defs>
-        <path d="M256 32C132.3 32 32 132.3 32 256s100.3 224 224 224 224-100.3 224-224S379.7 32 256 32zm0 32c106 0 192 86 192 192S362 448 256 448 64 362 64 256 150 64 256 64zM176 224c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zm160 0c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zM256 320c42.8 0 82.1 23.4 102.8 60.9 7.1 13-1.1 28.8-15.8 28.8h-174c-14.6 0-22.9-15.8-15.8-28.8 20.7-37.5 60-60.9 102.8-60.9z" fill="url(#peachGradient)"/>
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="url(#logoGradient)"/>
       </svg>
       中投區會考落點分析邀請碼
     </h1>
@@ -560,7 +689,7 @@
     </button>
   </div>
 
-  <div class="copyright" style="margin: 2rem 0; font-size: 0.9rem; color: var(--text-color); opacity: 0.7; text-align: center;">
+  <div class="copyright">
     2025 CTTW會考落點分析邀請碼. All rights reserved.
   </div>
 
