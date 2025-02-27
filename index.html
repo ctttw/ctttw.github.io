@@ -244,13 +244,16 @@
           color: var(--accent-color);
         }
     
+        /* Updated Menu Styles for Enhanced Aesthetics */
         .fullscreen-menu {
           position: fixed;
           top: 0;
           right: 0;
           width: 250px;
           height: 100%;
-          background-color: var(--menu-background);
+          background: linear-gradient(180deg, rgba(221,136,232,0.95) 0%, rgba(137,82,194,0.95) 100%);
+          border-left: 1px solid rgba(255, 255, 255, 0.3);
+          box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -258,6 +261,9 @@
           z-index: 2000;
           transform: translateX(100%);
           transition: transform 0.5s ease;
+          border-top-left-radius: 10px;
+          border-bottom-left-radius: 10px;
+          padding: 20px 0;
         }
     
         .fullscreen-menu.show {
@@ -271,7 +277,7 @@
           margin: 20px 0;
           transition: all 0.5s ease;
           position: relative;
-          padding: 10px 0;
+          padding: 10px 20px;
           opacity: 0;
           transform: translateY(20px);
         }
@@ -301,6 +307,7 @@
     
         .fullscreen-menu a:hover {
           color: var(--accent-color);
+          text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
         }
     
         .close-menu {
@@ -579,8 +586,8 @@
   
         @media (max-width: 768px) {
             .dark-mode-toggle {
-                width: 50px;
-                height: 50px;
+                width: 45px;
+                height: 45px;
                 font-size: 1.2em;
                 bottom: 10px;
                 right: 10px;
@@ -1013,11 +1020,7 @@
       overflow-y: auto;
       font-size: 0.9rem;
     }
-    #disclaimerModal h2 {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
-      padding-bottom: 0.8rem;
-    }
+    #disclaimerModal h2 { font-size: 1.3rem; }
     #disclaimerModal a { padding: 0.8rem; font-size: 0.9rem; margin-bottom: 1rem; }
     #disclaimerModal p { font-size: 0.85rem; margin-bottom: 0.8rem; }
     #disclaimerModal ul { margin-bottom: 0.8rem; }
@@ -1301,7 +1304,7 @@
           </select>
         </div>
         <button type="button" onclick="analyzeScores()"><i class="fas fa-search icon"></i>分析落點</button>
-        <button id="exportResults" style="display: none;" onclick="exportResults()"><i class="fas fa-file-export icon"></i>匯出結果</button> 
+        <button id="exportResults" style="display: none;" onclick="showExportModal()"><i class="fas fa-file-export icon"></i>匯出結果</button> 
 
   
 
@@ -1319,10 +1322,36 @@
     <i class="fas fa-moon"></i>
 </button>
 
+<div id="exportModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeExportModal()">&times;</span>
+    <h2><i class="fas fa-file-export icon"></i> 匯出結果</h2>
+    <p>請選擇匯出檔案格式：</p>
+    <button class="export-format-button" onclick="exportAsTXT()">純文字 (.txt)</button>
+    <button class="export-format-button" onclick="exportAsCSV()">CSV (.csv)</button>
+    <button class="export-format-button" onclick="exportAsJSON()">JSON (.json)</button>
+  </div>
+</div>
 
- 
+<style>
+  /* 新增匯出格式按鈕樣式 */
+  .export-format-button {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .export-format-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+  }
+</style>
 
- <!-- 修改後的美化版免責聲明 Modal -->
+  <!-- 修改後的美化版免責聲明 Modal -->
  <div id="disclaimerModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
@@ -1671,7 +1700,6 @@
       resultsHTML += `<p class="no-schools"><i class="fas fa-exclamation-triangle icon"></i> 根據您的成績，暫時沒有符合條件的學校。</p>`;
     }
     resultsHTML += `</div></div>`;
-
     const resultsElement = document.getElementById('results');
     resultsElement.innerHTML = resultsHTML;
     resultsElement.style.display = 'none';
@@ -1680,93 +1708,144 @@
       resultsElement.style.animation = 'zoomIn 0.5s ease-out';
       document.getElementById('exportResults').style.display = 'inline-block';
     }, 100);
+    // 儲存最新資料供匯出使用
+    window.latestAnalysisData = data;
   }
 
-      // Add event listeners for initial page load
-    window.addEventListener('load', () => {
-      logUserActivity('page_load');
-    });
-  
-    // Log when user closes/leaves the page
-    window.addEventListener('beforeunload', () => {
-      logUserActivity('page_exit');
-    });
-  
-    function exportResults() {
-      logUserActivity('export_results');
+  // 新增匯出格式選單相關函式
+  function showExportModal() {
+    document.getElementById('exportModal').style.display = 'block';
+  }
+  function closeExportModal() {
+    document.getElementById('exportModal').style.display = 'none';
+  }
+  // 當點選 Modal 以外區域時關閉 Modal
+  document.getElementById('exportModal').addEventListener('click', function(e) {
+    if(e.target === this){
+      closeExportModal();
+    }
+  });
+
+  function exportAsTXT() {
     const resultsElement = document.getElementById('results');
     const resultsText = resultsElement.innerText;
-    
-    // Get current date and time
     const now = new Date();
     const dateTime = now.toLocaleString('zh-TW', { 
-      year: 'numeric', 
-      month: '2-digit', 
-      day: '2-digit', 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      second: '2-digit',
-      hour12: false 
+      year: 'numeric', month: '2-digit', day: '2-digit', 
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false 
     });
-  
-    // Create ASCII art watermark with date and time
     const watermark = 
-    "********************************\n" +
-    "*    https://ctttw.github.io/   *\n" +
-    "*  CTTW 中投區會考落點分析系統 *\n" +
-    "*       以下資料僅供參考       *\n" +
-    "*                              *\n" +
-    `*產生時間: ${dateTime}         *\n` +
-    "*                              *\n" +
-    "********************************\n\n";
-  
-    // Combine watermark and results
+      "********************************\n" +
+      "*    https://ctttw.github.io/   *\n" +
+      "*  CTTW 中投區會考落點分析系統 *\n" +
+      "*       以下資料僅供參考       *\n" +
+      "*                              *\n" +
+      `*產生時間: ${dateTime}         *\n` +
+      "*                              *\n" +
+      "********************************\n\n";
     const contentWithWatermark = watermark + resultsText;
-  
     const blob = new Blob([contentWithWatermark], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
+    triggerDownload(url, '中投區會考落點分析結果.txt');
+    closeExportModal();
+  }
+
+  function exportAsCSV() {
+    if (!window.latestAnalysisData) {
+      alert("請先進行分析後再匯出！");
+      return;
+    }
+    const { totalPoints, totalCredits, eligibleSchools } = window.latestAnalysisData;
+    let csvContent = "總積分,總積點\n" + totalPoints + "," + totalCredits + "\n\n";
+    csvContent += "學校類型,學校名稱\n";
+    eligibleSchools.forEach(school => {
+      // 將逗號轉成其他字元避免 CSV 分隔問題
+      const type = school.type.replace(/,/g, " ");
+      const name = school.name.replace(/,/g, " ");
+      csvContent += `${type},${name}\n`;
+    });
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    triggerDownload(url, '中投區會考落點分析結果.csv');
+    closeExportModal();
+  }
+
+  function exportAsJSON() {
+    if (!window.latestAnalysisData) {
+      alert("請先進行分析後再匯出！");
+      return;
+    }
+    const jsonStr = JSON.stringify(window.latestAnalysisData, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    triggerDownload(url, '中投區會考落點分析結果.json');
+    closeExportModal();
+  }
+
+  // 共用的下載觸發函式
+  function triggerDownload(url, fileName) {
     const a = document.createElement('a');
     a.style.display = 'none';
     a.href = url;
-    a.download = '中投區會考落點分析結果.txt';
+    a.download = fileName;
     document.body.appendChild(a);
     a.click();
     URL.revokeObjectURL(url);
   }
-        
-          // 初始顯示免責聲明
-          window.onload = function() {
-            showDisclaimer();
-          }
-        </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-1N8G2EXHXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  
+  // 初始顯示免責聲明
+  window.onload = function() {
+    showDisclaimer();
+  }
 
-  gtag('config', 'G-1N8G2EXHXX');
-</script>
+  function toggleMenu() {
+          var menu = document.getElementById("fullscreenMenu");
+          menu.classList.toggle("show");
+          document.body.style.overflow = menu.classList.contains("show") ? "hidden" : "auto";
   
-  <script>
+          // 添加連結的動畫延遲
+          var links = menu.getElementsByTagName('a');
+          for (var i = 0; i < links.length; i++) {
+            links[i].style.animationDelay = (i * 0.1) + 's';
+          }
+        }
   
-  document.oncontextmenu = function (){
-  return false;
-  }
-  </script>
-        <script>
+        function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDarkMode = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDarkMode);
+      updateDarkModeIcon(isDarkMode);
+      
+      // Log dark mode toggle
+      logUserActivity('toggle_dark_mode', { enabled: isDarkMode });
+    }
   
-  document.body.onkeydown = function(e){
-  var keyCode = e.keyCode || e.which || e.charCode;
-  var ctrlKey = e.ctrlKey || e.metaKey;
-  if(ctrlKey && (keyCode == 83 || keyCode == 85 || keyCode == 73)) {
-  e.preventDefault();
-  return false;
-  }else if(keyCode && keyCode == 123){
-  return false;
-  }
-  }
+        function updateDarkModeIcon(isDarkMode) {
+            const icon = document.querySelector('#darkModeToggle i');
+            icon.style.transform = 'scale(0)';
+            
+            setTimeout(() => {
+                if (isDarkMode) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+                icon.style.transform = 'scale(1)';
+            }, 150);
+        }
+  
+        // 檢查用戶之前的深色模式偏好
+        const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (savedDarkMode) {
+            document.body.classList.add('dark-mode');
+        }
+        updateDarkModeIcon(savedDarkMode);
+  
+        // 添加事件監聽器2025/01/19改為後端管理錄取分數測試版增加手機談窗框,增加記錄使用者LOG
+        document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+  
   const html5QrCode = new Html5Qrcode("qr-reader");
     const qrConfig = { fps: 10, qrbox: { width: 250, height: 250 } };
   
@@ -1823,79 +1902,28 @@
       }
     });
   
+    </script>
   
+  <script>
   
+  document.oncontextmenu = function (){
+  return false;
+  }
+  </script>
+        <script>
   
-    function toggleMenu() {
-          var menu = document.getElementById("fullscreenMenu");
-          menu.classList.toggle("show");
-          document.body.style.overflow = menu.classList.contains("show") ? "hidden" : "auto";
-  
-          // 添加連結的動畫延遲
-          var links = menu.getElementsByTagName('a');
-          for (var i = 0; i < links.length; i++) {
-            links[i].style.animationDelay = (i * 0.1) + 's';
-          }
-        }
-  
-  
-        function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-      const isDarkMode = document.body.classList.contains('dark-mode');
-      localStorage.setItem('darkMode', isDarkMode);
-      updateDarkModeIcon(isDarkMode);
-      
-      // Log dark mode toggle
-      logUserActivity('toggle_dark_mode', { enabled: isDarkMode });
-    }
-  
-        function updateDarkModeIcon(isDarkMode) {
-            const icon = document.querySelector('#darkModeToggle i');
-            icon.style.transform = 'scale(0)';
-            
-            setTimeout(() => {
-                if (isDarkMode) {
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                } else {
-                    icon.classList.remove('fa-sun');
-                    icon.classList.add('fa-moon');
-                }
-                icon.style.transform = 'scale(1)';
-            }, 150);
-        }
-  
-        // 檢查用戶之前的深色模式偏好
-        const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-        if (savedDarkMode) {
-            document.body.classList.add('dark-mode');
-        }
-        updateDarkModeIcon(savedDarkMode);
-  
-        // 添加事件監聽器2025/01/19改為後端管理錄取分數測試版增加手機談窗框,增加記錄使用者LOG
-        document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
-  
-  
-  
-      // 更新版權年份
-      document.getElementById('currentYear').textContent = new Date().getFullYear();
-  
-      const canvas = document.getElementById('signatureCanvas');
-      const ctx = canvas.getContext('2d');
-      let isDrawing = false;
-      let lastX = 0;
-      let lastY = 0;
-  
-      function startDrawing(e) {
-        isDrawing = true;
-        [lastX, lastY] = [e.offsetX, e.offsetY];
-      }
-  
-  
-  
-        </script>
-  
-<style>
+  document.body.onkeydown = function(e){
+  var keyCode = e.keyCode || e.which || e.charCode;
+  var ctrlKey = e.ctrlKey || e.metaKey;
+  if(ctrlKey && (keyCode == 83 || keyCode == 85 || keyCode == 73)) {
+  e.preventDefault();
+  return false;
+  }else if(keyCode && keyCode == 123){
+  return false;
+  }
+  }
+  </script>
+  <style>
       /* 分析結果美化 CSS */
       .analysis-results {
         background: var(--card-background);
