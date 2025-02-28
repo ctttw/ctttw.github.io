@@ -1099,6 +1099,70 @@
     background-color: #2980b9;
     transform: translateY(-2px);
   }
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+          .container {
+            width: 95%;
+            padding: 1rem;
+            margin: 60px auto 20px;
+          }
+          
+          /* Improved mobile layout for form elements */
+          .form-group {
+            margin-bottom: 0.8rem;
+          }
+          
+          select, input[type="text"] {
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            width: 100%;
+            box-sizing: border-box;
+          }
+          
+          /* Reduce button padding */
+          button, .qr-options button, .file-input-label {
+            padding: 0.7rem 1rem;
+            width: 100%;
+          }
+          
+          /* Adjust results display for mobile */
+          .result-card {
+            flex: 1 1 100%;
+            margin: 5px 0;
+            padding: 10px;
+          }
+          
+          /* Tighten up modal content */
+          .modal-content {
+            width: 90%;
+            padding: 15px;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .container {
+            width: 92%;
+            padding: 0.8rem;
+            margin-top: 55px;
+          }
+          
+          /* Even smaller padding */
+          .form-group label,
+          select,
+          input[type="text"] {
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+          }
+          
+          /* Adjust results layout further */
+          .result-value {
+            font-size: 1.5rem;
+          }
+          
+          .result-label {
+            font-size: 0.85rem;
+          }
+        }
       </style>
 </head>
 <body>
