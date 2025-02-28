@@ -83,13 +83,11 @@ function closeDisclaimer() {
   modal.style.display = 'none';
 }
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName('close')[0];
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  closeDisclaimer();
-}
+document.querySelectorAll('.modal .close').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    this.closest('.modal').style.display = 'none';
+  });
+});
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
@@ -316,7 +314,13 @@ function displayResults(data) {
   const { totalPoints, totalCredits, eligibleSchools } = data;
 
   let resultsHTML = `<div class="analysis-results">`;
-  resultsHTML += `<div class="result-header"><h2><i class="fas fa-clipboard-check icon"></i> 分析結果</h2></div>`;
+  resultsHTML += `<div class="result-header">
+                    <svg class="result-decorator" width="50" height="50" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" fill="var(--accent-color)" opacity="0.2"></circle>
+                      <path d="M9 12l2 2 4-4" stroke="var(--accent-color)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <h2><i class="fas fa-clipboard-check icon"></i> 分析結果</h2>
+                  </div>`;
   resultsHTML += `<div class="result-summary">
                     <div class="result-card">
                       <i class="fas fa-star icon"></i>
@@ -564,18 +568,3 @@ document.getElementById('fileInput').addEventListener('change', event => {
   }
 });
 
-// 防止複製和右鍵
-document.oncontextmenu = function (){
-  return false;
-}
-
-document.body.onkeydown = function(e){
-  var keyCode = e.keyCode || e.which || e.charCode;
-  var ctrlKey = e.ctrlKey || e.metaKey;
-  if(ctrlKey && (keyCode == 83 || keyCode == 85 || keyCode == 73)) {
-    e.preventDefault();
-    return false;
-  } else if(keyCode && keyCode == 123){
-    return false;
-  }
-}
