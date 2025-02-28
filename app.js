@@ -316,13 +316,7 @@ function displayResults(data) {
   const { totalPoints, totalCredits, eligibleSchools } = data;
 
   let resultsHTML = `<div class="analysis-results">`;
-  resultsHTML += `<div class="result-header">
-                    <svg class="result-decorator" width="50" height="50" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="10" fill="var(--accent-color)" opacity="0.2"></circle>
-                      <path d="M9 12l2 2 4-4" stroke="var(--accent-color)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                    <h2><i class="fas fa-clipboard-check icon"></i> 分析結果</h2>
-                  </div>`;
+  resultsHTML += `<div class="result-header"><h2><i class="fas fa-clipboard-check icon"></i> 分析結果</h2></div>`;
   resultsHTML += `<div class="result-summary">
                     <div class="result-card">
                       <i class="fas fa-star icon"></i>
