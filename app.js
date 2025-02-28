@@ -120,9 +120,10 @@ function showLoading() {
     <div class="loading-spinner">
       <div class="spinner"></div>
       <div class="loading-text">分析中，請稍候...</div>
-      <div class="loading-progress">
-        <div class="progress-bar"></div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
       </div>
+      <div class="loading-status">準備中...</div>
     </div>
   `;
   document.body.appendChild(loadingOverlay);
@@ -136,12 +137,35 @@ function showLoading() {
       loadingOverlay.style.opacity = '1';
       
       // Animate the progress bar
-      setTimeout(() => {
-        const progressBar = loadingOverlay.querySelector('.progress-bar');
-        progressBar.style.width = '100%';
-      }, 200);
+      setTimeout(() => animateAnalysisProgress(), 300);
     });
   });
+}
+
+function animateAnalysisProgress() {
+  const progressFill = document.querySelector('.progress-fill');
+  const loadingStatus = document.querySelector('.loading-status');
+  const statuses = ['準備中...', '收集學校資料...', '分析成績...', '計算積分...', '產生結果報告...', '完成!'];
+  let currentStep = 0;
+  
+  const updateProgress = () => {
+    if (currentStep >= statuses.length) return;
+    
+    const progress = (currentStep + 1) / statuses.length;
+    progressFill.style.width = `${progress * 100}%`;
+    loadingStatus.textContent = statuses[currentStep];
+    loadingStatus.style.animation = 'pulse 0.5s ease';
+    
+    setTimeout(() => {
+      loadingStatus.style.animation = '';
+      currentStep++;
+      if (currentStep < statuses.length) {
+        setTimeout(updateProgress, currentStep === statuses.length - 1 ? 300 : 700);
+      }
+    }, 500);
+  };
+  
+  updateProgress();
 }
 
 function hideLoading() {
@@ -294,14 +318,14 @@ function displayResults(data) {
   let resultsHTML = `<div class="analysis-results">`;
   resultsHTML += `<div class="result-header"><h2><i class="fas fa-clipboard-check icon"></i> 分析結果</h2></div>`;
   resultsHTML += `<div class="result-summary">
-                    <div class="result-card" data-value="${totalPoints}">
+                    <div class="result-card">
                       <i class="fas fa-star icon"></i>
-                      <div class="result-value">0</div>
+                      <div class="result-value">${totalPoints}</div>
                       <div class="result-label">總積分</div>
                     </div>
-                    <div class="result-card" data-value="${totalCredits}">
+                    <div class="result-card">
                       <i class="fas fa-award icon"></i>
-                      <div class="result-value">0</div>
+                      <div class="result-value">${totalCredits}</div>
                       <div class="result-label">總積點</div>
                     </div>
                   </div>`;
@@ -319,7 +343,7 @@ function displayResults(data) {
                         <h4>${type}</h4>
                         <ul>`;
       schools.forEach((schoolName, index) => {
-        resultsHTML += `<li class="school-item" style="opacity: 0; transform: translateX(20px);"><i class="fas fa-check-circle icon"></i>${schoolName}</li>`;
+        resultsHTML += `<li style="animation-delay: ${index * 0.1}s"><i class="fas fa-check-circle icon"></i>${schoolName}</li>`;
       });
       resultsHTML += `   </ul>
                       </div>`;
@@ -330,51 +354,15 @@ function displayResults(data) {
   resultsHTML += `</div></div>`;
   const resultsElement = document.getElementById('results');
   resultsElement.innerHTML = resultsHTML;
-  resultsElement.style.display = 'block';
-  
-  // Animate the cards
+  resultsElement.style.display = 'none';
   setTimeout(() => {
-    const cards = document.querySelectorAll('.result-card');
-    cards.forEach(card => {
-      const targetValue = parseInt(card.getAttribute('data-value'));
-      const valueDisplay = card.querySelector('.result-value');
-      animateNumber(valueDisplay, 0, targetValue, 1500);
-      card.style.animation = 'bounceIn 0.8s ease-out forwards';
-    });
-    
-    // Animate school list with staggered delay
-    const schoolItems = document.querySelectorAll('.school-item');
-    schoolItems.forEach((item, index) => {
-      setTimeout(() => {
-        item.style.transition = 'all 0.5s ease-out';
-        item.style.opacity = '1';
-        item.style.transform = 'translateX(0)';
-      }, 1000 + (index * 100));
-    });
-    
+    resultsElement.style.display = 'block';
+    resultsElement.style.animation = 'fadeInUp 0.8s ease-out forwards';
     document.getElementById('exportResults').style.display = 'inline-block';
-    document.getElementById('exportResults').style.animation = 'bounceIn 0.8s ease-out';
-  }, 300);
-  
+    document.getElementById('exportResults').style.animation = 'fadeInUp 0.5s ease-out forwards';
+  }, 100);
   // 儲存最新資料供匯出使用
   window.latestAnalysisData = data;
-}
-
-// Function to animate numbers counting up
-function animateNumber(element, start, end, duration) {
-  let startTimestamp = null;
-  const step = (timestamp) => {
-    if (!startTimestamp) startTimestamp = timestamp;
-    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-    const currentValue = Math.floor(progress * (end - start) + start);
-    element.innerHTML = currentValue;
-    if (progress < 1) {
-      window.requestAnimationFrame(step);
-    } else {
-      element.innerHTML = end;
-    }
-  };
-  window.requestAnimationFrame(step);
 }
 
 // 新增匯出格式選單相關函式
