@@ -329,6 +329,22 @@ function displayResults(data) {
                       <div class="result-label">總積點</div>
                     </div>
                   </div>`;
+  // 新增一個顯示使用者輸入成績的詳細區塊，增加結果完整性
+  resultsHTML += `<div class="detailed-scores">
+                    <h3><i class="fas fa-chart-bar icon"></i> 您的成績輸入</h3>
+                    <table class="scores-table">
+                      <tr>
+                        <th>科目</th>
+                        <th>分數</th>
+                      </tr>
+                      <tr><td>國文</td><td>${document.getElementById('chinese').value || '-'}</td></tr>
+                      <tr><td>英文</td><td>${document.getElementById('english').value || '-'}</td></tr>
+                      <tr><td>數學</td><td>${document.getElementById('math').value || '-'}</td></tr>
+                      <tr><td>自然</td><td>${document.getElementById('science').value || '-'}</td></tr>
+                      <tr><td>社會</td><td>${document.getElementById('social').value || '-'}</td></tr>
+                      <tr><td>作文</td><td>${document.getElementById('composition').value || '-'}</td></tr>
+                    </table>
+                  </div>`;
   resultsHTML += `<div class="result-schools"><h3><i class="fas fa-list-ul icon"></i> 可能錄取的學校</h3>`;
   if (eligibleSchools && eligibleSchools.length > 0) {
     let groupedSchools = {};
@@ -345,8 +361,7 @@ function displayResults(data) {
       schools.forEach((schoolName, index) => {
         resultsHTML += `<li style="animation-delay: ${index * 0.1}s"><i class="fas fa-check-circle icon"></i>${schoolName}</li>`;
       });
-      resultsHTML += `   </ul>
-                      </div>`;
+      resultsHTML += `</ul></div>`;
     });
   } else {
     resultsHTML += `<p class="no-schools"><i class="fas fa-exclamation-triangle icon"></i> 根據您的成績，暫時沒有符合條件的學校。</p>`;
