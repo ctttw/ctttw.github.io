@@ -1278,6 +1278,41 @@
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
           color: var(--text-color);
         }
+        /* 新增使用說明美觀樣式 */
+        #instructions {
+          background: linear-gradient(135deg, #ffffff, #f7f7f7);
+          padding: 2rem;
+          border-radius: 15px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          border-left: 5px solid var(--accent-color);
+        }
+        
+        .instruction-item {
+          border-left: 4px solid var(--secondary-color);
+          padding-left: 1rem;
+          margin-bottom: 1.5rem;
+          background: var(--card-background);
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .instruction-item:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 深色模式下的使用說明樣式 */
+        body.dark-mode #instructions {
+          background: linear-gradient(135deg, #2c2c2c, #1e1e1e);
+          border-left: 5px solid var(--accent-color);
+        }
+        
+        body.dark-mode .instruction-item {
+          background: #1e1e1e;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+          border-left: 4px solid var(--secondary-color);
+        }
       </style>
 </head>
 <body>
