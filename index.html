@@ -1109,6 +1109,22 @@
     background-color: #2980b9;
     transform: translateY(-2px);
   }
+        /* 列印按鈕樣式 */
+  .print-button {
+    background-color: var(--accent-color);
+    margin-top: 15px;
+    width: 100%;
+  }
+  
+  .print-button:hover {
+    background-color: #007755;
+  }
+  
+  @media print {
+    .container, .header, .fullscreen-menu, #exportModal, .dark-mode-toggle {
+      display: none !important;
+    }
+  }
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
           .container {
@@ -1515,6 +1531,7 @@
     <button class="export-format-button" onclick="exportAsTXT()">純文字 (.txt)</button>
     <button class="export-format-button" onclick="exportAsCSV()">CSV (.csv)</button>
     <button class="export-format-button" onclick="exportAsJSON()">JSON (.json)</button>
+    <button class="export-format-button print-button" onclick="printResults()"><i class="fas fa-print icon"></i> 列印結果</button>
   </div>
 </div>
 
