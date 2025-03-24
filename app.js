@@ -355,6 +355,37 @@ function displayResults(data) {
                   </div>`;
   resultsHTML += `<div class="result-schools"><h3><i class="fas fa-list-ul icon"></i> 可能錄取的學校</h3>`;
   if (eligibleSchools && eligibleSchools.length > 0) {
+    // 新增學校統計資訊區塊
+    let schoolsByType = {};
+    let totalSchoolCount = eligibleSchools.length;
+    
+    // 計算各類型學校數量
+    eligibleSchools.forEach(school => {
+      if (!schoolsByType[school.type]) {
+        schoolsByType[school.type] = 0;
+      }
+      schoolsByType[school.type]++;
+    });
+    
+    // 新增學校統計區塊
+    resultsHTML += `<div class="school-stats">
+                      <h4><i class="fas fa-chart-pie icon"></i> 學校統計</h4>
+                      <div class="stats-cards">
+                        <div class="stats-card">
+                          <div class="stats-value">${totalSchoolCount}</div>
+                          <div class="stats-label">總學校數</div>
+                        </div>`;
+                        
+    // 為每種學校類型添加統計卡片
+    Object.entries(schoolsByType).forEach(([type, count]) => {
+      resultsHTML += `<div class="stats-card">
+                        <div class="stats-value">${count}</div>
+                        <div class="stats-label">${type}</div>
+                      </div>`;
+    });
+    
+    resultsHTML += `</div></div>`;
+    
     let groupedSchools = {};
     eligibleSchools.forEach(school => {
       if (!groupedSchools[school.type]) {
@@ -456,7 +487,7 @@ async function submitRating() {
   }
 }
 
-// 新增匯出格式選單相關函式
+// 新增匯出格式選菜單相關函式
 function showExportModal() {
   document.getElementById('exportModal').style.display = 'block';
   setTimeout(() => {

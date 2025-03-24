@@ -1593,6 +1593,114 @@
           }
         }
 
+        /* 新增學校統計樣式 */
+        .school-stats {
+          background: var(--card-background);
+          border-radius: var(--border-radius);
+          padding: 20px;
+          margin: 20px 0;
+          box-shadow: 0 8px 25px var(--shadow-color);
+          transition: all 0.3s ease;
+        }
+
+        .school-stats:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 12px 30px var(--shadow-color);
+        }
+
+        .school-stats h4 {
+          text-align: center;
+          margin-top: 0;
+          margin-bottom: 20px;
+          color: var(--primary-color);
+          font-size: 1.3rem;
+          position: relative;
+          padding-bottom: 10px;
+        }
+
+        .school-stats h4::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 60px;
+          height: 3px;
+          background: linear-gradient(90deg, var(--primary-color), var(--tertiary-color));
+          border-radius: 3px;
+        }
+
+        .stats-cards {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 15px;
+        }
+
+        .stats-card {
+          background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+          border-radius: var(--border-radius);
+          padding: 15px;
+          min-width: 100px;
+          flex: 1;
+          max-width: 150px;
+          text-align: center;
+          box-shadow: 0 5px 15px var(--shadow-color);
+          transition: all 0.3s ease;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          animation: fadeIn 0.5s ease-out, slideInUp 0.5s ease-out;
+        }
+
+        .stats-card:hover {
+          transform: translateY(-5px) scale(1.05);
+          box-shadow: 0 10px 25px var(--shadow-color);
+        }
+
+        .stats-value {
+          font-size: 1.8rem;
+          font-weight: 700;
+          color: var(--accent-color);
+          margin-bottom: 8px;
+        }
+
+        .stats-label {
+          font-size: 0.9rem;
+          color: var(--text-color);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        /* 媒體查詢優化 */
+        @media (max-width: 768px) {
+          .stats-cards {
+            gap: 10px;
+          }
+          
+          .stats-card {
+            min-width: 80px;
+            padding: 10px;
+          }
+          
+          .stats-value {
+            font-size: 1.5rem;
+          }
+          
+          .stats-label {
+            font-size: 0.8rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+          }
+          
+          .stats-card {
+            max-width: none;
+          }
+        }
       </style>
 </head>
 <body>
