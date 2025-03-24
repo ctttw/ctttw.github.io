@@ -370,6 +370,24 @@ function displayResults(data) {
   } else {
     resultsHTML += `<p class="no-schools"><i class="fas fa-exclamation-triangle icon"></i> 根據您的成績，暫時沒有符合條件的學校。</p>`;
   }
+  
+  // 新增評分部分
+  resultsHTML += `<div class="rating-section">
+                    <h3><i class="fas fa-thumbs-up icon"></i> 對本次分析結果評分</h3>
+                    <p>您認為這個分析結果是否對您有幫助？請給予評分：</p>
+                    <div class="star-rating">
+                      <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="太棒了！">★</label>
+                      <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="很好">★</label>
+                      <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="還不錯">★</label>
+                      <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="普通">★</label>
+                      <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="有待改進">★</label>
+                    </div>
+                    <div class="feedback-container">
+                      <textarea id="feedbackText" placeholder="請分享您的建議或意見（選填）"></textarea>
+                      <button type="button" onclick="submitRating()"><i class="fas fa-paper-plane icon"></i>提交評分</button>
+                    </div>
+                  </div>`;
+  
   resultsHTML += `</div></div>`;
   const resultsElement = document.getElementById('results');
   resultsElement.innerHTML = resultsHTML;
@@ -382,6 +400,56 @@ function displayResults(data) {
   }, 100);
   // 儲存最新資料供匯出使用
   window.latestAnalysisData = data;
+}
+
+// 新增提交評分功能
+async function submitRating() {
+  try {
+    const rating = document.querySelector('input[name="rating"]:checked')?.value;
+    if (!rating) {
+      alert('請先選擇評分星級！');
+      return;
+    }
+    
+    const feedback = document.getElementById('feedbackText').value.trim();
+    const analysisData = window.latestAnalysisData;
+    if (!analysisData) {
+      alert('無法取得分析數據，請重新分析後再評分');
+      return;
+    }
+    
+    // 顯示提交中動畫
+    const submitButton = document.querySelector('.feedback-container button');
+    const originalText = submitButton.innerHTML;
+    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 提交中...';
+    submitButton.disabled = true;
+    
+    // 記錄評分資料
+    await logUserActivity('submit_rating', {
+      rating: parseInt(rating),
+      feedback: feedback,
+      analysisData: {
+        totalPoints: analysisData.totalPoints,
+        totalCredits: analysisData.totalCredits,
+        schoolCount: analysisData.eligibleSchools?.length || 0
+      }
+    });
+    
+    // 顯示感謝訊息
+    const ratingSection = document.querySelector('.rating-section');
+    ratingSection.innerHTML = `
+      <div class="rating-thanks">
+        <i class="fas fa-heart icon"></i>
+        <h3>感謝您的評分！</h3>
+        <p>您的反饋將幫助我們不斷完善系統。</p>
+      </div>
+    `;
+    ratingSection.style.animation = 'pulse 1s ease-in-out';
+    
+  } catch (error) {
+    console.error('提交評分時發生錯誤:', error);
+    alert('評分提交失敗，請稍後再試');
+  }
 }
 
 // 新增匯出格式選單相關函式
@@ -422,7 +490,8 @@ function exportAsCSV() {
     return;
   }
   const { totalPoints, totalCredits, eligibleSchools } = window.latestAnalysisData;
-  let csvContent = "總積分,總積點\n" + totalPoints + "," + totalCredits + "\n\n";
+  // Add BOM for UTF-8 encoding to properly display Chinese characters
+  let csvContent = "\uFEFF" + "總積分,總積點\n" + totalPoints + "," + totalCredits + "\n\n";
   csvContent += "學校類型,學校名稱\n";
   eligibleSchools.forEach(school => {
     // 將逗號轉成其他字元避免 CSV 分隔問題

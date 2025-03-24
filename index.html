@@ -601,7 +601,6 @@
   
         body.dark-mode .confirm-button {
           background-color: #6200ee;
-          color: #ffffff;
         }
         body.dark-mode .confirm-button:hover {
           background-color: #3700b3;
@@ -916,8 +915,9 @@
   }
   
   @keyframes pulse {
-    0%, 100% { transform: scale(1) rotate(0deg); }
+    0% { transform: scale(1) rotate(0deg); }
     50% { transform: scale(1.1) rotate(180deg); }
+    100% { transform: scale(1) rotate(360deg); }
   }
   
   @keyframes spin {
@@ -1304,6 +1304,118 @@
           box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
         }
         
+  /* 新增評分相關樣式 */
+  .rating-section {
+    margin-top: 40px;
+    padding: 20px;
+    background: linear-gradient(135deg, #ffffff, #f7f7f7);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    text-align: center;
+    animation: fadeIn 0.8s ease-out;
+  }
+  
+  body.dark-mode .rating-section {
+    background: linear-gradient(135deg, var(--card-background), #2c2c2c);
+  }
+  
+  .rating-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+  }
+  
+  .star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .star-rating input {
+    display: none;
+  }
+  
+  .star-rating label {
+    color: #ddd;
+    font-size: 40px;
+    padding: 0 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .star-rating label:hover,
+  .star-rating label:hover ~ label,
+  .star-rating input:checked ~ label {
+    color: #ffcc00;
+    transform: scale(1.2);
+  }
+  
+  .feedback-container {
+    margin-top: 15px;
+  }
+  
+  .feedback-container textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    min-height: 80px;
+    resize: vertical;
+    font-family: inherit;
+    background-color: var(--card-background);
+    color: var(--text-color);
+  }
+  
+  .feedback-container button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    margin-top: 10px;
+  }
+  
+  .feedback-container button:hover {
+    background-color: #007755;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .rating-thanks {
+    padding: 20px;
+    text-align: center;
+    animation: zoomIn 0.5s ease-out;
+  }
+  
+  .rating-thanks .icon {
+    font-size: 48px;
+    color: #ff6b6b;
+    display: block;
+    margin: 0 auto 15px;
+    animation: pulse 1.5s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  
+  /* 響應式設計調整 */
+  @media (max-width: 768px) {
+    .star-rating label {
+      font-size: 32px;
+      padding: 0 3px;
+    }
+    
+    .feedback-container textarea {
+      min-height: 60px;
+    }
+  }
   
       </style>
 </head>
