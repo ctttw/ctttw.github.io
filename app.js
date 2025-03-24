@@ -811,6 +811,20 @@ function toggleMenu() {
     links[i].style.animation = menu.classList.contains("show") ? 
       'slideInRight 0.5s ease-out forwards' : 'none';
   }
+  
+  // 添加菜單轉場特效
+  const menuIcon = document.querySelector('.menu-icon i');
+  if (menu.classList.contains("show")) {
+    menuIcon.classList.remove('fa-bars');
+    menuIcon.classList.add('fa-times');
+    // 記錄菜單打開行為
+    logUserActivity('open_menu');
+  } else {
+    menuIcon.classList.remove('fa-times');
+    menuIcon.classList.add('fa-bars');
+    // 記錄菜單關閉行為
+    logUserActivity('close_menu');
+  }
 }
 
 function toggleDarkMode() {
