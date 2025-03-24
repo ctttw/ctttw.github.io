@@ -1342,8 +1342,15 @@
           }
           
           .fullscreen-menu {
-            width: 100%;
-            border-radius: 0;
+            width: 85%;
+            border-radius: 20px 0 0 20px;
+            padding: 30px 15px;
+          }
+
+          .fullscreen-menu a {
+            font-size: 1.1em;
+            margin: 10px 0;
+            padding: 10px 15px;
           }
 
           .rating-section h3 {
@@ -1585,41 +1592,7 @@
             font-size: 0.9rem;
           }
         }
-        
-        .invite-button-container {
-          text-align: center;
-          margin: 25px 0 20px;
-        }
-        
-        .instruction-buttons {
-          display: flex;
-          justify-content: center;
-          gap: 15px;
-          margin-bottom: 20px;
-        }
-        
-        .instruction-buttons button {
-          flex: 1;
-          max-width: 200px;
-          padding: 0.8rem 1.2rem;
-          font-size: 0.95rem;
-        }
-        
-        .invite-link {
-          display: inline-block;
-          padding: 16px 32px;
-          background: linear-gradient(45deg, var(--danger-color), var(--tertiary-color));
-          color: white;
-          text-decoration: none;
-          border-radius: 50px;
-          font-weight: 600;
-          transition: all 0.3s ease;
-          box-shadow: 0 5px 15px rgba(247, 37, 133, 0.3);
-          position: relative;
-          overflow: hidden;
-          font-size: 1.1rem;
-          animation: pulse 2s infinite;
-        }
+
       </style>
 </head>
 <body>
