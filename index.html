@@ -11,22 +11,31 @@
       <meta name="description" content="中投區會考落點分析，幫助使用者分析會考成績，提供學校落點參考。">
       <meta name="keywords" content="中投區, 會考, 落點分析, 教育, 學校,臺中一中,臺中女中,興大附中,文華高中,臺中二中,惠文高中,東山高中,長億高中,私立明道高中,私立明德高中,臺中高工,臺中家商,興大附農">
       <meta name="author" content="中投區會考落點">
+      <!-- 新增QR CODE掃描庫 -->
+      <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
       <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
         
         :root {
-        --primary-color: #e74eff;
-        --secondary-color: #4376f7;
-        --background-color: #ecf0f1;
-        --text-color: #34495e;
-        --card-background: #ffffff;
-        --shadow-color: rgba(0, 0, 0, 0.1);
-        --accent-color: #00976a;
-        --menu-background: rgba(221, 136, 232, 0.95);
+          --primary-color: #4361ee;
+          --secondary-color: #3a0ca3;
+          --tertiary-color: #7209b7;
+          --background-color: #f8f9fa;
+          --text-color: #2b2d42;
+          --card-background: #ffffff;
+          --shadow-color: rgba(0, 0, 0, 0.08);
+          --accent-color: #4cc9f0;
+          --accent-hover: #4895ef;
+          --success-color: #4caf50;
+          --danger-color: #f72585;
+          --warning-color: #fb8500;
+          --border-radius: 12px;
+          --input-border: #e0e0e0;
         }
       
         body {
-          font-family: 'Noto Sans TC', sans-serif;
+          font-family: 'Poppins', 'Noto Sans TC', sans-serif;
           background-color: var(--background-color);
           margin: 0;
           padding: 0;
@@ -35,12 +44,13 @@
           -moz-user-select: none;
           -ms-user-select: none;
           user-select: none;
+          line-height: 1.6;
         }
       
         .container {
           background: var(--card-background);
           padding: 2.5rem;
-          border-radius: 20px;
+          border-radius: var(--border-radius);
           box-shadow: 0 10px 30px var(--shadow-color);
           max-width: 800px;
           width: 90%;
@@ -48,15 +58,7 @@
           text-align: center;
           transition: all 0.3s ease;
         }
-  /* 添加單科標示相關樣式 */
-  .subject-requirements {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
-  font-size: 0.9em;
-  }
-  
+        
         .container:hover {
           transform: translateY(-5px);
           box-shadow: 0 15px 35px var(--shadow-color);
@@ -65,6 +67,7 @@
         h1, h2, h3 {
           color: var(--primary-color);
           margin-bottom: 1rem;
+          font-weight: 600;
         }
       
         h1 {
@@ -72,6 +75,10 @@
           position: relative;
           display: inline-block;
           margin-bottom: 2rem;
+          background: linear-gradient(45deg, var(--primary-color), var(--tertiary-color));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
       
         h1::after {
@@ -80,10 +87,10 @@
           bottom: -10px;
           left: 50%;
           transform: translateX(-50%);
-          width: 50%;
-          height: 3px;
-          background-color: var(--accent-color);
-          border-radius: 2px;
+          width: 100px;
+          height: 4px;
+          background: linear-gradient(90deg, var(--primary-color), var(--tertiary-color));
+          border-radius: 10px;
         }
       
         h2 {
@@ -94,19 +101,22 @@
         h3 {
           font-size: 1.5rem;
           margin-top: 1.5rem;
+          color: var(--secondary-color);
         }
       
         .form-group {
           margin-bottom: 1.5rem;
           text-align: left;
+          position: relative;
         }
       
         label {
           display: block;
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.8rem;
           font-weight: 500;
           color: var(--text-color);
           transition: color 0.3s ease;
+          font-size: 0.95rem;
         }
       
         label:hover {
@@ -115,100 +125,78 @@
       
         select, input[type="text"] {
           width: 100%;
-          padding: 0.75rem;
-          border: 2px solid #bdc3c7;
-          border-radius: 8px;
+          padding: 0.75rem 1rem;
+          border: 2px solid var(--input-border);
+          border-radius: var(--border-radius);
           font-size: 1rem;
           transition: all 0.3s ease;
-          background-color: #f9f9f9;
+          background-color: var(--background-color);
+          box-shadow: 0 2px 5px var(--shadow-color);
+          font-family: 'Poppins', 'Noto Sans TC', sans-serif;
         }
       
         select:focus, input[type="text"]:focus {
           outline: none;
           border-color: var(--primary-color);
-          box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+          box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
           background-color: #fff;
         }
       
         button {
-          background-color: var(--primary-color);
+          background: linear-gradient(45deg, var(--primary-color), var(--tertiary-color));
           color: #fff;
           border: none;
           padding: 1rem 2rem;
-          font-size: 1.1rem;
-          border-radius: 30px;
+          font-size: 1rem;
+          border-radius: 50px;
           cursor: pointer;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 6px var(--shadow-color);
+          box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+          font-weight: 600;
+          letter-spacing: 0.5px;
+          font-family: 'Poppins', 'Noto Sans TC', sans-serif;
         }
       
         button:hover {
-          background-color: #2980b9;
-          transform: translateY(-2px);
-          box-shadow: 0 6px 8px var(--shadow-color);
+          background: linear-gradient(45deg, var(--tertiary-color), var(--primary-color));
+          transform: translateY(-3px);
+          box-shadow: 0 7px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        button:active {
+          transform: translateY(1px);
         }
       
         #results, #instructions {
           margin-top: 2.5rem;
           text-align: left;
-          background: #f9f9f9;
-          padding: 1.5rem;
-          border-radius: 10px;
-          box-shadow: inset 0 2px 4px var(--shadow-color);
+          background: var(--background-color);
+          padding: 2rem;
+          border-radius: var(--border-radius);
+          box-shadow: 0 5px 15px var(--shadow-color);
           transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        #results::before, #instructions::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 5px;
+          background: linear-gradient(90deg, var(--primary-color), var(--tertiary-color), var(--accent-color));
         }
       
         #results:hover, #instructions:hover {
-          background: #f0f0f0;
-          box-shadow: inset 0 3px 6px var(--shadow-color);
+          transform: translateY(-5px);
+          box-shadow: 0 8px 25px var(--shadow-color);
         }
-      
-        .result-item, .instruction-item {
-          margin-bottom: 1rem;
-          padding: 1rem;
-          background: var(--card-background);
-          border-radius: 8px;
-          box-shadow: 0 2px 4px var(--shadow-color);
-          transition: all 0.3s ease;
-        }
-      
-        .result-item:hover, .instruction-item:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 4px 8px var(--shadow-color);
-        }
-      
-        .result-item h3, .instruction-item h3 {
-          margin-bottom: 0.5rem;
-          color: var(--primary-color);
-        }
-      
-        .instruction-toggle, .disclaimer-toggle {
-          background-color: var(--secondary-color);
-          color: #fff;
-          border: none;
-          padding: 0.5rem 1rem;
-          font-size: 1rem;
-          border-radius: 20px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          margin-bottom: 1rem;
-          margin-right: 0.5rem;
-        }
-      
-        .instruction-toggle:hover, .disclaimer-toggle:hover {
-          background-color: #27ae60;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 6px var(--shadow-color);
-        }
-      
-        .icon {
-          margin-right: 0.5rem;
-          font-size: 1.2em;
-        }
-      
-        /* 菜單樣式 */
+        
+        /* Header styling */
         .header {
-          background-color: var(--primary-color);
+          background: linear-gradient(135deg, var(--primary-color), var(--tertiary-color));
           color: white;
           padding: 15px 0;
           position: fixed;
@@ -216,7 +204,7 @@
           left: 0;
           width: 100%;
           z-index: 1000;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
         }
     
         .header-container {
@@ -237,38 +225,46 @@
     
         .header-logo i {
           margin-right: 10px;
+          font-size: 1.2em;
         }
     
         .menu-icon {
           font-size: 1.5em;
           cursor: pointer;
-          transition: color 0.3s ease;
+          transition: all 0.3s ease;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          background-color: rgba(255, 255, 255, 0.2);
         }
     
         .menu-icon:hover {
-          color: var(--accent-color);
+          background-color: rgba(255, 255, 255, 0.3);
+          transform: rotate(90deg);
         }
     
-        /* Updated Menu Styles for Enhanced Aesthetics */
+        /* Menu styling */
         .fullscreen-menu {
           position: fixed;
           top: 0;
           right: 0;
-          width: 300px; 
+          width: 320px; 
           height: 100%;
-          background: rgba(255, 255, 255, 0.2); 
+          background: rgba(255, 255, 255, 0.9); 
           backdrop-filter: blur(10px);
-          border-left: 1px solid rgba(255, 255, 255, 0.3);
-          box-shadow: -8px 0 40px rgba(0, 0, 0, 0.2);
+          box-shadow: -8px 0 30px rgba(0, 0, 0, 0.15);
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
           z-index: 2000;
           transform: translateX(100%);
-          transition: transform 0.4s ease;
-          border-top-left-radius: 20px;
-          border-bottom-left-radius: 20px;
+          transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+          border-top-left-radius: 30px;
+          border-bottom-left-radius: 30px;
           padding: 40px 20px;
         }
     
@@ -277,48 +273,67 @@
         }
     
         .fullscreen-menu a {
-          color: #000; 
+          color: var(--text-color);
           text-decoration: none;
           font-size: 1.2em;
           margin: 15px 0;
-          transition: all 0.3s ease;
+          transition: all 0.4s ease;
           position: relative;
-          padding: 10px 15px;
-          border-radius: 10px;
+          padding: 12px 20px;
+          border-radius: 50px;
+          display: flex;
+          align-items: center;
+          width: 80%;
+          font-weight: 500;
         }
     
         .fullscreen-menu a:hover {
-          background: rgba(255, 255, 255, 0.3); 
-          color: var(--accent-color);
-          transform: scale(1.05);
+          background: linear-gradient(135deg, var(--primary-color), var(--tertiary-color));
+          color: white;
+          transform: translateX(10px);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-    
-        .fullscreen-menu a::after {
-          display: none;
+        
+        .fullscreen-menu a i {
+          margin-right: 15px;
+          font-size: 1.3em;
+          transition: transform 0.3s ease;
+        }
+        
+        .fullscreen-menu a:hover i {
+          transform: translateX(5px);
         }
     
         .close-menu {
           position: absolute;
           top: 20px;
           right: 20px; 
-          font-size: 1.8em;
-          color: #000; 
+          font-size: 2em;
+          color: var(--text-color);
           cursor: pointer;
-          transition: color 0.3s ease, transform 0.3s ease;
+          transition: all 0.4s ease;
+          width: 50px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          background-color: rgba(0, 0, 0, 0.05);
         }
     
         .close-menu:hover {
-          color: var(--accent-color);
-          transform: rotate(90deg);
+          background-color: var(--danger-color);
+          color: white;
+          transform: rotate(180deg);
         }
-    
-    
+        
+        /* QR Code options */
         .qr-options {
           display: flex;
           justify-content: center;
           flex-wrap: wrap;
           gap: 15px;
-          margin-bottom: 30px;
+          margin: 25px 0;
         }
     
         #fileInput {
@@ -326,18 +341,18 @@
         }
     
         .file-input-label, #scanQRCode {
-          background-color: var(--secondary-color);
+          background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
           color: #fff;
-          padding: 12px 24px;
-          border-radius: 30px;
+          padding: 14px 24px;
+          border-radius: 50px;
           cursor: pointer;
           transition: all 0.3s ease;
           text-align: center;
           flex: 1;
           min-width: 200px;
-          font-weight: 500;
+          font-weight: 600;
           border: none;
-          box-shadow: 0 4px 6px var(--shadow-color);
+          box-shadow: 0 4px 15px rgba(76, 201, 240, 0.3);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -346,111 +361,231 @@
         }
     
         .file-input-label:hover, #scanQRCode:hover {
-          background-color: #27ae60;
-          transform: translateY(-2px);
-          box-shadow: 0 6px 8px var(--shadow-color);
+          background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+          transform: translateY(-3px);
+          box-shadow: 0 7px 20px rgba(76, 201, 240, 0.4);
+        }
+        
+        .file-input-label:active, #scanQRCode:active {
+          transform: translateY(1px);
         }
     
         #qr-result {
           margin-top: 20px;
-          font-weight: bold;
+          font-weight: 600;
           color: var(--primary-color);
           text-align: center;
-          padding: 10px;
-          background-color: var(--card-background);
-          border-radius: 5px;
-          box-shadow: 0 2px 4px var(--shadow-color);
+          padding: 15px;
+          background-color: rgba(76, 201, 240, 0.1);
+          border-radius: var(--border-radius);
+          box-shadow: 0 3px 10px var(--shadow-color);
         }
     
         #qr-reader {
           margin-top: 20px;
           text-align: center;
+          border-radius: var(--border-radius);
+          overflow: hidden;
+          box-shadow: 0 5px 20px var(--shadow-color);
         }
     
         .invite-link {
           display: inline-block;
           margin: 20px 0;
           padding: 15px 30px;
-          background-color: var(--accent-color);
+          background: linear-gradient(45deg, var(--danger-color), var(--tertiary-color));
           color: white;
           text-decoration: none;
-          border-radius: 30px;
-          font-weight: bold;
+          border-radius: 50px;
+          font-weight: 600;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 5px 15px rgba(247, 37, 133, 0.3);
+          position: relative;
+          overflow: hidden;
         }
     
         .invite-link:hover {
-          background-color: #c0392b;
-          transform: translateY(-2px);
-          box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+          transform: translateY(-3px);
+          box-shadow: 0 8px 20px rgba(247, 37, 133, 0.4);
+        }
+        
+        .invite-link:active {
+          transform: translateY(1px);
         }
     
         .invite-link .icon {
           margin-right: 10px;
         }
+        
+        .invite-link::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+          transition: all 0.6s;
+        }
+        
+        .invite-link:hover::before {
+          left: 100%;
+        }
     
-        /* 修改底部版權聲明樣式 */
+        /* Footer styling */
         .copyright {
-          background-color: var(--primary-color);
+          background: linear-gradient(135deg, var(--primary-color), var(--tertiary-color));
           color: white;
           text-align: center;
-          padding: 1rem;
+          padding: 1.5rem;
           margin-top: 2rem;
           font-size: 0.9rem;
+          border-radius: var(--border-radius);
+          box-shadow: 0 -5px 20px var(--shadow-color);
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .copyright::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(45deg, transparent 25%, rgba(255, 255, 255, 0.05) 50%, transparent 75%);
+          background-size: 250% 250%;
+          animation: shine 3s infinite linear;
         }
     
         .copyright p {
           margin: 0.5rem 0;
+          position: relative;
         }
-    
-        /* Animations */
+        
+        @keyframes shine {
+          0% { background-position: 0% 0%; }
+          100% { background-position: 100% 100%; }
+        }
+
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--tertiary-color));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+            outline: none;
+        }
+  
+        .dark-mode-toggle:hover {
+            transform: scale(1.1) rotate(360deg);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.5);
+        }
+  
+        .dark-mode-toggle:active {
+            transform: scale(0.95);
+        }
+  
+        .dark-mode-toggle i {
+            transition: all 0.4s ease;
+        }
+  
+        /* Improved animations */
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
         }
       
-        @keyframes slideIn {
-          from { transform: translateY(20px); opacity: 0; }
+        @keyframes slideInUp {
+          from { transform: translateY(30px); opacity: 0; }
           to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideInLeft {
+          from { transform: translateX(-30px); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideInRight {
+          from { transform: translateX(30px); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
         }
       
         .container {
-          animation: fadeIn 0.5s ease-out;
+          animation: fadeIn 0.6s ease-out, slideInUp 0.6s ease-out;
         }
         
-        .form-group, .result-item, .instruction-item {
-          animation: slideIn 0.5s ease-out;
+        .form-group {
+          animation: slideInLeft 0.5s ease-out both;
         }
-     /* 新增過渡動畫 */
-     @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+        
+        .form-group:nth-child(odd) {
+          animation: slideInRight 0.5s ease-out both;
         }
-    
-        @keyframes slideIn {
-          from { transform: translateY(-20px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
+        
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
+        .form-group:nth-child(7) { animation-delay: 0.7s; }
+        .form-group:nth-child(8) { animation-delay: 0.8s; }
+        
+        /* Dark mode styling */
+        body.dark-mode {
+            --background-color: #121212;
+            --text-color: #e0e0e0;
+            --card-background: #1e1e1e;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --input-border: #333;
+            --primary-color: #90e0ef;
+            --secondary-color: #48cae4;
+            --tertiary-color: #00b4d8;
+            --accent-color: #0077b6;
+            --accent-hover: #90e0ef;
         }
-    
-        .container {
-          animation: fadeIn 0.5s ease-out;
+        
+        body.dark-mode .fullscreen-menu {
+          background: rgba(30, 30, 30, 0.9);
         }
-    
-        .form-group, .instruction-toggle, .disclaimer-toggle {
-          animation: slideIn 0.5s ease-out;
+        
+        body.dark-mode .fullscreen-menu a {
+          color: #e0e0e0;
         }
-    
-        .fullscreen-menu a {
-          animation: slideIn 0.5s ease-out;
-          animation-fill-mode: backwards;
+        
+        body.dark-mode .fullscreen-menu a:hover {
+          background: linear-gradient(135deg, var(--primary-color), var(--tertiary-color));
+          color: #121212;
         }
-    
-        .fullscreen-menu a:nth-child(1) { animation-delay: 0.1s; }
-        .fullscreen-menu a:nth-child(2) { animation-delay: 0.2s; }
-        .fullscreen-menu a:nth-child(3) { animation-delay: 0.3s; }
-        .fullscreen-menu a:nth-child(4) { animation-delay: 0.4s; }
-        /* Modal styles */
+        
+        body.dark-mode .close-menu {
+          color: #e0e0e0;
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        body.dark-mode #qr-result {
+          background-color: rgba(0, 119, 182, 0.2);
+        }
+        
+        body.dark-mode .copyright::before {
+          background: linear-gradient(45deg, transparent 25%, rgba(255, 255, 255, 0.05) 50%, transparent 75%);
+        }
+
+        /* Modal styling */
         .modal {
           display: none;
           position: fixed;
@@ -460,963 +595,1098 @@
           width: 100%;
           height: 100%;
           overflow: auto;
-          background-color: rgba(0,0,0,0.4);
+          background-color: rgba(0,0,0,0.6);
+          backdrop-filter: blur(5px);
+          opacity: 0;
+          transition: opacity 0.4s ease;
+        }
+        
+        .modal.show {
+          opacity: 1;
         }
       
         .modal-content {
-          background-color: #fefefe;
-          margin: 15% auto;
-          padding: 20px;
-          border: 1px solid #888;
+          background: var(--card-background);
+          margin: 10% auto;
+          padding: 30px;
+          border-radius: var(--border-radius);
           width: 80%;
           max-width: 600px;
-          border-radius: 10px;
-          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          box-shadow: 0 10px 40px rgba(0,0,0,0.2);
           position: relative;
+          transform: scale(0.9);
+          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          opacity: 0;
+        }
+        
+        .modal.show .modal-content {
+          transform: scale(1);
+          opacity: 1;
         }
       
         .close {
-          color: #aaa;
-          float: right;
-          font-size: 28px;
-          font-weight: bold;
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          width: 40px;
+          height: 40px;
+          background: rgba(0,0,0,0.05);
+          color: var(--text-color);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          font-size: 1.5rem;
           cursor: pointer;
+          transition: all 0.3s ease;
         }
       
-        .close:hover,
-        .close:focus {
-          color: #000;
-          text-decoration: none;
-          cursor: pointer;
+        .close:hover {
+          background: var(--danger-color);
+          color: white;
+          transform: rotate(90deg);
         }
       
         .confirm-button {
-          background-color: var(--primary-color);
+          background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
           color: white;
           border: none;
-          padding: 10px 20px;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 16px;
-          margin: 4px 2px;
-          cursor: pointer;
-          border-radius: 5px;
-          transition: background-color 0.3s ease;
-        }
-      
-        .confirm-button:hover {
-          background-color: #2980b9;
-        }
-  
-        /* 深色模式樣式 */
-        body.dark-mode {
-            --background-color: #121212;
-            --text-color: #e0e0e0;
-            --card-background: #1e1e1e;
-            --shadow-color: rgba(0, 0, 0, 0.7);
-            --primary-color: #bb86fc;
-            --secondary-color: #03dac6;
-            --accent-color: #03dac6;
-        }
-  
-        /* 深色模式切換按鈕樣式 */
-        .dark-mode-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            font-size: 1.5em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            outline: none;
-        }
-  
-        .dark-mode-toggle:hover {
-            background-color: var(--secondary-color);
-            transform: scale(1.1) rotate(360deg);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-  
-        .dark-mode-toggle:active {
-            transform: scale(0.95);
-        }
-  
-        .dark-mode-toggle i {
-            transition: all 0.3s ease;
-        }
-  
-        body.dark-mode .dark-mode-toggle {
-            background-color: var(--accent-color);
-        }
-  
-        body.dark-mode .dark-mode-toggle:hover {
-            background-color: var(--secondary-color);
-        }
-  
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-  
-        .dark-mode-toggle {
-            animation: float 4s ease-in-out infinite;
-        }
-  
-        @media (max-width: 768px) {
-            .dark-mode-toggle {
-                width: 45px;
-                height: 45px;
-                font-size: 1.2em;
-                bottom: 10px;
-                right: 10px;
-            }
-        }
-  
-        /* 深色模式樣式 */
-        body.dark-mode .modal-content {
-          background-color: #1e1e1e;
-          color: #e0e0e0;
-          border-color: #333;
-        }
-  
-        body.dark-mode .close {
-          color: #e0e0e0;
-        }
-        body.dark-mode .close:hover,
-        body.dark-mode .close:focus {
-          color: #aaa;
-        }
-  
-        body.dark-mode .confirm-button {
-          background-color: #6200ee;
-        }
-        body.dark-mode .confirm-button:hover {
-          background-color: #3700b3;
-          box-shadow: 0 10px 25px rgba(55, 0, 179, 0.4);
-        }
-  
-        body.dark-mode .loading-spinner {
-          background: #242424;
-        }
-  
-        /* 增強美觀的免責聲明樣式 */
-        #disclaimerModal .modal-content {
-          background-color: #ffffff;
-          border-radius: 30px;
-          padding: 50px;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-          max-width: 700px;
-          margin: auto;
-          position: relative;
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-  
-        #disclaimerModal h2 {
-          color: #2c3e50;
-          font-size: 32px;
-          margin-bottom: 30px;
-          border-bottom: 4px solid #3498db;
-          padding-bottom: 20px;
-          text-align: center;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-transform: uppercase;
-          letter-spacing: 2px;
-        }
-  
-        #disclaimerModal .icon {
-          color: #3498db;
-          margin-right: 15px;
-          font-size: 28px;
-        }
-  
-        #disclaimerModal a {
-          color: #2980b9;
-          text-decoration: none;
-          transition: all 0.4s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 25px;
-          padding: 20px;
-          background-color: #ecf0f1;
-          border-radius: 15px;
-          font-weight: bold;
-          font-size: 18px;
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-  
-        #disclaimerModal a:hover {
-          color: #ffffff;
-          background-color: #3498db;
-          transform: translateY(-5px) scale(1.02);
-          box-shadow: 0 10px 25px rgba(52, 152, 219, 0.4);
-        }
-  
-        #disclaimerModal p {
-          color: #34495e;
-          line-height: 2;
-          margin-bottom: 25px;
-          font-size: 18px;
-          display: flex;
-          align-items: flex-start;
-          text-align: justify;
-        }
-  
-        #disclaimerModal p .icon {
-          margin-right: 15px;
-          font-size: 22px;
-          margin-top: 5px;
-        }
-  
-        #disclaimerModal ul {
-          list-style-type: none;
-          padding-left: 0;
-        }
-  
-        #disclaimerModal li {
-          margin-bottom: 20px;
-          position: relative;
-          padding-left: 40px;
-          font-size: 18px;
-          display: flex;
-          align-items: center;
-          color: #34495e;
-        }
-  
-        #disclaimerModal li:before {
-          content: "\f058";
-          font-family: "Font Awesome 5 Free";
-          font-weight: 900;
-          position: absolute;
-          left: 0;
-          color: #2ecc71;
-          font-size: 22px;
-        }
-  
-        #disclaimerModal .confirm-button {
-          background-color: #2ecc71;
-          color: white;
-          border: none;
-          padding: 15px 30px;
+          padding: 12px 25px;
           border-radius: 50px;
           cursor: pointer;
-          transition: all 0.4s ease;
-          font-weight: bold;
-          font-size: 18px;
-          margin-top: 30px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          transition: all 0.3s ease;
+          font-weight: 600;
+          display: block;
           width: 100%;
-          text-align: center;
+          margin-top: 20px;
+          font-size: 1rem;
           text-transform: uppercase;
           letter-spacing: 1px;
         }
-  
-        #disclaimerModal .confirm-button:hover {
-          background-color: #27ae60;
-          transform: translateY(-5px) scale(1.02);
-          box-shadow: 0 10px 25px rgba(46, 204, 113, 0.4);
+      
+        .confirm-button:hover {
+          background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+          transform: translateY(-3px);
+          box-shadow: 0 7px 20px rgba(76, 201, 240, 0.3);
         }
-  
-        #disclaimerModal .close {
-          position: absolute;
-          right: 25px;
-          top: 25px;
-          color: #7f8c8d;
-          font-size: 28px;
-          transition: all 0.4s ease;
-          background: none;
-          border: none;
-          cursor: pointer;
+        
+        .confirm-button:active {
+          transform: translateY(1px);
         }
-  
-        #disclaimerModal .close:hover {
-          color: #34495e;
-          transform: rotate(90deg) scale(1.2);
-        }
-  
-        /* 深色模式樣式 */
-        body.dark-mode #disclaimerModal .modal-content {
-          background-color: #1e1e1e;
-          color: #e0e0e0;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-  
-        body.dark-mode #disclaimerModal h2 {
-          color: #bb86fc;
-          border-bottom-color: #bb86fc;
-        }
-  
-        body.dark-mode #disclaimerModal a {
-          color: #03dac6;
-          background-color: #1e1e1e;
-        }
-  
-        body.dark-mode #disclaimerModal a:hover {
-          color: #02c8b6;
-          background-color: #242424;
-        }
-  
-        body.dark-mode #disclaimerModal p,
-        body.dark-mode #disclaimerModal li {
-          color: #e0e0e0;
-        }
-  
-        body.dark-mode #disclaimerModal .confirm-button {
-          background-color: #6200ee;
-        }
-  
-        body.dark-mode #disclaimerModal .confirm-button:hover {
-          background-color: #3700b3;
-          box-shadow: 0 10px 25px rgba(55, 0, 179, 0.4);
-        }
-  
-        body.dark-mode #disclaimerModal .close {
-          color: #e0e0e0;
-        }
-  
-        body.dark-mode #disclaimerModal .close:hover {
-          color: #aaa;
-        }
-  
-        /* 添加動畫效果 */
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-  
-        @keyframes scaleIn {
-          from { transform: scale(0.9); opacity: 0; }
-          to { transform: scale(1); opacity: 1; }
-        }
-  
-        #disclaimerModal .modal-content {
-          animation: scaleIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-        }
-  
-        #disclaimerModal h2,
-        #disclaimerModal a,
-        #disclaimerModal p,
-        #disclaimerModal ul,
-        #disclaimerModal .confirm-button {
-          opacity: 0;
-          animation: fadeInUp 0.5s ease-out forwards;
-        }
-  
-        #disclaimerModal h2 { animation-delay: 0.1s; }
-        #disclaimerModal a { animation-delay: 0.2s; }
-        #disclaimerModal p { animation-delay: 0.3s; }
-        #disclaimerModal ul { animation-delay: 0.4s; }
-        #disclaimerModal .confirm-button { animation-delay: 0.5s; }
-  
-        #disclaimerModal li {
-          opacity: 0;
-          animation: fadeInUp 0.5s ease-out forwards;
-        }
-  
-        #disclaimerModal li:nth-child(1) { animation-delay: 0.5s; }
-        #disclaimerModal li:nth-child(2) { animation-delay: 0.6s; }
-        #disclaimerModal li:nth-child(3) { animation-delay: 0.7s; }
-        #disclaimerModal li:nth-child(4) { animation-delay: 0.8s; }
-  
-  
-  
-  
-  /* Loading animation styles */
-  .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.7);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    backdrop-filter: blur(5px);
-  }
-  
-  .loading-spinner {
-    width: 250px;
-    height: auto;
-    padding: 25px;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  }
-  
-  body.dark-mode .loading-spinner {
-    background: #242424;
-  }
-  
-  .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite, pulse 1.5s ease-in-out infinite;
-    margin-bottom: 15px;
-  }
-  
-  .loading-text {
-    color: var(--text-color);
-    font-size: 16px;
-    text-align: center;
-    font-weight: 500;
-    margin-bottom: 15px;
-  }
-  
-  .progress-bar {
-    width: 100%;
-    height: 8px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-  
-  .progress-fill {
-    height: 100%;
-    width: 0;
-    background: linear-gradient(to right, var(--primary-color), var(--accent-color));
-    border-radius: 4px;
-    transition: width 0.7s ease;
-  }
-  
-  .loading-status {
-    font-size: 14px;
-    color: var(--accent-color);
-    text-align: center;
-    min-height: 20px;
-    font-weight: bold;
-  }
-  
-  @keyframes pulse {
-    0% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.1) rotate(180deg); }
-    100% { transform: scale(1) rotate(360deg); }
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  /* Enhanced results animation */
-  .school-group li {
-    font-size: 1rem;
-    padding: 8px;
-    margin-bottom: 5px;
-    background: var(--background-color);
-    border-radius: 5px;
-    box-shadow: 0 2px 4px var(--shadow-color);
-    display: flex;
-    align-items: center;
-    opacity: 0;
-    animation: fadeInUp 0.5s ease-out forwards;
-    transform: translateY(10px);
-  }
-  
-  .result-card {
-    animation: zoomIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    opacity: 0;
-  }
-  
-  .result-card:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  
-  .result-card:nth-child(2) {
-    animation-delay: 0.3s;
-  }
-  
-  @keyframes zoomIn {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
-  
-  /* ... existing code ... */
-        /* 分析結果美化 CSS */
-  .analysis-results {
-    background: linear-gradient(135deg, #ffffff, #f7f7f7);
-    border-radius: 20px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-    padding: 30px;
-    margin-top: 20px;
-    animation: zoomIn 0.7s ease-out;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .analysis-results:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-  }
-  
-  .result-header h2 {
-    margin: 0;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--accent-color);
-    text-align: center;
-    font-size: 2.2rem;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-  }
-  
-  .result-decorator {
-    margin: 0 auto 15px;
-    display: block;
-    animation: pulseSlow 3s ease-in-out infinite;
-  }
-  
-  @keyframes pulseSlow {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-  }
-  
-  .result-summary {
-    display: flex;
-    justify-content: space-around;
-    margin: 20px 0;
-    flex-wrap: wrap;
-  }
-  
-  .result-card {
-    background: linear-gradient(135deg, #ffffff, #f0f0f0);
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin: 10px;
-    flex: 1 1 200px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .result-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  }
-  
-  .result-card .icon {
-    font-size: 1.8rem;
-    margin-bottom: 10px;
-    color: var(--primary-color);
-  }
-  
-  .result-value {
-    font-size: 2rem;
-    font-weight: bold;
-    color: var(--text-color);
-  }
-  
-  .result-label {
-    font-size: 1rem;
-    color: var(--secondary-color);
-  }
-  
-  .result-schools h3 {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 1.8rem;
-    border-bottom: 1px solid var(--accent-color);
-    padding-bottom: 10px;
-  }
-  
-  .school-group {
-    margin: 15px 0;
-  }
-  
-  .school-group h4 {
-    font-size: 1.4rem;
-    color: var(--primary-color);
-    margin-bottom: 10px;
-  }
-  
-  .school-group ul {
-    list-style: none;
-    padding-left: 0;
-  }
-  
-  .school-group li {
-    font-size: 1rem;
-    padding: 8px;
-    margin-bottom: 5px;
-    background: linear-gradient(135deg, #ffffff, #f7f7f7);
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-    transition: background 0.3s ease;
-  }
-  
-  .school-group li:hover {
-    background: linear-gradient(135deg, #f0f0f0, #e9e9e9);
-  }
-  
-  .school-group li .icon {
-    margin-right: 8px;
-    color: var(--accent-color);
-  }
-  
-  .no-schools {
-    text-align: center;
-    font-size: 1.2rem;
-    padding: 20px;
-    background: linear-gradient(135deg, #ffffff, #f7f7f7);
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    color: var(--text-color);
-  }
-        /* 新增匯出格式按鈕樣式 */
-  .export-format-button {
-    background-color: var(--primary-color);
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    margin: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  .export-format-button:hover {
-    background-color: #2980b9;
-    transform: translateY(-2px);
-  }
-        /* 列印按鈕樣式 */
-  .print-button {
-    background-color: var(--accent-color);
-    margin-top: 15px;
-    width: 100%;
-  }
-  
-  .print-button:hover {
-    background-color: #007755;
-  }
-  
-  @media print {
-    .container, .header, .fullscreen-menu, #exportModal, .dark-mode-toggle {
-      display: none !important;
-    }
-  }
-        /* Mobile Responsive Styles */
-        @media (max-width: 768px) {
-          .container {
-            width: 95%;
-            padding: 1rem;
-            margin: 60px auto 20px;
-          }
-          
-          /* Improved mobile layout for form elements */
-          .form-group {
-            margin-bottom: 0.8rem;
-          }
-          
-          select, input[type="text"] {
-            padding: 0.5rem;
-            font-size: 0.9rem;
-            width: 100%;
-            box-sizing: border-box;
-          }
-          
-          /* Reduce button padding */
-          button, .qr-options button, .file-input-label {
-            padding: 0.7rem 1rem;
-            width: 100%;
-          }
-          
-          /* Adjust results display for mobile */
-          .result-card {
-            flex: 1 1 100%;
-            margin: 5px 0;
-            padding: 10px;
-          }
-          
-          /* Tighten up modal content */
-          .modal-content {
-            width: 90%;
-            margin: 10% auto;
-            padding: 15px;
-          }
-          #disclaimerModal .modal-content {
-            width: 85%;
-            max-height: 80vh;
-            margin: 5% auto;
-            padding: 1.2rem;
-            overflow-y: auto;
-            font-size: 0.9rem;
-          }
-          #disclaimerModal h2 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-          }
-          #disclaimerModal a {
-            padding: 0.8rem;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-          }
-          #disclaimerModal p {
-            font-size: 0.85rem;
-            margin-bottom: 0.8rem;
-            line-height: 1.5;
-          }
-          #disclaimerModal ul {
-            margin-bottom: 0.8rem;
-          }
-          #disclaimerModal li {
-            font-size: 0.85rem;
-            margin-bottom: 0.5rem;
-            padding-left: 1.5rem;
-          }
-          #disclaimerModal li:before {
-            font-size: 1rem;
-          }
-          #disclaimerModal .icon {
-            font-size: 1rem;
-          }
-          #disclaimerModal .confirm-button {
-            padding: 0.8rem;
-            font-size: 0.9rem;
-            margin-top: 1rem;
-          }
-        }
-
-        @media (max-width: 480px) {
-          #disclaimerModal .modal-content {
-            width: 90%;
-            padding: 0.8rem;
-            margin: 5% auto;
-          }
-          #disclaimerModal h2 {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-          }
-          #disclaimerModal p, #disclaimerModal li {
-            font-size: 0.8rem;
-            margin-bottom: 0.6rem;
-          }
-          #disclaimerModal li {
-            padding-left: 1.2rem;
-          }
-          #disclaimerModal li:before {
-            font-size: 0.9rem;
-          }
-          #disclaimerModal .confirm-button {
-            font-size: 0.85rem;
-            padding: 0.7rem;
-          }
-          #disclaimerModal a {
-            font-size: 0.8rem;
-            padding: 0.6rem;
-          }
-        }
-        /* Additional styles for detailed analysis results */
-        .detailed-scores {
+        
+        /* Analysis results styling */
+        .analysis-results {
+          background: var(--card-background);
+          border-radius: var(--border-radius);
+          box-shadow: 0 15px 40px var(--shadow-color);
+          padding: 30px;
           margin-top: 20px;
+          animation: slideInUp 0.7s ease-out;
+          transition: transform 0.4s ease, box-shadow 0.4s ease;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .analysis-results::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 5px;
+          background: linear-gradient(90deg, var(--primary-color), var(--tertiary-color), var(--accent-color));
+        }
+      
+        .analysis-results:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 50px var(--shadow-color);
+        }
+      
+        .result-header {
           text-align: center;
+          margin-bottom: 25px;
+          position: relative;
+        }
+        
+        .result-header h2 {
+          margin: 0;
+          font-size: 2rem;
+          background: linear-gradient(45deg, var(--primary-color), var(--tertiary-color));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        
+        .result-header::after {
+          content: '';
+          display: block;
+          width: 80px;
+          height: 4px;
+          background: linear-gradient(90deg, var(--primary-color), var(--tertiary-color));
+          margin: 15px auto 0;
+          border-radius: 2px;
+        }
+      
+        .result-decorator {
+          margin: 0 auto 15px;
+          display: block;
+        }
+      
+        .result-summary {
+          display: flex;
+          justify-content: center;
+          margin: 30px 0;
+          flex-wrap: wrap;
+          gap: 20px;
+        }
+      
+        .result-card {
+          background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+          border-radius: var(--border-radius);
+          padding: 25px;
+          box-shadow: 0 8px 25px var(--shadow-color);
+          text-align: center;
+          flex: 1 1 200px;
+          max-width: 250px;
+          transition: all 0.4s ease;
+          position: relative;
+          backdrop-filter: blur(5px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          overflow: hidden;
+        }
+        
+        .result-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+          transform: translateX(-100%);
+          transition: transform 0.6s ease;
+        }
+        
+        .result-card:hover::before {
+          transform: translateX(100%);
+        }
+      
+        .result-card:hover {
+          transform: translateY(-8px) scale(1.03);
+          box-shadow: 0 15px 35px var(--shadow-color);
+        }
+      
+        .result-card .icon {
+          font-size: 2rem;
+          margin-bottom: 15px;
+          color: var(--primary-color);
+          background: rgba(67, 97, 238, 0.1);
+          width: 60px;
+          height: 60px;
+          line-height: 60px;
+          border-radius: 50%;
+          display: inline-block;
+        }
+      
+        .result-value {
+          font-size: 2.5rem;
+          font-weight: 700;
+          color: var(--primary-color);
+          margin: 10px 0;
+          background: linear-gradient(45deg, var(--primary-color), var(--tertiary-color));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+      
+        .result-label {
+          font-size: 1rem;
+          color: var(--text-color);
+          font-weight: 500;
+        }
+      
+        .result-schools h3 {
+          text-align: center;
+          margin: 30px 0 20px;
+          font-size: 1.8rem;
+          color: var(--primary-color);
+          position: relative;
+          display: inline-block;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        
+        .result-schools h3::after {
+          content: '';
+          display: block;
+          width: 50px;
+          height: 3px;
+          background: var(--accent-color);
+          margin: 10px auto 0;
+          border-radius: 2px;
+        }
+      
+        .school-group {
+          margin: 20px 0;
+          animation: fadeIn 0.5s ease-out;
+        }
+      
+        .school-group h4 {
+          font-size: 1.4rem;
+          color: var(--secondary-color);
+          margin-bottom: 15px;
+          padding-left: 15px;
+          border-left: 4px solid var(--accent-color);
+        }
+      
+        .school-group ul {
+          list-style: none;
+          padding-left: 0;
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 10px;
+        }
+      
+        .school-group li {
+          font-size: 1rem;
+          padding: 12px 15px;
+          margin-bottom: 5px;
+          background: var(--card-background);
+          border-radius: var(--border-radius);
+          box-shadow: 0 4px 10px var(--shadow-color);
+          display: flex;
+          align-items: center;
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+          border-left: 3px solid transparent;
+        }
+      
+        .school-group li:hover {
+          transform: translateX(5px);
+          border-left-color: var(--accent-color);
+          box-shadow: 0 6px 15px var(--shadow-color);
+        }
+      
+        .school-group li .icon {
+          margin-right: 10px;
+          color: var(--accent-color);
+          font-size: 1.1rem;
+        }
+      
+        .no-schools {
+          text-align: center;
+          font-size: 1.2rem;
+          padding: 25px;
+          background: var(--card-background);
+          border-radius: var(--border-radius);
+          box-shadow: 0 8px 20px var(--shadow-color);
+          color: var(--text-color);
+          margin: 30px 0;
+          border: 1px dashed var(--accent-color);
+        }
+        
+        .no-schools .icon {
+          font-size: 2rem;
+          color: var(--warning-color);
+          margin-bottom: 10px;
+          display: block;
+        }
+        
+        /* Detailed scores table */
+        .detailed-scores {
+          margin: 30px 0;
+          background: var(--background-color);
+          padding: 20px;
+          border-radius: var(--border-radius);
+          box-shadow: 0 5px 15px var(--shadow-color);
+        }
+        
+        .detailed-scores h3 {
+          text-align: center;
+          margin-top: 0;
+          margin-bottom: 15px;
+          font-size: 1.5rem;
+          color: var(--primary-color);
         }
         
         .scores-table {
           width: 100%;
-          border-collapse: collapse;
-          margin: 10px auto;
+          border-collapse: separate;
+          border-spacing: 0;
+          margin: 15px auto;
+          overflow: hidden;
+          border-radius: var(--border-radius);
+          box-shadow: 0 3px 10px var(--shadow-color);
         }
         
         .scores-table th, .scores-table td {
-          border: 1px solid var(--shadow-color);
-          padding: 10px;
+          padding: 12px 15px;
           text-align: center;
+          border-bottom: 1px solid var(--input-border);
         }
         
         .scores-table th {
-          background-color: var(--primary-color);
+          background: linear-gradient(45deg, var(--primary-color), var(--tertiary-color));
           color: white;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+          position: relative;
         }
         
-        /* Dark mode overrides for analysis results */
-        body.dark-mode .analysis-results {
-          background: linear-gradient(135deg, var(--card-background), #2c2c2c);
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+        .scores-table th:first-child {
+          border-top-left-radius: var(--border-radius);
         }
-        body.dark-mode .result-card {
-          background: linear-gradient(135deg, var(--card-background), #2c2c2c);
+        
+        .scores-table th:last-child {
+          border-top-right-radius: var(--border-radius);
         }
-        body.dark-mode .school-group li {
-          background: linear-gradient(135deg, var(--card-background), #2c2c2c);
+        
+        .scores-table tr:last-child td:first-child {
+          border-bottom-left-radius: var(--border-radius);
         }
-        body.dark-mode .school-group li:hover {
-          background: linear-gradient(135deg, #2c2c2c, #3a3a3a);
+        
+        .scores-table tr:last-child td:last-child {
+          border-bottom-right-radius: var(--border-radius);
         }
-        body.dark-mode .no-schools {
+        
+        .scores-table tr:nth-child(even) {
+          background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .scores-table tr:hover td {
+          background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        /* Star rating styling */
+        .rating-section {
+          margin-top: 40px;
+          padding: 30px;
           background: var(--card-background);
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+          border-radius: var(--border-radius);
+          box-shadow: 0 8px 30px var(--shadow-color);
+          text-align: center;
+          animation: fadeIn 0.8s ease-out;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .rating-section::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 5px;
+          height: 100%;
+          background: linear-gradient(to bottom, var(--primary-color), var(--tertiary-color));
+        }
+      
+        .rating-section h3 {
+          color: var(--primary-color);
+          margin-bottom: 15px;
+          font-size: 1.6rem;
+        }
+      
+        .star-rating {
+          display: flex;
+          flex-direction: row-reverse;
+          justify-content: center;
+          margin: 20px 0;
+        }
+      
+        .star-rating input {
+          display: none;
+        }
+      
+        .star-rating label {
+          color: #ddd;
+          font-size: 40px;
+          padding: 0 5px;
+          cursor: pointer;
+          transition: all 0.4s ease;
+        }
+      
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+          color: var(--warning-color);
+          transform: scale(1.2) rotate(5deg);
+          text-shadow: 0 0 10px rgba(251, 133, 0, 0.5);
+        }
+      
+        .feedback-container {
+          margin-top: 20px;
+        }
+      
+        .feedback-container textarea {
+          width: 100%;
+          padding: 15px;
+          border: 2px solid var(--input-border);
+          border-radius: var(--border-radius);
+          margin-bottom: 15px;
+          min-height: 100px;
+          resize: vertical;
+          font-family: inherit;
+          background-color: var(--background-color);
+          color: var(--text-color);
+          transition: all 0.3s ease;
+          box-shadow: 0 3px 10px var(--shadow-color);
+        }
+        
+        .feedback-container textarea:focus {
+          border-color: var(--primary-color);
+          box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+          outline: none;
+        }
+      
+        .feedback-container button {
+          background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+          color: white;
+          border: none;
+          padding: 12px 25px;
+          border-radius: 50px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-weight: 600;
+          margin-top: 10px;
+          box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+      
+        .feedback-container button:hover {
+          background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+          transform: translateY(-3px);
+          box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        .feedback-container button:active {
+          transform: translateY(1px);
+        }
+      
+        .rating-thanks {
+          padding: 30px;
+          text-align: center;
+          animation: fadeIn 0.5s ease-out;
+        }
+      
+        .rating-thanks .icon {
+          font-size: 60px;
+          color: var(--danger-color);
+          display: block;
+          margin: 0 auto 20px;
+          animation: pulse 1.5s infinite;
+        }
+        
+        /* Export buttons styling */
+        #exportResults {
+          margin-top: 15px;
+          background: linear-gradient(45deg, var(--success-color), var(--accent-color));
+        }
+        
+        #exportResults:hover {
+          background: linear-gradient(45deg, var(--accent-color), var(--success-color));
+        }
+        
+        .export-format-button {
+          background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+          color: white;
+          border: none;
+          padding: 12px 25px;
+          margin: 10px;
+          border-radius: 50px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-weight: 600;
+          box-shadow: 0 5px 15px var(--shadow-color);
+          width: calc(50% - 20px);
+        }
+        
+        .export-format-button:hover {
+          background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+          transform: translateY(-3px);
+          box-shadow: 0 8px 20px var(--shadow-color);
+        }
+        
+        .print-button {
+          background: linear-gradient(45deg, var(--success-color), var(--accent-color));
+          margin-top: 15px;
+          width: calc(100% - 20px);
+        }
+        
+        .print-button:hover {
+          background: linear-gradient(45deg, var(--accent-color), var(--success-color));
+        }
+        
+        /* Loading animation styling */
+        .loading-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0,0,0,0.7);
+          display: none;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+          backdrop-filter: blur(5px);
+        }
+        
+        .loading-spinner {
+          width: 280px;
+          height: auto;
+          padding: 30px;
+          background: var(--card-background);
+          border-radius: var(--border-radius);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .loading-spinner::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 5px;
+          background: linear-gradient(90deg, var(--primary-color), var(--tertiary-color), var(--accent-color));
+          background-size: 200% 100%;
+          animation: gradientMove 2s linear infinite;
+        }
+        
+        @keyframes gradientMove {
+          0% { background-position: 0% 0%; }
+          100% { background-position: 200% 0%; }
+        }
+        
+        .spinner {
+          width: 60px;
+          height: 60px;
+          border: 4px solid rgba(67, 97, 238, 0.1);
+          border-top: 4px solid var(--primary-color);
+          border-radius: 50%;
+          animation: spin 1s linear infinite, pulse 1.5s ease-in-out infinite;
+          margin-bottom: 20px;
+        }
+        
+        .loading-text {
+          color: var(--text-color);
+          font-size: 18px;
+          text-align: center;
+          font-weight: 600;
+          margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+          width: 100%;
+          height: 10px;
+          background-color: rgba(0, 0, 0, 0.1);
+          border-radius: 5px;
+          margin-bottom: 15px;
+          overflow: hidden;
+          position: relative;
+        }
+        
+        .progress-fill {
+          height: 100%;
+          width: 0;
+          background: linear-gradient(to right, var(--primary-color), var(--tertiary-color));
+          border-radius: 5px;
+          transition: width 0.7s ease;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .progress-fill::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+          transform: translateX(-100%);
+          animation: shine 1.5s infinite;
+        }
+        
+        .loading-status {
+          font-size: 16px;
+          color: var(--accent-color);
+          text-align: center;
+          min-height: 20px;
+          font-weight: bold;
+        }
+        
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+          .container {
+            width: 95%;
+            padding: 1.5rem;
+            margin: 70px auto 20px;
+          }
+          
+          h1 {
+            font-size: 2rem;
+          }
+          
+          .form-group {
+            margin-bottom: 1rem;
+          }
+          
+          select, input[type="text"] {
+            padding: 0.6rem;
+          }
+          
+          button {
+            padding: 0.8rem 1.5rem;
+          }
+          
+          .result-card {
+            flex: 1 1 100%;
+            max-width: none;
+          }
+          
+          .school-group ul {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          }
+          
+          .modal-content {
+            width: 90%;
+            padding: 20px;
+          }
+          
+          .star-rating label {
+            font-size: 32px;
+          }
+          
+          .export-format-button {
+            width: calc(100% - 20px);
+          }
+          
+          .fullscreen-menu {
+            width: 280px;
+          }
+          
+          .fullscreen-menu a {
+            width: 90%;
+          }
+          
+          .dark-mode-toggle {
+            width: 50px;
+            height: 50px;
+            font-size: 1.3em;
+          }
+
+          .qr-options {
+            flex-direction: column;
+          }
+          
+          .file-input-label, #scanQRCode {
+            margin-bottom: 10px;
+            width: 100%;
+          }
+
+          #results {
+            padding: 1.5rem;
+          }
+
+          .detailed-scores {
+            padding: 15px;
+          }
+
+          .rating-section {
+            padding: 20px;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          h1 {
+            font-size: 1.8rem;
+          }
+          
+          .container {
+            padding: 1.2rem;
+          }
+          
+          .result-summary {
+            flex-direction: column;
+            align-items: center;
+          }
+          
+          .result-card {
+            width: 100%;
+          }
+          
+          .school-group ul {
+            grid-template-columns: 1fr;
+          }
+          
+          .scores-table {
+            font-size: 0.85rem;
+          }
+          
+          .scores-table th, .scores-table td {
+            padding: 8px 10px;
+          }
+          
+          .file-input-label, #scanQRCode {
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            height: 45px;
+          }
+          
+          .fullscreen-menu {
+            width: 100%;
+            border-radius: 0;
+          }
+
+          .rating-section h3 {
+            font-size: 1.4rem;
+          }
+
+          .star-rating label {
+            font-size: 28px;
+            padding: 0 2px;
+          }
+
+          .invite-link {
+            padding: 12px 20px;
+            font-size: 0.9rem;
+          }
+
+          .header-logo {
+            font-size: 1.2em;
+          }
+
+          .header-container {
+            padding: 0 15px;
+          }
+
+          .form-group label {
+            font-size: 0.9rem;
+          }
+
+          select, input[type="text"] {
+            font-size: 0.9rem;
+          }
+
+          .detailed-scores h3, 
+          .result-schools h3 {
+            font-size: 1.4rem;
+          }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) {
+          select, input[type="text"], button {
+            font-size: 16px; /* Prevents iOS zoom on focus */
+          }
+          
+          .fullscreen-menu a {
+            padding: 15px 20px;
+          }
+          
+          .close, .close-menu {
+            min-width: 44px;
+            min-height: 44px;
+          }
+
+          .star-rating label {
+            padding: 0 8px;
+          }
+        }
+        
+        /* Fix for very small screens */
+        @media (max-width: 360px) {
+          .container {
+            padding: 1rem;
+          }
+          
+          h1 {
+            font-size: 1.5rem;
+          }
+          
+          button {
+            padding: 0.7rem 1.2rem;
+            font-size: 0.9rem;
+          }
+          
+          .modal-content {
+            padding: 15px;
+          }
+        }
+        
+        /* Enhanced disclaimer styling */
+        .disclaimer-container {
+          padding: 10px 0;
+          margin-bottom: 20px;
+        }
+        
+        .disclaimer-header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 20px;
+          padding-bottom: 15px;
+          border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .disclaimer-icon {
+          font-size: 2.5rem;
+          color: var(--warning-color);
+          margin-right: 15px;
+          animation: pulse 2s infinite;
+          flex-shrink: 0;
+        }
+        
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+        
+        .disclaimer-intro {
+          font-size: 1.1rem;
+          font-weight: 500;
+          margin: 0;
           color: var(--text-color);
         }
-        /* 新增使用說明美觀樣式 */
-        #instructions {
-          background: linear-gradient(135deg, #ffffff, #f7f7f7);
-          padding: 2rem;
-          border-radius: 15px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          border-left: 5px solid var(--accent-color);
+        
+        .disclaimer-section {
+          margin-bottom: 25px;
+          padding: 15px;
+          background-color: rgba(0,0,0,0.02);
+          border-radius: var(--border-radius);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+          transition: all 0.3s ease;
+        }
+        
+        .disclaimer-section:hover {
+          background-color: rgba(0,0,0,0.03);
+          transform: translateY(-3px);
+          box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .disclaimer-section h3 {
+          font-size: 1.2rem;
+          color: var(--primary-color);
+          margin-top: 0;
+          margin-bottom: 15px;
+          display: flex;
+          align-items: center;
+        }
+        
+        .disclaimer-section h3 i {
+          margin-right: 10px;
+          font-size: 1.3rem;
+          color: var(--accent-color);
+        }
+        
+        .disclaimer-list {
+          list-style-type: none;
+          padding-left: 5px;
+          margin: 0;
+        }
+        
+        .disclaimer-list li {
+          padding: 8px 0 8px 25px;
+          position: relative;
+          border-bottom: 1px dashed rgba(0,0,0,0.05);
+        }
+        
+        .disclaimer-list li:last-child {
+          border-bottom: none;
+        }
+        
+        .disclaimer-list li i {
+          position: absolute;
+          left: 0;
+          top: 11px;
+          color: var(--tertiary-color);
+        }
+        
+        .disclaimer-list li i.fa-check-circle {
+          color: var(--success-color);
+        }
+        
+        .disclaimer-invite {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 20px;
+          background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(114, 9, 183, 0.1));
+          border-radius: var(--border-radius);
+        }
+        
+        .disclaimer-invite i {
+          font-size: 2rem;
+          color: var(--tertiary-color);
+          margin-bottom: 15px;
+          animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+          0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+          40% { transform: translateY(-15px); }
+          60% { transform: translateY(-7px); }
+        }
+        
+        .invite-button {
+          display: inline-block;
+          padding: 12px 25px;
+          background: linear-gradient(45deg, var(--primary-color), var(--tertiary-color));
+          color: white;
+          border-radius: 50px;
+          text-decoration: none;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .invite-button:hover {
+          background: linear-gradient(45deg, var(--tertiary-color), var(--primary-color));
+          transform: translateY(-3px);
+          box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        .disclaimer-footer {
+          font-style: italic;
+          padding: 15px;
+          margin-top: 10px;
+          font-size: 0.95rem;
+          text-align: center;
+          color: var(--text-color);
+          background: rgba(0,0,0,0.03);
+          border-radius: var(--border-radius);
+          border-left: 3px solid var(--accent-color);
+        }
+        
+        /* Responsive styles for disclaimer */
+        @media (max-width: 768px) {
+          .disclaimer-header {
+            flex-direction: column;
+            text-align: center;
+          }
+          
+          .disclaimer-icon {
+            margin-right: 0;
+            margin-bottom: 15px;
+          }
+          
+          .invite-button {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+          }
+        }
+        
+        /* Add styling for instruction modal */
+        .instructions-container {
+          padding: 10px 0;
+          margin-bottom: 20px;
         }
         
         .instruction-item {
-          border-left: 4px solid var(--secondary-color);
-          padding-left: 1rem;
-          margin-bottom: 1.5rem;
-          background: var(--card-background);
-          border-radius: 8px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          margin-bottom: 25px;
+          padding: 15px;
+          background-color: rgba(0,0,0,0.02);
+          border-radius: var(--border-radius);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+          transition: all 0.3s ease;
         }
         
         .instruction-item:hover {
+          background-color: rgba(0,0,0,0.03);
           transform: translateY(-3px);
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
         
-  /* 新增評分相關樣式 */
-  .rating-section {
-    margin-top: 40px;
-    padding: 20px;
-    background: linear-gradient(135deg, #ffffff, #f7f7f7);
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    text-align: center;
-    animation: fadeIn 0.8s ease-out;
-  }
-  
-  body.dark-mode .rating-section {
-    background: linear-gradient(135deg, var(--card-background), #2c2c2c);
-  }
-  
-  .rating-section h3 {
-    color: var(--primary-color);
-    margin-bottom: 10px;
-  }
-  
-  .star-rating {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: center;
-    margin: 20px 0;
-  }
-  
-  .star-rating input {
-    display: none;
-  }
-  
-  .star-rating label {
-    color: #ddd;
-    font-size: 40px;
-    padding: 0 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .star-rating label:hover,
-  .star-rating label:hover ~ label,
-  .star-rating input:checked ~ label {
-    color: #ffcc00;
-    transform: scale(1.2);
-  }
-  
-  .feedback-container {
-    margin-top: 15px;
-  }
-  
-  .feedback-container textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    min-height: 80px;
-    resize: vertical;
-    font-family: inherit;
-    background-color: var(--card-background);
-    color: var(--text-color);
-  }
-  
-  .feedback-container button {
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    margin-top: 10px;
-  }
-  
-  .feedback-container button:hover {
-    background-color: #007755;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  }
-  
-  .rating-thanks {
-    padding: 20px;
-    text-align: center;
-    animation: zoomIn 0.5s ease-out;
-  }
-  
-  .rating-thanks .icon {
-    font-size: 48px;
-    color: #ff6b6b;
-    display: block;
-    margin: 0 auto 15px;
-    animation: pulse 1.5s infinite;
-  }
-  
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-  }
-  
-  /* 響應式設計調整 */
-  @media (max-width: 768px) {
-    .star-rating label {
-      font-size: 32px;
-      padding: 0 3px;
-    }
+        .instruction-item h3 {
+          font-size: 1.2rem;
+          color: var(--primary-color);
+          margin-top: 0;
+          margin-bottom: 15px;
+          display: flex;
+          align-items: center;
+        }
+        
+        .instruction-item h3 i {
+          margin-right: 10px;
+          font-size: 1.3rem;
+          color: var(--accent-color);
+        }
+        
+        .instruction-item p {
+          margin: 0;
+          line-height: 1.6;
+        }
+        
+        .instruction-item .invite-link {
+          margin: 10px 0;
+          display: inline-block;
+        }
+      </style>
+
+      <style>
+        /* Invite button optimization */
+        .invite-container {
+          margin: 25px auto;
+          text-align: center;
+        }
+        
+        .invite-link {
+          display: inline-block;
+          padding: 15px 30px;
+          background: linear-gradient(45deg, #f72585, #7209b7);
+          color: white;
+          text-decoration: none;
+          border-radius: 50px;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          box-shadow: 0 10px 20px rgba(247, 37, 133, 0.3);
+          position: relative;
+          overflow: hidden;
+          font-size: 1.1rem;
+          transform: scale(1);
+          animation: pulse 2s infinite;
+        }
     
-    .feedback-container textarea {
-      min-height: 60px;
-    }
-  }
-  
+        .invite-link:hover {
+          transform: translateY(-5px) scale(1.05);
+          box-shadow: 0 15px 30px rgba(247, 37, 133, 0.4);
+        }
+        
+        .invite-link .icon {
+          margin-right: 10px;
+          font-size: 1.2em;
+          vertical-align: middle;
+        }
+        
+        .invite-link::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+          transition: all 0.6s;
+        }
+        
+        .invite-link:hover::before {
+          left: 100%;
+        }
+        
+        @media (max-width: 768px) {
+          .invite-link {
+            padding: 12px 25px;
+            font-size: 1rem;
+          }
+        }
       </style>
 </head>
 <body>
@@ -1443,232 +1713,245 @@
   </div>
   <div class="container">
     <h1><i class="fas fa-chart-line icon"></i>中投區會考落點分析系統</h1>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOxDcbwdmBpZGrushwYGBMRKqloorV4xf4Auibo5ZIAhQm3A/viewform?usp=sf_link" target="_blank" class="invite-link">
-      <i class="fas fa-envelope-open-text icon"></i>填寫表單獲取邀請碼
-    </a>
-              <button class="instruction-toggle" onclick="toggleInstructions()"><i class="fas fa-info-circle icon"></i>使用說明</button>
-    <button class="disclaimer-toggle" onclick="showDisclaimer()"><i class="fas fa-exclamation-triangle icon"></i>免責聲明</button>
-    <div id="instructions" style="display: none;">
-      <h2><i class="fas fa-book icon"></i>使用說明</h2>
-      <div class="instruction-item">
-        <h3><i class="fas fa-key icon"></i>1. 輸入邀請碼</h3>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOxDcbwdmBpZGrushwYGBMRKqloorV4xf4Auibo5ZIAhQm3A/viewform?usp=sf_link" target="_blank" class="invite-link">
-          <i class="fas fa-envelope-open-text icon"></i>填寫表單獲取邀請碼
-        </a>
-                      <p>在"邀請碼"欄位中輸入有效的邀請碼。邀請碼每小時自動更新，請確保使用最新的邀請碼。</p>
-      </div>
-      <div class="instruction-item">
-        <h3><i class="fas fa-school icon"></i>2. 選擇學校屬性和類型</h3>
-        <p>從下拉菜單中選擇您感興趣的學校屬性（公立/私立）和類型（普通科/職業類科）。</p>
-      </div>
-      <div class="instruction-item">
-        <h3><i class="fas fa-pencil-alt icon"></i>3. 輸入會考成績</h3>
-        <p>為每個科目（國文、英文、數學、自然、社會）選擇您的會考等級，從A++到C。</p>
-      </div>
-      <div class="instruction-item">
-        <h3><i class="fas fa-pen-fancy icon"></i>4. 選擇作文級分</h3>
-        <p>從0到6級中選擇您的作文成績。</p>
-      </div>
-      <div class="instruction-item">
-        <h3><i class="fas fa-search icon"></i>5. 分析結果</h3>
-        <p>點擊"分析落點"按鈕，系統將根據您的成績計算總積分，並顯示您可能錄取的學校列表。</p>
-      </div>
+    <div class="form-group invite-container">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOxDcbwdmBpZGrushwYGBMRKqloorV4xf4Auibo5ZIAhQm3A/viewform?usp=sf_link" target="_blank" class="invite-link">
+        <i class="fas fa-envelope-open-text icon"></i>填寫表單獲取邀請碼
+      </a>
     </div>
+    <button class="instruction-toggle" onclick="toggleInstructions()"><i class="fas fa-info-circle icon"></i>使用說明</button>
+    <button class="disclaimer-toggle" onclick="showDisclaimer()"><i class="fas fa-exclamation-triangle icon"></i>免責聲明</button>
     <form id="analysisForm">
       <div class="form-group">
           <label for="invitationCode"><i class="fas fa-key icon"></i>邀請碼：</label>
           <input type="text" id="invitationCode" required placeholder="請輸入邀請碼">
-                    </div>
-
-
-                    
-          <div class="qr-options">
-            <button type="button" id="scanQRCode"><i class="fas fa-camera icon"></i>掃描 QR 碼</button>
-            <label for="fileInput" class="file-input-label">
-              <i class="fas fa-image icon"></i>上傳 QR 碼
-            </label>
-            <input type="file" id="fileInput" accept="image/*">
-        </div>
-
-        </form>
-        <div id="qr-reader" style="display: none;"></div>
-        <div id="qr-result"></div>
-
-
-        
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.3.1/dist/jsQR.min.js"></script>
-        <div class="form-group">
-          <label for="schoolOwnership"><i class="fas fa-building icon"></i>學校屬性：</label>
-          <select id="schoolOwnership">
-            <option value="all">全部</option>
-            <option value="public">公立</option>
-            <option value="private">私立</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="schoolType"><i class="fas fa-graduation-cap icon"></i>學校類型：</label>
-          <select id="schoolType" onchange="toggleVocationalGroup()">
-            <option value="all">全部</option>
-            <option value="普通科">普通科</option>
-            <option value="職業類科">職業類科</option>
-          </select>
-        </div>
-        <div class="form-group" id="vocationalGroupContainer" style="display: none;">
-          <label for="vocationalGroup"><i class="fas fa-tools icon"></i>職業群別：</label>
-          <select id="vocationalGroup">
-            <option value="all">全部</option>
-            <option value="機械群">機械群</option>
-            <option value="動力機械群">動力機械群</option>
-            <option value="電機與電子群">電機與電子群</option>
-            <option value="化工群">化工群</option>
-            <option value="土木與建築群">土木與建築群</option>
-            <option value="商業與管理群">商業與管理群</option>
-            <option value="外語群">外語群</option>
-            <option value="設計群">設計群</option>
-            <option value="農業群">農業群</option>
-            <option value="食品群">食品群</option>
-            <option value="家政群">家政群</option>
-            <option value="餐旅群">餐旅群</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="chinese"><i class="fas fa-book icon"></i>國文：</label>
-          <select id="chinese">
-            <option value="">請選擇您的國文會考分數</option>
-
-            <option value="A++">A++</option>
-            <option value="A+">A+</option>
-            <option value="A">A</option>
-            <option value="B++">B++</option>
-            <option value="B+">B+</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="english"><i class="fas fa-language icon"></i>英文：</label>
-          <select id="english">
-            <option value="">請選擇您的英文會考分數</option>
-
-            <option value="A++">A++</option>
-            <option value="A+">A+</option>
-            <option value="A">A</option>
-            <option value="B++">B++</option>
-            <option value="B+">B+</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="math"><i class="fas fa-calculator icon"></i>數學：</label>
-          <select id="math">
-            <option value="">請選擇您的數學會考分數</option>
-
-            <option value="A++">A++</option>
-            <option value="A+">A+</option>
-            <option value="A">A</option>
-            <option value="B++">B++</option>
-            <option value="B+">B+</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="science"><i class="fas fa-flask icon"></i>自然：</label>
-          <select id="science">
-            <option value="">請選擇您的自然會考分數</option>
-
-            <option value="A++">A++</option>
-            <option value="A+">A+</option>
-            <option value="A">A</option>
-            <option value="B++">B++</option>
-            <option value="B+">B+</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="social"><i class="fas fa-globe icon"></i>社會：</label>
-          <select id="social">
-            <option value="">請選擇您的社會會考分數</option>
-
-            <option value="A++">A++</option>
-            <option value="A+">A+</option>
-            <option value="A">A</option>
-            <option value="B++">B++</option>
-            <option value="B+">B+</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="composition"><i class="fas fa-pen-nib icon"></i>作文：</label>
-          <select id="composition">
-            <option value="">請選擇您的作文會考分數</option>
-
-            <option value="0">0 級分</option>
-            <option value="1">1 級分</option>
-            <option value="2">2 級分</option>
-            <option value="3">3 級分</option>
-            <option value="4">4 級分</option>
-            <option value="5">5 級分</option>
-            <option value="6">6 級分</option>
-          </select>
-        </div>
-        <button type="button" onclick="analyzeScores()"><i class="fas fa-search icon"></i>分析落點</button>
-        <button id="exportResults" style="display: none;" onclick="showExportModal()"><i class="fas fa-file-export icon"></i>匯出結果</button> 
-
-  
-
+      </div>
+      <div class="qr-options">
+        <button type="button" id="scanQRCode"><i class="fas fa-camera icon"></i>掃描 QR 碼</button>
+        <label for="fileInput" class="file-input-label">
+          <i class="fas fa-image icon"></i>上傳 QR 碼
+        </label>
+        <input type="file" id="fileInput" accept="image/*">
+      </div>
+      <div id="qr-reader" style="display: none;"></div>
+      <div id="qr-result"></div>
+      <div class="form-group">
+        <label for="schoolOwnership"><i class="fas fa-building icon"></i>學校屬性：</label>
+        <select id="schoolOwnership">
+          <option value="all">全部</option>
+          <option value="public">公立</option>
+          <option value="private">私立</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="schoolType"><i class="fas fa-graduation-cap icon"></i>學校類型：</label>
+        <select id="schoolType" onchange="toggleVocationalGroup()">
+          <option value="all">全部</option>
+          <option value="普通科">普通科</option>
+          <option value="職業類科">職業類科</option>
+        </select>
+      </div>
+      <div class="form-group" id="vocationalGroupContainer" style="display: none;">
+        <label for="vocationalGroup"><i class="fas fa-tools icon"></i>職業群別：</label>
+        <select id="vocationalGroup">
+          <option value="all">全部</option>
+          <option value="機械群">機械群</option>
+          <option value="動力機械群">動力機械群</option>
+          <option value="電機與電子群">電機與電子群</option>
+          <option value="化工群">化工群</option>
+          <option value="土木與建築群">土木與建築群</option>
+          <option value="商業與管理群">商業與管理群</option>
+          <option value="外語群">外語群</option>
+          <option value="設計群">設計群</option>
+          <option value="農業群">農業群</option>
+          <option value="食品群">食品群</option>
+          <option value="家政群">家政群</option>
+          <option value="餐旅群">餐旅群</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="chinese"><i class="fas fa-book icon"></i>國文：</label>
+        <select id="chinese">
+          <option value="">請選擇您的國文會考分數</option>
+          <option value="A++">A++</option>
+          <option value="A+">A+</option>
+          <option value="A">A</option>
+          <option value="B++">B++</option>
+          <option value="B+">B+</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="english"><i class="fas fa-language icon"></i>英文：</label>
+        <select id="english">
+          <option value="">請選擇您的英文會考分數</option>
+          <option value="A++">A++</option>
+          <option value="A+">A+</option>
+          <option value="A">A</option>
+          <option value="B++">B++</option>
+          <option value="B+">B+</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="math"><i class="fas fa-calculator icon"></i>數學：</label>
+        <select id="math">
+          <option value="">請選擇您的數學會考分數</option>
+          <option value="A++">A++</option>
+          <option value="A+">A+</option>
+          <option value="A">A</option>
+          <option value="B++">B++</option>
+          <option value="B+">B+</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="science"><i class="fas fa-flask icon"></i>自然：</label>
+        <select id="science">
+          <option value="">請選擇您的自然會考分數</option>
+          <option value="A++">A++</option>
+          <option value="A+">A+</option>
+          <option value="A">A</option>
+          <option value="B++">B++</option>
+          <option value="B+">B+</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="social"><i class="fas fa-globe icon"></i>社會：</label>
+        <select id="social">
+          <option value="">請選擇您的社會會考分數</option>
+          <option value="A++">A++</option>
+          <option value="A+">A+</option>
+          <option value="A">A</option>
+          <option value="B++">B++</option>
+          <option value="B+">B+</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="composition"><i class="fas fa-pen-nib icon"></i>作文：</label>
+        <select id="composition">
+          <option value="">請選擇您的作文會考分數</option>
+          <option value="0">0 級分</option>
+          <option value="1">1 級分</option>
+          <option value="2">2 級分</option>
+          <option value="3">3 級分</option>
+          <option value="4">4 級分</option>
+          <option value="5">5 級分</option>
+          <option value="6">6 級分</option>
+        </select>
+      </div>
+      <button type="button" onclick="analyzeScores()"><i class="fas fa-search icon"></i>分析落點</button>
+      <button id="exportResults" style="display: none;" onclick="showExportModal()"><i class="fas fa-file-export icon"></i>匯出結果</button> 
     </form>
     <div id="results"></div>
-<div class="copyright">
-    <p>&copy; 2025 CTTW中投區會考落點分析系統. All rights reserved.</p>
-    <p>本網站由CTTW會考落點分析平台開發維護。未經授權，禁止複製或轉載。</p>
-  </div>
-</div>      
+    <div class="copyright">
+      <p>&copy; 2025 CTTW中投區會考落點分析系統. All rights reserved.</p>
+      <p>本網站由CTTW會考落點分析平台開發維護。未經授權，禁止複製或轉載。</p>
+    </div>
+  </div>      
   
 
   
   <button id="darkModeToggle" class="dark-mode-toggle" aria-label="切換深色模式">
     <i class="fas fa-moon"></i>
-</button>
+  </button>
 
-<div id="exportModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeExportModal()">&times;</span>
-    <h2><i class="fas fa-file-export icon"></i> 匯出結果</h2>
-    <p>請選擇匯出檔案格式：</p>
-    <button class="export-format-button" onclick="exportAsTXT()">純文字 (.txt)</button>
-    <button class="export-format-button" onclick="exportAsCSV()">CSV (.csv)</button>
-    <button class="export-format-button" onclick="exportAsJSON()">JSON (.json)</button>
-    <button class="export-format-button print-button" onclick="printResults()"><i class="fas fa-print icon"></i> 列印結果</button>
+  <div id="exportModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeExportModal()">&times;</span>
+      <h2><i class="fas fa-file-export icon"></i> 匯出結果</h2>
+      <p>請選擇匯出檔案格式：</p>
+      <button class="export-format-button" onclick="exportAsTXT()">純文字 (.txt)</button>
+      <button class="export-format-button" onclick="exportAsCSV()">CSV (.csv)</button>
+      <button class="export-format-button" onclick="exportAsJSON()">JSON (.json)</button>
+      <button class="export-format-button print-button" onclick="printResults()"><i class="fas fa-print icon"></i> 列印結果</button>
+    </div>
   </div>
-</div>
 
- <div id="disclaimerModal" class="modal">
+  <div id="disclaimerModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
       <h2><i class="fas fa-balance-scale icon"></i> 免責聲明</h2>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOxDcbwdmBpZGrushwYGBMRKqloorV4xf4Auibo5ZIAhQm3A/viewform?usp=sf_link" target="_blank">
-        <i class="fas fa-link icon"></i> 填寫表單獲取邀請碼
-      </a>
-      <p>親愛的使用者，我們誠摯地提醒您：本網站提供的落點分析結果僅供參考，不代表實際錄取結果。實際錄取情況可能會因多種因素而有所不同，包括但不限於：</p>
-      <ul>
-        <li>各校的招生政策變化</li>
-        <li>當年度考生整體表現</li>
-        <li>特殊才能或其他加分項目</li>
-        <li>各校的實際招生名額調整</li>
-      </ul>
-      <p>為了確保您做出最佳的決定，我們強烈建議您：</p>
-      <ul>
-        <li>參考多方資訊，不要僅依賴本網站的分析結果</li>
-        <li>諮詢學校輔導老師或升學顧問的專業意見</li>
-        <li>密切關注各校的官方網站和招生簡章，以獲取最新和最準確的資訊</li>
-      </ul>
-      <p>本網站不對因使用本服務而產生的任何直接或間接損失負責。使用本服務即表示您同意本免責聲明的所有條款。祝您升學順利！</p>
+      <div class="disclaimer-container">
+        <div class="disclaimer-header">
+          <div class="disclaimer-icon">
+            <i class="fas fa-exclamation-circle"></i>
+          </div>
+          <p class="disclaimer-intro">親愛的使用者，我們誠摯地提醒您：本網站提供的落點分析結果僅供參考，不代表實際錄取結果。</p>
+        </div>
+        
+        <div class="disclaimer-section">
+          <h3><i class="fas fa-info-circle"></i> 分析結果可能受影響的因素</h3>
+          <ul class="disclaimer-list">
+            <li><i class="fas fa-angle-right"></i> 各校的招生政策變化</li>
+            <li><i class="fas fa-angle-right"></i> 當年度考生整體表現</li>
+            <li><i class="fas fa-angle-right"></i> 特殊才能或其他加分項目</li>
+            <li><i class="fas fa-angle-right"></i> 各校的實際招生名額調整</li>
+          </ul>
+        </div>
+        
+        <div class="disclaimer-section">
+          <h3><i class="fas fa-lightbulb"></i> 我們的建議</h3>
+          <ul class="disclaimer-list">
+            <li><i class="fas fa-check-circle"></i> 參考多方資訊，不要僅依賴本網站的分析結果</li>
+            <li><i class="fas fa-check-circle"></i> 諮詢學校輔導老師或升學顧問的專業意見</li>
+            <li><i class="fas fa-check-circle"></i> 密切關注各校的官方網站和招生簡章，以獲取最新和最準確的資訊</li>
+          </ul>
+        </div>
+        
+        <div class="disclaimer-section">
+          <div class="disclaimer-invite">
+            <i class="fas fa-envelope-open-text"></i>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOxDcbwdmBpZGrushwYGBMRKqloorV4xf4Auibo5ZIAhQm3A/viewform?usp=sf_link" target="_blank" class="invite-button">
+              填寫表單獲取邀請碼
+            </a>
+          </div>
+        </div>
+        
+        <div class="disclaimer-footer">
+          <p>本網站不對因使用本服務而產生的任何直接或間接損失負責。使用本服務即表示您同意本免責聲明的所有條款。祝您升學順利！</p>
+        </div>
+      </div>
       <button class="confirm-button" onclick="closeDisclaimer()">我已了解並同意</button>
+    </div>
+  </div>
+  
+  <div id="instructionsModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeInstructionsModal()">&times;</span>
+      <h2><i class="fas fa-book icon"></i> 使用說明</h2>
+      <div class="instructions-container">
+        <div class="instruction-item">
+          <h3><i class="fas fa-key icon"></i>1. 輸入邀請碼</h3>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOxDcbwdmBpZGrushwYGBMRKqloorV4xf4Auibo5ZIAhQm3A/viewform?usp=sf_link" target="_blank" class="invite-link">
+            <i class="fas fa-envelope-open-text icon"></i>填寫表單獲取邀請碼
+          </a>
+          <p>在"邀請碼"欄位中輸入有效的邀請碼。邀請碼每小時自動更新，請確保使用最新的邀請碼。</p>
+        </div>
+        <div class="instruction-item">
+          <h3><i class="fas fa-school icon"></i>2. 選擇學校屬性和類型</h3>
+          <p>從下拉菜單中選擇您感興趣的學校屬性（公立/私立）和類型（普通科/職業類科）。</p>
+        </div>
+        <div class="instruction-item">
+          <h3><i class="fas fa-pencil-alt icon"></i>3. 輸入會考成績</h3>
+          <p>為每個科目（國文、英文、數學、自然、社會）選擇您的會考等級，從A++到C。</p>
+        </div>
+        <div class="instruction-item">
+          <h3><i class="fas fa-pen-fancy icon"></i>4. 選擇作文級分</h3>
+          <p>從0到6級中選擇您的作文成績。</p>
+        </div>
+        <div class="instruction-item">
+          <h3><i class="fas fa-search icon"></i>5. 分析結果</h3>
+          <p>點擊"分析落點"按鈕，系統將根據您的成績計算總積分，並顯示您可能錄取的學校列表。</p>
+        </div>
+      </div>
+      <button class="confirm-button" onclick="closeInstructionsModal()">我已了解</button>
     </div>
   </div>
   

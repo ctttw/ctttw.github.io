@@ -27,16 +27,19 @@ function toggleVocationalGroup() {
 }
 
 function toggleInstructions() {
-  var instructions = document.getElementById('instructions');
-  if (instructions.style.display === 'none') {
-    instructions.style.display = 'block';
-    instructions.style.animation = 'fadeIn 0.5s ease-out';
-  } else {
-    instructions.style.animation = 'fadeOut 0.5s ease-out';
-    setTimeout(() => {
-      instructions.style.display = 'none';
-    }, 500);
-  }
+  var instructionsModal = document.getElementById('instructionsModal');
+  instructionsModal.style.display = 'block';
+  setTimeout(() => {
+    instructionsModal.classList.add('show');
+  }, 10);
+}
+
+function closeInstructionsModal() {
+  var instructionsModal = document.getElementById('instructionsModal');
+  instructionsModal.classList.remove('show');
+  setTimeout(() => {
+    instructionsModal.style.display = 'none';
+  }, 400);
 }
 
 let isDragging = false;
@@ -47,6 +50,7 @@ function showDisclaimer() {
   var modal = document.getElementById('disclaimerModal');
   var modalContent = modal.querySelector('.modal-content');
   modal.style.display = 'block';
+  modal.classList.add('show');
   
   modalContent.addEventListener('mousedown', startDragging);
   document.addEventListener('mousemove', drag);
@@ -80,7 +84,10 @@ function stopDragging() {
 
 function closeDisclaimer() {
   var modal = document.getElementById('disclaimerModal');
-  modal.style.display = 'none';
+  modal.classList.remove('show');
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 400);
 }
 
 document.querySelectorAll('.modal .close').forEach(function(btn) {
@@ -98,6 +105,10 @@ window.onclick = function(event) {
   var exportModal = document.getElementById('exportModal');
   if (event.target == exportModal) {
     closeExportModal();
+  }
+  var instructionsModal = document.getElementById('instructionsModal');
+  if (event.target == instructionsModal) {
+    closeInstructionsModal();
   }
 }
 
@@ -455,9 +466,16 @@ async function submitRating() {
 // 新增匯出格式選單相關函式
 function showExportModal() {
   document.getElementById('exportModal').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('exportModal').classList.add('show');
+  }, 10);
 }
+
 function closeExportModal() {
-  document.getElementById('exportModal').style.display = 'none';
+  document.getElementById('exportModal').classList.remove('show');
+  setTimeout(() => {
+    document.getElementById('exportModal').style.display = 'none';
+  }, 400);
 }
 
 function exportAsTXT() {
@@ -797,6 +815,8 @@ function toggleMenu() {
   var links = menu.getElementsByTagName('a');
   for (var i = 0; i < links.length; i++) {
     links[i].style.animationDelay = (i * 0.1) + 's';
+    links[i].style.animation = menu.classList.contains("show") ? 
+      'slideInRight 0.5s ease-out forwards' : 'none';
   }
 }
 
@@ -836,22 +856,25 @@ updateDarkModeIcon(savedDarkMode);
 // 添加事件監聽器
 document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
 
-const html5QrCode = new Html5Qrcode("qr-reader");
-const qrConfig = { fps: 10, qrbox: { width: 250, height: 250 } };
+document.addEventListener('DOMContentLoaded', function() {
+  const html5QrCode = new Html5Qrcode("qr-reader");
+  const qrConfig = { fps: 10, qrbox: { width: 250, height: 250 } };
 
-document.getElementById('scanQRCode').addEventListener('click', () => {
-  const qrReader = document.getElementById('qr-reader');
-  if (qrReader.style.display === 'none') {
-    qrReader.style.display = 'block';
-    html5QrCode.start({ facingMode: "environment" }, qrConfig, onScanSuccess);
-  } else {
-    qrReader.style.display = 'none';
-    html5QrCode.stop();
-  }
+  document.getElementById('scanQRCode').addEventListener('click', () => {
+    const qrReader = document.getElementById('qr-reader');
+    if (qrReader.style.display === 'none') {
+      qrReader.style.display = 'block';
+      html5QrCode.start({ facingMode: "environment" }, qrConfig, onScanSuccess);
+    } else {
+      qrReader.style.display = 'none';
+      html5QrCode.stop();
+    }
+  });
 });
 
 function onScanSuccess(decodedText, decodedResult) {
   document.getElementById('invitationCode').value = decodedText;
+  const html5QrCode = new Html5Qrcode("qr-reader");
   html5QrCode.stop();
   document.getElementById('qr-reader').style.display = 'none';
   document.getElementById('qr-result').textContent = `您的邀請碼是：${decodedText}`;
