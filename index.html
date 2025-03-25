@@ -2288,6 +2288,34 @@
             margin: 5px 0;
           }
         }
+        
+        /* Add spacing between buttons in instruction section */
+        .instruction-buttons {
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+          margin: 20px 0;
+        }
+        
+        .instruction-toggle,
+        .disclaimer-toggle {
+          padding: 12px 20px;
+          min-width: 140px;
+        }
+        
+        @media (max-width: 480px) {
+          .instruction-buttons {
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+          }
+          
+          .instruction-toggle,
+          .disclaimer-toggle {
+            width: 100%;
+            max-width: 280px;
+          }
+        }
       </style>
 </head>
 <body>
