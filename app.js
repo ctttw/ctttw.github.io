@@ -48,12 +48,13 @@ function selectIdentity(identity) {
     'teacher': '老師'
   };
   
-  document.getElementById('identityConfirmation').textContent = `您選擇的身分是: ${identityNames[identity]}`;
-  document.getElementById('identityConfirmation').style.display = 'block';
+  const confirmationElement = document.getElementById('identityConfirmation');
+  confirmationElement.textContent = `您選擇的身分是: ${identityNames[identity]}`;
+  confirmationElement.style.display = 'block';
   
   // 添加淡入動畫
   setTimeout(() => {
-    document.getElementById('identityConfirmation').classList.add('show');
+    confirmationElement.classList.add('show');
   }, 100);
 }
 

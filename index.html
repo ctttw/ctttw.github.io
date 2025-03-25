@@ -2015,79 +2015,108 @@
         }
         /* Identity Selection Cards */
         .identity-selector {
-          margin: 20px 0;
+          margin: 30px 0;
           text-align: center;
-        }
-        
-        .identity-selector h2 {
-          font-size: 1.6rem;
-          margin-bottom: 10px;
-          color: var(--primary-color);
-        }
-        
-        .identity-intro {
-          font-size: 1rem;
-          color: var(--text-color);
-          margin-bottom: 20px;
-          opacity: 0.8;
-        }
-        
-        .identity-cards {
-          display: flex;
-          justify-content: center;
-          gap: 15px;
-          flex-wrap: wrap;
-          margin-bottom: 20px;
-        }
-        
-        .identity-card {
           background: var(--card-background);
           border-radius: var(--border-radius);
-          padding: 15px;
-          width: 100%;
-          max-width: 200px;
+          padding: 25px;
           box-shadow: 0 5px 20px var(--shadow-color);
-          transition: all 0.3s ease;
           position: relative;
           overflow: hidden;
-          cursor: pointer;
-          text-align: center;
-          border: 2px solid transparent;
         }
         
-        .identity-card::before {
+        .identity-selector::before {
           content: '';
           position: absolute;
           top: 0;
           left: 0;
           width: 100%;
-          height: 4px;
+          height: 5px;
           background: linear-gradient(90deg, var(--primary-color), var(--tertiary-color));
-          transition: height 0.3s ease;
+        }
+        
+        .identity-selector h2 {
+          font-size: 1.8rem;
+          margin-bottom: 15px;
+          color: var(--primary-color);
+          background: linear-gradient(45deg, var(--primary-color), var(--tertiary-color));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        
+        .identity-selector h2 i {
+          margin-right: 10px;
+        }
+        
+        .identity-intro {
+          color: var(--text-color);
+          margin-bottom: 25px;
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        
+        .identity-cards {
+          display: flex;
+          justify-content: center;
+          gap: 25px;
+          margin: 30px 0;
+        }
+        
+        .identity-card {
+          background: var(--background-color);
+          border-radius: 20px;
+          padding: 25px 15px;
+          width: 120px;
+          height: 120px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 10px 20px var(--shadow-color);
+          border: 3px solid transparent;
+        }
+        
+        .identity-card::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 3px;
+          background: linear-gradient(90deg, var(--primary-color), var(--tertiary-color));
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.4s ease;
         }
         
         .identity-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 30px var(--shadow-color);
+          transform: translateY(-10px);
+          box-shadow: 0 15px 30px var(--shadow-color);
         }
         
-        .identity-card:hover::before {
-          height: 6px;
+        .identity-card:hover::after {
+          transform: scaleX(1);
         }
         
         .identity-icon {
-          font-size: 2rem;
-          color: var(--primary-color);
-          margin-bottom: 10px;
-          height: 50px;
-          width: 50px;
+          width: 60px;
+          height: 60px;
+          background: linear-gradient(135deg, var(--primary-color), var(--tertiary-color));
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(67, 97, 238, 0.1);
-          border-radius: 50%;
-          margin: 0 auto 15px;
-          transition: all 0.3s ease;
+          margin-bottom: 15px;
+          color: white;
+          font-size: 1.5rem;
+          transition: all 0.4s ease;
+          box-shadow: 0 5px 15px rgba(114, 9, 183, 0.3);
         }
         
         .identity-card:hover .identity-icon {
@@ -2096,28 +2125,79 @@
         
         .identity-card h3 {
           margin: 0;
-          font-size: 1.3rem;
+          font-size: 1.2rem;
+          font-weight: 600;
           color: var(--text-color);
-          margin-bottom: 5px;
+          transition: all 0.3s ease;
         }
         
-        .identity-card p,
-        .identity-features,
-        .select-button {
-          display: none;
+        .identity-card:hover h3 {
+          color: var(--primary-color);
         }
         
-        /* Mobile responsive for identity cards */
-        @media (max-width: 768px) {
+        .identity-card.selected {
+          border-color: var(--accent-color);
+          background: linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(67, 97, 238, 0.1));
+          transform: translateY(-10px);
+          box-shadow: 0 15px 30px var(--shadow-color);
+        }
+        
+        .identity-card.selected .identity-icon {
+          transform: scale(1.1);
+          background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+        }
+        
+        .identity-card.selected h3 {
+          color: var(--accent-color);
+          font-weight: 700;
+        }
+        
+        .identity-confirmation {
+          background: linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(67, 97, 238, 0.1));
+          padding: 15px 20px;
+          border-radius: 50px;
+          display: inline-block;
+          color: var(--primary-color);
+          font-weight: 600;
+          margin-top: 20px;
+          opacity: 0;
+          transform: translateY(10px);
+          transition: all 0.4s ease;
+          border-left: 4px solid var(--accent-color);
+          box-shadow: 0 5px 15px var(--shadow-color);
+        }
+        
+        .identity-confirmation.show {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        @media (max-width: 600px) {
           .identity-cards {
-            flex-direction: column;
-            align-items: center;
+            flex-wrap: wrap;
             gap: 15px;
           }
           
           .identity-card {
-            max-width: 100%;
-            width: 90%;
+            width: 100px;
+            height: 100px;
+            padding: 15px 10px;
+          }
+          
+          .identity-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 1.3rem;
+          }
+          
+          .identity-card h3 {
+            font-size: 1rem;
+          }
+          
+          .identity-confirmation {
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 10px;
           }
         }
         /* Mobile responsive styles */
@@ -2387,38 +2467,20 @@
         <div id="identity-student" class="identity-card" onclick="selectIdentity('student')">
           <div class="identity-icon"><i class="fas fa-user-graduate"></i></div>
           <h3>學生</h3>
-          <p>正在準備會考的學生</p>
-          <div class="identity-features">
-            <span><i class="fas fa-check"></i> 個人成績分析</span>
-            <span><i class="fas fa-check"></i> 學校推薦</span>
-          </div>
-          <div class="select-button">選擇</div>
         </div>
         
         <div id="identity-parent" class="identity-card" onclick="selectIdentity('parent')">
           <div class="identity-icon"><i class="fas fa-users"></i></div>
           <h3>家長</h3>
-          <p>關心孩子升學的家長</p>
-          <div class="identity-features">
-            <span><i class="fas fa-check"></i> 親子對話建議</span>
-            <span><i class="fas fa-check"></i> 選校參考</span>
-          </div>
-          <div class="select-button">選擇</div>
         </div>
         
         <div id="identity-teacher" class="identity-card" onclick="selectIdentity('teacher')">
           <div class="identity-icon"><i class="fas fa-chalkboard-teacher"></i></div>
           <h3>老師</h3>
-          <p>指導學生的教師或輔導老師</p>
-          <div class="identity-features">
-            <span><i class="fas fa-check"></i> 班級統計參考</span>
-            <span><i class="fas fa-check"></i> 輔導建議</span>
-          </div>
-          <div class="select-button">選擇</div>
         </div>
       </div>
       
-      <div id="identityConfirmation" class="identity-confirmation">
+      <div id="identityConfirmation" style="display: none;" class="identity-confirmation">
         您選擇的身分是: <span id="identityDisplayName"></span>
       </div>
     </div>
