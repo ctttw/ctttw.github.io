@@ -405,13 +405,11 @@ function displayResults(data) {
                       <tr><td>作文</td><td>${document.getElementById('composition').value || '-'}</td></tr>
                     </table>
                   </div>`;
-  resultsHTML += `<div class="result-schools"><h3><i class="fas fa-list-ul icon"></i> 可能錄取的學校</h3>`;
+  
+  // 添加學校統計部分
   if (eligibleSchools && eligibleSchools.length > 0) {
-    // 新增學校統計資訊區塊 - 增強美觀度
+    // 計算各類型學校的數量
     let schoolsByType = {};
-    let totalSchoolCount = eligibleSchools.length;
-    
-    // 計算各類型學校數量
     eligibleSchools.forEach(school => {
       if (!schoolsByType[school.type]) {
         schoolsByType[school.type] = 0;
@@ -419,55 +417,41 @@ function displayResults(data) {
       schoolsByType[school.type]++;
     });
     
-    // 增強美觀的學校統計區塊，並優化手機版顯示
+    // 生成學校統計HTML
     resultsHTML += `<div class="school-stats">
-                      <h4><i class="fas fa-chart-pie icon"></i> 學校統計概覽</h4>
+                      <h4><i class="fas fa-chart-pie"></i> 學校統計</h4>
                       <div class="stats-overview">
                         <div class="stats-total">
                           <div class="stats-circle">
-                            <span>${totalSchoolCount}</span>
+                            <span>${eligibleSchools.length}</span>
                           </div>
                           <div class="stats-label">符合條件的學校總數</div>
                         </div>
                         <div class="stats-distribution">`;
     
-    // 為每種學校類型創建更美觀的統計卡片與進度條
+    // 添加各類型學校分布統計
     Object.entries(schoolsByType).forEach(([type, count]) => {
-      const percentage = Math.round((count / totalSchoolCount) * 100);
-      const barColor = `hsl(${Math.floor(Math.random() * 270)}, 70%, 60%)`;
-      
+      const percentage = Math.round((count / eligibleSchools.length) * 100);
+      const typeIcon = getSchoolTypeIcon(type);
       resultsHTML += `<div class="stats-type-item">
                         <div class="stats-type-header">
-                          <span class="stats-type-name">${type}</span>
-                          <span class="stats-type-count">${count}所 (${percentage}%)</span>
+                          <div class="stats-type-name"><i class="${typeIcon}"></i> ${type}</div>
+                          <div class="stats-type-count">${count} 所 (${percentage}%)</div>
                         </div>
                         <div class="stats-progress">
-                          <div class="stats-progress-bar" style="width: ${percentage}%; background-color: ${barColor}"></div>
+                          <div class="stats-progress-bar" style="width: ${percentage}%; 
+                            background: ${getColorForSchoolType(type)}"></div>
                         </div>
                       </div>`;
     });
     
     resultsHTML += `</div>
                   </div>
-                  <div class="stats-cards">`;
-                        
-    // 針對手機版優化卡片顯示
-    Object.entries(schoolsByType).forEach(([type, count], index) => {
-      const iconClass = getSchoolTypeIcon(type);
-      const hue = 200 + (index * 30) % 150; // 產生不同色調的顏色
-      
-      // 將學校類型名稱截短處理，避免手機版溢出
-      const displayType = type.length > 10 ? type.substring(0, 9) + "..." : type;
-      
-      resultsHTML += `<div class="stats-card" style="--stats-card-color: hsl(${hue}, 70%, 60%)">
-                        <div class="stats-card-icon"><i class="${iconClass}"></i></div>
-                        <div class="stats-value">${count}</div>
-                        <div class="stats-label">${displayType}</div>
-                      </div>`;
-    });
-    
-    resultsHTML += `</div></div>`;
-    
+                </div>`;
+  }
+  
+  resultsHTML += `<div class="result-schools"><h3><i class="fas fa-list-ul icon"></i> 可能錄取的學校</h3>`;
+  if (eligibleSchools && eligibleSchools.length > 0) {
     let groupedSchools = {};
     eligibleSchools.forEach(school => {
       if (!groupedSchools[school.type]) {
@@ -534,6 +518,24 @@ function getSchoolTypeIcon(type) {
     case '家政群': return 'fas fa-home';
     default: return 'fas fa-graduation-cap';
   }
+}
+
+// 添加獲取類型顏色的函數
+function getColorForSchoolType(type) {
+  const colors = {
+    '普通科': 'linear-gradient(90deg, #4361ee, #3a0ca3)',
+    '職業類科': 'linear-gradient(90deg, #f72585, #7209b7)',
+    '綜合高中': 'linear-gradient(90deg, #4cc9f0, #4895ef)',
+    '機械群': 'linear-gradient(90deg, #3a86ff, #0077b6)',
+    '電機與電子群': 'linear-gradient(90deg, #00b4d8, #0096c7)',
+    '商業與管理群': 'linear-gradient(90deg, #ffd166, #ffaa00)',
+    '外語群': 'linear-gradient(90deg, #06d6a0, #1b9aaa)',
+    '設計群': 'linear-gradient(90deg, #ef476f, #d62246)',
+    '餐旅群': 'linear-gradient(90deg, #ff9e00, #ff6d00)',
+    '家政群': 'linear-gradient(90deg, #9d4edd, #7b2cbf)'
+  };
+  
+  return colors[type] || 'linear-gradient(90deg, #4cc9f0, #4361ee)';
 }
 
 // 新增提交評分功能
@@ -935,7 +937,7 @@ function printResults() {
     let schoolsByType = {};
     let totalSchoolCount = eligibleSchools.length;
     
-    // 計算各類型學校數量
+    // 計算各類型學校的數量
     eligibleSchools.forEach(school => {
       if (!schoolsByType[school.type]) {
         schoolsByType[school.type] = 0;
