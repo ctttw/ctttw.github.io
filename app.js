@@ -362,7 +362,7 @@ function displayResults(data) {
                   </div>`;
   resultsHTML += `<div class="result-schools"><h3><i class="fas fa-list-ul icon"></i> 可能錄取的學校</h3>`;
   if (eligibleSchools && eligibleSchools.length > 0) {
-    // 新增學校統計資訊區塊
+    // 新增學校統計資訊區塊 - 增強美觀度
     let schoolsByType = {};
     let totalSchoolCount = eligibleSchools.length;
     
@@ -374,18 +374,45 @@ function displayResults(data) {
       schoolsByType[school.type]++;
     });
     
-    // 新增學校統計區塊
+    // 增強美觀的學校統計區塊
     resultsHTML += `<div class="school-stats">
-                      <h4><i class="fas fa-chart-pie icon"></i> 學校統計</h4>
-                      <div class="stats-cards">
-                        <div class="stats-card">
-                          <div class="stats-value">${totalSchoolCount}</div>
-                          <div class="stats-label">總學校數</div>
-                        </div>`;
-                        
-    // 為每種學校類型添加統計卡片
+                      <h4><i class="fas fa-chart-pie icon"></i> 學校統計概覽</h4>
+                      <div class="stats-overview">
+                        <div class="stats-total">
+                          <div class="stats-circle">
+                            <span>${totalSchoolCount}</span>
+                          </div>
+                          <div class="stats-label">符合條件的學校總數</div>
+                        </div>
+                        <div class="stats-distribution">`;
+    
+    // 為每種學校類型創建更美觀的統計卡片與進度條
     Object.entries(schoolsByType).forEach(([type, count]) => {
-      resultsHTML += `<div class="stats-card">
+      const percentage = Math.round((count / totalSchoolCount) * 100);
+      const barColor = `hsl(${Math.floor(Math.random() * 270)}, 70%, 60%)`;
+      
+      resultsHTML += `<div class="stats-type-item">
+                        <div class="stats-type-header">
+                          <span class="stats-type-name">${type}</span>
+                          <span class="stats-type-count">${count}所 (${percentage}%)</span>
+                        </div>
+                        <div class="stats-progress">
+                          <div class="stats-progress-bar" style="width: ${percentage}%; background-color: ${barColor}"></div>
+                        </div>
+                      </div>`;
+    });
+    
+    resultsHTML += `</div>
+                  </div>
+                  <div class="stats-cards">`;
+                        
+    // 為每種學校類型添加增強美觀的卡片
+    Object.entries(schoolsByType).forEach(([type, count], index) => {
+      const iconClass = getSchoolTypeIcon(type);
+      const hue = 200 + (index * 30) % 150; // 產生不同色調的顏色
+      
+      resultsHTML += `<div class="stats-card" style="--stats-card-color: hsl(${hue}, 70%, 60%)">
+                        <div class="stats-card-icon"><i class="${iconClass}"></i></div>
                         <div class="stats-value">${count}</div>
                         <div class="stats-label">${type}</div>
                       </div>`;
@@ -442,6 +469,23 @@ function displayResults(data) {
   }, 100);
   // 儲存最新資料供匯出使用
   window.latestAnalysisData = data;
+}
+
+// 新增判斷學校類型的圖標函數
+function getSchoolTypeIcon(type) {
+  switch(type) {
+    case '普通科': return 'fas fa-book';
+    case '職業類科': return 'fas fa-tools';
+    case '綜合高中': return 'fas fa-school';
+    case '機械群': return 'fas fa-cogs';
+    case '電機與電子群': return 'fas fa-microchip';
+    case '商業與管理群': return 'fas fa-briefcase';
+    case '外語群': return 'fas fa-language';
+    case '設計群': return 'fas fa-paint-brush';
+    case '餐旅群': return 'fas fa-utensils';
+    case '家政群': return 'fas fa-home';
+    default: return 'fas fa-graduation-cap';
+  }
 }
 
 // 新增提交評分功能
@@ -541,6 +585,16 @@ function exportAsCSV() {
   const { totalPoints, totalCredits, eligibleSchools } = window.latestAnalysisData;
   // Add BOM for UTF-8 encoding to properly display Chinese characters
   let csvContent = "\uFEFF" + "總積分,總積點\n" + totalPoints + "," + totalCredits + "\n\n";
+  
+  // 添加成績資料
+  csvContent += "科目,分數\n";
+  csvContent += `國文,${document.getElementById('chinese').value}\n`;
+  csvContent += `英文,${document.getElementById('english').value}\n`;
+  csvContent += `數學,${document.getElementById('math').value}\n`;
+  csvContent += `自然,${document.getElementById('science').value}\n`;
+  csvContent += `社會,${document.getElementById('social').value}\n`;
+  csvContent += `作文,${document.getElementById('composition').value}\n\n`;
+  
   csvContent += "學校類型,學校名稱\n";
   eligibleSchools.forEach(school => {
     // 將逗號轉成其他字元避免 CSV 分隔問題
@@ -559,7 +613,26 @@ function exportAsJSON() {
     alert("請先進行分析後再匯出！");
     return;
   }
-  const jsonStr = JSON.stringify(window.latestAnalysisData, null, 2);
+  
+  // 獲取成績數據並添加到分析結果
+  const scores = {
+    chinese: document.getElementById('chinese').value,
+    english: document.getElementById('english').value,
+    math: document.getElementById('math').value,
+    science: document.getElementById('science').value,
+    social: document.getElementById('social').value,
+    composition: document.getElementById('composition').value
+  };
+  
+  // 合併成績和分析結果
+  const exportData = {
+    ...window.latestAnalysisData,
+    scores,
+    exportTime: new Date().toISOString(),
+    source: "CTTW 中投區會考落點分析系統"
+  };
+  
+  const jsonStr = JSON.stringify(exportData, null, 2);
   const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   triggerDownload(url, '中投區會考落點分析結果.json');
@@ -711,6 +784,50 @@ function printResults() {
         border-top: 1px solid #eee;
         padding-top: 10px;
       }
+      .stats-section {
+        background: #f5f5f5;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 20px 0;
+      }
+      .stats-title {
+        font-size: 18px;
+        color: #4376f7;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+      }
+      .stat-item {
+        background: white;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .stat-value {
+        font-size: 20px;
+        font-weight: bold;
+        color: #e74eff;
+      }
+      .stat-label {
+        font-size: 12px;
+        color: #666;
+      }
+      .page-break {
+        page-break-after: always;
+      }
+      .qr-code {
+        text-align: center;
+        margin: 20px 0;
+      }
+      .qr-code img {
+        max-width: 150px;
+        height: auto;
+      }
       @media print {
         body {
           -webkit-print-color-adjust: exact;
@@ -763,7 +880,47 @@ function printResults() {
         <td>${scores.composition}</td>
       </tr>
     </table>
+  `;
+  
+  // 添加學校統計信息
+  if (eligibleSchools && eligibleSchools.length > 0) {
+    let schoolsByType = {};
+    let totalSchoolCount = eligibleSchools.length;
     
+    // 計算各類型學校數量
+    eligibleSchools.forEach(school => {
+      if (!schoolsByType[school.type]) {
+        schoolsByType[school.type] = 0;
+      }
+      schoolsByType[school.type]++;
+    });
+    
+    printContent += `
+      <div class="stats-section">
+        <div class="stats-title">學校統計</div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value">${totalSchoolCount}</div>
+            <div class="stat-label">總學校數</div>
+          </div>
+    `;
+    
+    Object.entries(schoolsByType).forEach(([type, count]) => {
+      printContent += `
+        <div class="stat-item">
+          <div class="stat-value">${count}</div>
+          <div class="stat-label">${type}</div>
+        </div>
+      `;
+    });
+    
+    printContent += `
+        </div>
+      </div>
+    `;
+  }
+  
+  printContent += `
     <div class="schools-section">
       <h3>可能錄取的學校</h3>
   `;
@@ -787,7 +944,7 @@ function printResults() {
         printContent += `<li class="school-item">• ${schoolName}</li>`;
       });
       
-      printContent += `</ul>`;
+      printContent += `</ul></div>`;
     });
   } else {
     printContent += `

@@ -1253,7 +1253,7 @@
           }
           
           .school-group ul {
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
           }
           
           .modal-content {
@@ -1593,153 +1593,337 @@
           }
         }
 
-        /* 新增學校統計樣式 */
-        .school-stats {
-          background: var(--card-background);
+        /* 優化匯出選項設計 */
+        .export-options {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 15px;
+          margin-top: 20px;
+        }
+
+        .export-option {
+          display: flex;
+          align-items: center;
+          background: var(--background-color);
           border-radius: var(--border-radius);
           padding: 20px;
-          margin: 20px 0;
-          box-shadow: 0 8px 25px var(--shadow-color);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 3px 10px var(--shadow-color);
+          border-left: 4px solid transparent;
+        }
+
+        .export-option:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 20px var(--shadow-color);
+          border-left-color: var(--accent-color);
+        }
+
+        .export-option:active {
+          transform: translateY(0);
+        }
+
+        .export-icon {
+          font-size: 2rem;
+          color: var(--accent-color);
+          margin-right: 15px;
+          width: 50px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(76, 201, 240, 0.1);
+          border-radius: 50%;
           transition: all 0.3s ease;
         }
 
-        .school-stats:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 12px 30px var(--shadow-color);
+        .export-option:hover .export-icon {
+          transform: rotate(15deg) scale(1.1);
+          color: var(--primary-color);
         }
 
+        .export-details {
+          flex: 1;
+        }
+
+        .export-details h3 {
+          margin: 0 0 5px 0;
+          font-size: 1.2rem;
+          color: var(--text-color);
+        }
+
+        .export-details p {
+          margin: 0;
+          font-size: 0.9rem;
+          color: var(--text-color);
+          opacity: 0.8;
+        }
+
+        /* 增強美觀的學校統計樣式 */
+        .school-stats {
+          margin: 30px 0;
+          background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(76, 201, 240, 0.1));
+          border-radius: var(--border-radius);
+          padding: 25px;
+          box-shadow: 0 5px 20px var(--shadow-color);
+          overflow: hidden;
+          position: relative;
+        }
+  
         .school-stats h4 {
           text-align: center;
           margin-top: 0;
           margin-bottom: 20px;
+          font-size: 1.6rem;
           color: var(--primary-color);
-          font-size: 1.3rem;
           position: relative;
-          padding-bottom: 10px;
-        }
-
-        .school-stats h4::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
+          display: inline-block;
           left: 50%;
           transform: translateX(-50%);
-          width: 60px;
+        }
+  
+        .school-stats h4::after {
+          content: '';
+          display: block;
+          width: 50px;
           height: 3px;
-          background: linear-gradient(90deg, var(--primary-color), var(--tertiary-color));
-          border-radius: 3px;
+          background: var(--accent-color);
+          margin: 10px auto 0;
+          border-radius: 2px;
         }
-
-        .stats-cards {
+  
+        .stats-overview {
           display: flex;
+          margin-bottom: 25px;
+          gap: 20px;
           flex-wrap: wrap;
-          justify-content: center;
-          gap: 15px;
         }
-
-        .stats-card {
-          background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-          border-radius: var(--border-radius);
-          padding: 15px;
-          min-width: 100px;
+  
+        .stats-total {
           flex: 1;
-          max-width: 150px;
+          min-width: 200px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 15px;
+          background: rgba(255, 255, 255, 0.7);
+          border-radius: var(--border-radius);
+          box-shadow: 0 4px 15px var(--shadow-color);
+        }
+  
+        .stats-circle {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, var(--primary-color), var(--tertiary-color));
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 15px;
+          box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+          position: relative;
+          animation: pulse 2s infinite;
+        }
+  
+        .stats-circle::before {
+          content: '';
+          position: absolute;
+          width: 110px;
+          height: 110px;
+          border-radius: 50%;
+          border: 2px dashed var(--primary-color);
+          animation: spin 10s linear infinite;
+        }
+  
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+  
+        .stats-circle span {
+          font-size: 2.5rem;
+          font-weight: 700;
+          color: white;
+        }
+  
+        .stats-label {
+          font-size: 1.1rem;
+          color: var(--text-color);
+          font-weight: 500;
+          text-align: center;
+        }
+  
+        .stats-distribution {
+          flex: 2;
+          min-width: 300px;
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          background: rgba(255, 255, 255, 0.7);
+          border-radius: var(--border-radius);
+          padding: 20px;
+          box-shadow: 0 4px 15px var(--shadow-color);
+        }
+  
+        .stats-type-item {
+          margin-bottom: 10px;
+        }
+  
+        .stats-type-header {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 5px;
+        }
+  
+        .stats-type-name {
+          font-weight: 600;
+          font-size: 1rem;
+          color: var(--text-color);
+        }
+  
+        .stats-type-count {
+          font-size: 0.9rem;
+          color: var(--tertiary-color);
+          font-weight: 600;
+        }
+  
+        .stats-progress {
+          height: 12px;
+          background-color: rgba(0, 0, 0, 0.05);
+          border-radius: 10px;
+          overflow: hidden;
+          position: relative;
+        }
+  
+        .stats-progress-bar {
+          height: 100%;
+          border-radius: 10px;
+          position: relative;
+          transition: width 1s ease-in-out;
+          animation: progressAnimation 1s ease-out;
+        }
+  
+        @keyframes progressAnimation {
+          from { width: 0; }
+        }
+  
+        .stats-progress-bar::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+          animation: progressShine 1.5s infinite;
+        }
+  
+        @keyframes progressShine {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+  
+        .stats-cards {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+          gap: 15px;
+          margin-top: 25px;
+        }
+  
+        .stats-card {
+          background: white;
+          border-radius: var(--border-radius);
+          padding: 20px 15px;
           text-align: center;
           box-shadow: 0 5px 15px var(--shadow-color);
           transition: all 0.3s ease;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          animation: fadeIn 0.5s ease-out, slideInUp 0.5s ease-out;
-        }
-
-        .stats-card:hover {
-          transform: translateY(-5px) scale(1.05);
-          box-shadow: 0 10px 25px var(--shadow-color);
-        }
-
-        .stats-value {
-          font-size: 1.8rem;
-          font-weight: 700;
-          color: var(--accent-color);
-          margin-bottom: 8px;
-        }
-
-        .stats-label {
-          font-size: 0.9rem;
-          color: var(--text-color);
-          white-space: nowrap;
+          border-top: 4px solid var(--stats-card-color, var(--accent-color));
+          position: relative;
           overflow: hidden;
-          text-overflow: ellipsis;
+          animation: fadeInUp 0.5s ease-out forwards;
         }
-
-        /* 媒體查詢優化 */
+  
+        .stats-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 12px 20px var(--shadow-color);
+        }
+  
+        .stats-card-icon {
+          font-size: 1.8rem;
+          color: var(--stats-card-color, var(--accent-color));
+          margin-bottom: 10px;
+          transition: all 0.3s ease;
+        }
+  
+        .stats-card:hover .stats-card-icon {
+          transform: scale(1.2) rotate(10deg);
+        }
+  
+        .stats-value {
+          font-size: 2rem;
+          font-weight: 700;
+          color: var(--text-color);
+          margin: 10px 0;
+        }
+  
+        .stats-card:hover .stats-value {
+          color: var(--stats-card-color, var(--accent-color));
+        }
+  
+        /* 響應式調整 */
         @media (max-width: 768px) {
+          .stats-overview {
+            flex-direction: column;
+          }
+          
+          .stats-circle {
+            width: 80px;
+            height: 80px;
+          }
+          
+          .stats-circle::before {
+            width: 90px;
+            height: 90px;
+          }
+          
+          .stats-circle span {
+            font-size: 2rem;
+          }
+          
+          .stats-label {
+            font-size: 1rem;
+          }
+          
           .stats-cards {
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+          }
+          
+          .stats-card-icon {
+            font-size: 1.5rem;
+          }
+          
+          .stats-value {
+            font-size: 1.8rem;
+          }
+        }
+  
+        @media (max-width: 480px) {
+          .school-stats {
+            padding: 15px;
+          }
+          
+          .stats-cards {
+            grid-template-columns: repeat(2, 1fr);
           }
           
           .stats-card {
-            min-width: 80px;
-            padding: 10px;
+            padding: 15px 10px;
           }
           
           .stats-value {
             font-size: 1.5rem;
           }
-          
-          .stats-label {
-            font-size: 0.8rem;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .stats-cards {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-          }
-          
-          .stats-card {
-            max-width: none;
-          }
-        }
-        
-        .instruction-container {
-          padding: 10px 0;
-          margin-bottom: 20px;
-        }
-        
-        .instruction-item {
-          margin-bottom: 25px;
-          padding: 15px;
-          background-color: rgba(0,0,0,0.02);
-          border-radius: var(--border-radius);
-          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-          transition: all 0.3s ease;
-        }
-        
-        .instruction-item:hover {
-          background-color: rgba(0,0,0,0.03);
-          transform: translateY(-3px);
-          box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-        
-        .instruction-item h3 {
-          font-size: 1.2rem;
-          color: var(--primary-color);
-          margin-top: 0;
-          margin-bottom: 15px;
-          display: flex;
-          align-items: center;
-        }
-        
-        .instruction-item h3 i {
-          margin-right: 10px;
-          font-size: 1.3rem;
-          color: var(--accent-color);
-        }
-        
-        .instruction-highlight {
-          margin: 15px 0;
-          text-align: center;
         }
       </style>
 </head>
@@ -1943,14 +2127,40 @@
     <span class="close" onclick="closeExportModal()">&times;</span>
     <h2><i class="fas fa-file-export icon"></i> 匯出結果</h2>
     <p>請選擇匯出檔案格式：</p>
-    <button class="export-format-button" onclick="exportAsTXT()">純文字 (.txt)</button>
-    <button class="export-format-button" onclick="exportAsCSV()">CSV (.csv)</button>
-    <button class="export-format-button" onclick="exportAsJSON()">JSON (.json)</button>
-    <button class="export-format-button print-button" onclick="printResults()"><i class="fas fa-print icon"></i> 列印結果</button>
+    <div class="export-options">
+      <div class="export-option" onclick="exportAsTXT()">
+        <div class="export-icon"><i class="fas fa-file-alt"></i></div>
+        <div class="export-details">
+          <h3>純文字檔案</h3>
+          <p>導出為 .txt 格式，適合普通文本編輯器查看</p>
+        </div>
+      </div>
+      <div class="export-option" onclick="exportAsCSV()">
+        <div class="export-icon"><i class="fas fa-file-csv"></i></div>
+        <div class="export-details">
+          <h3>CSV 檔案</h3>
+          <p>導出為 .csv 格式，適合在 Excel 等電子表格中查看</p>
+        </div>
+      </div>
+      <div class="export-option" onclick="exportAsJSON()">
+        <div class="export-icon"><i class="fas fa-file-code"></i></div>
+        <div class="export-details">
+          <h3>JSON 檔案</h3>
+          <p>導出為 .json 格式，適合程序讀取或進階數據處理</p>
+        </div>
+      </div>
+      <div class="export-option" onclick="printResults()">
+        <div class="export-icon"><i class="fas fa-print"></i></div>
+        <div class="export-details">
+          <h3>列印結果</h3>
+          <p>生成打印友好的頁面格式，適合直接打印或保存為 PDF</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
- <div id="disclaimerModal" class="modal">
+  
+  <div id="disclaimerModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
       <h2><i class="fas fa-balance-scale icon"></i> 免責聲明</h2>
