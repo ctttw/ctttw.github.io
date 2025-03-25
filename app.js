@@ -1174,3 +1174,45 @@ document.body.onkeydown = function(e){
     return false;
   }
 }
+
+// Add touch event handlers for mobile devices
+function setupMobileInteractions() {
+  // Fix for 300ms delay on touch devices
+  document.addEventListener('touchstart', function() {}, {passive: true});
+  
+  // Handle mobile navigation better
+  document.querySelectorAll('.fullscreen-menu a').forEach(link => {
+    link.addEventListener('touchstart', function() {
+      this.classList.add('active-touch');
+    });
+    link.addEventListener('touchend', function() {
+      this.classList.remove('active-touch');
+      setTimeout(() => toggleMenu(), 100);
+    });
+  });
+  
+  // Add scrolling for long modals on mobile
+  document.querySelectorAll('.modal-content').forEach(modal => {
+    modal.addEventListener('touchmove', function(e) {
+      e.stopPropagation();
+    }, {passive: true});
+  });
+}
+
+// Initialize mobile optimizations
+document.addEventListener('DOMContentLoaded', function() {
+  setupMobileInteractions();
+  
+  // Adjust UI based on screen size
+  const adjustForMobile = () => {
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      // Adjust for mobile viewport
+      document.querySelectorAll('.form-group select, .form-group input[type="text"]')
+        .forEach(el => el.setAttribute('data-size', 'mobile'));
+    }
+  };
+  
+  adjustForMobile();
+  window.addEventListener('resize', adjustForMobile);
+});
