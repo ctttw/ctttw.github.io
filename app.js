@@ -127,12 +127,26 @@ function showLoading() {
   loadingOverlay.className = 'loading-overlay';
   loadingOverlay.innerHTML = `
     <div class="loading-spinner">
-      <div class="spinner"></div>
-      <div class="loading-text">分析中，請稍候...</div>
-      <div class="progress-bar">
-        <div class="progress-fill"></div>
+      <div class="spinner-container">
+        <div class="spinner-ring"></div>
+        <div class="spinner-inner">
+          <div class="spinner-circle"></div>
+          <div class="spinner-icon"><i class="fas fa-chart-line"></i></div>
+        </div>
       </div>
-      <div class="loading-status">準備中...</div>
+      <div class="loading-text">分析中，請稍候...</div>
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+        <div class="loading-status">準備中...</div>
+      </div>
+      <div class="loading-steps">
+        <div class="step active"><i class="fas fa-cog"></i><span>初始化</span></div>
+        <div class="step"><i class="fas fa-database"></i><span>資料收集</span></div>
+        <div class="step"><i class="fas fa-calculator"></i><span>計算積分</span></div>
+        <div class="step"><i class="fas fa-check-circle"></i><span>完成</span></div>
+      </div>
     </div>
   `;
   document.body.appendChild(loadingOverlay);
@@ -154,24 +168,55 @@ function showLoading() {
 function animateAnalysisProgress() {
   const progressFill = document.querySelector('.progress-fill');
   const loadingStatus = document.querySelector('.loading-status');
-  const statuses = ['準備中...', '收集學校資料...', '分析成績...', '計算積分...', '產生結果報告...', '完成!'];
+  const loadingSteps = document.querySelectorAll('.loading-steps .step');
+  
+  const statuses = [
+    '準備分析資料...',
+    '收集學校資訊...',
+    '比對成績條件...',
+    '計算會考積分...',
+    '整理結果報表...',
+    '完成！'
+  ];
+  
   let currentStep = 0;
+  const totalSteps = statuses.length;
   
   const updateProgress = () => {
-    if (currentStep >= statuses.length) return;
+    if (currentStep >= totalSteps) return;
     
-    const progress = (currentStep + 1) / statuses.length;
+    const progress = (currentStep + 1) / totalSteps;
     progressFill.style.width = `${progress * 100}%`;
     loadingStatus.textContent = statuses[currentStep];
-    loadingStatus.style.animation = 'pulse 0.5s ease';
+    loadingStatus.classList.add('pulse');
+    
+    // Update step indicators
+    loadingSteps.forEach((step, index) => {
+      if (index < Math.floor(currentStep / (totalSteps / loadingSteps.length))) {
+        step.classList.add('active', 'completed');
+        step.classList.remove('current');
+      } else if (index === Math.floor(currentStep / (totalSteps / loadingSteps.length))) {
+        step.classList.add('active', 'current');
+        step.classList.remove('completed');
+      } else {
+        step.classList.remove('active', 'current', 'completed');
+      }
+    });
     
     setTimeout(() => {
-      loadingStatus.style.animation = '';
+      loadingStatus.classList.remove('pulse');
       currentStep++;
-      if (currentStep < statuses.length) {
-        setTimeout(updateProgress, currentStep === statuses.length - 1 ? 300 : 700);
+      if (currentStep < totalSteps) {
+        const delay = currentStep === totalSteps - 1 ? 300 : (500 + Math.random() * 500);
+        setTimeout(updateProgress, delay);
+      } else {
+        // Final step animation
+        loadingSteps.forEach((step) => {
+          step.classList.add('active', 'completed');
+          step.classList.remove('current');
+        });
       }
-    }, 500);
+    }, 300);
   };
   
   updateProgress();
