@@ -59,15 +59,21 @@ function selectIdentity(identity) {
 
 function toggleInstructions() {
   var instructionsModal = document.getElementById('instructionsModal');
+  var modalContent = instructionsModal.querySelector('.modal-content');
   instructionsModal.style.display = 'block';
+  
   setTimeout(() => {
     instructionsModal.classList.add('show');
+    modalContent.classList.add('show-content');
   }, 10);
 }
 
 function closeInstructions() {
   var modal = document.getElementById('instructionsModal');
+  var modalContent = modal.querySelector('.modal-content');
+  modalContent.classList.remove('show-content');
   modal.classList.remove('show');
+  
   setTimeout(() => {
     modal.style.display = 'none';
   }, 400);
@@ -81,7 +87,12 @@ function showDisclaimer() {
   var modal = document.getElementById('disclaimerModal');
   var modalContent = modal.querySelector('.modal-content');
   modal.style.display = 'block';
-  modal.classList.add('show');
+  
+  // Add slight delay before adding show class for better animation
+  setTimeout(() => {
+    modal.classList.add('show');
+    modalContent.classList.add('show-content');
+  }, 10);
   
   modalContent.addEventListener('mousedown', startDragging);
   document.addEventListener('mousemove', drag);
@@ -90,6 +101,18 @@ function showDisclaimer() {
   modalContent.addEventListener('touchstart', startDragging);
   document.addEventListener('touchmove', drag);
   document.addEventListener('touchend', stopDragging);
+}
+
+function closeDisclaimer() {
+  var modal = document.getElementById('disclaimerModal');
+  var modalContent = modal.querySelector('.modal-content');
+  modalContent.classList.remove('show-content');
+  modal.classList.remove('show');
+  
+  // Add delay to match animation duration before hiding
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 400);
 }
 
 function startDragging(e) {
@@ -111,14 +134,6 @@ function drag(e) {
 function stopDragging() {
   isDragging = false;
   document.querySelector('.modal-content').style.cursor = 'grab';
-}
-
-function closeDisclaimer() {
-  var modal = document.getElementById('disclaimerModal');
-  modal.classList.remove('show');
-  setTimeout(() => {
-    modal.style.display = 'none';
-  }, 400);
 }
 
 document.querySelectorAll('.modal .close').forEach(function(btn) {
@@ -565,16 +580,24 @@ function getColorForSchoolType(type) {
 
 // 新增匯出格式選菜單相關函式
 function showExportModal() {
-  document.getElementById('exportModal').style.display = 'block';
+  var exportModal = document.getElementById('exportModal');
+  var modalContent = exportModal.querySelector('.modal-content');
+  exportModal.style.display = 'block';
+  
   setTimeout(() => {
-    document.getElementById('exportModal').classList.add('show');
+    exportModal.classList.add('show');
+    modalContent.classList.add('show-content');
   }, 10);
 }
 
 function closeExportModal() {
-  document.getElementById('exportModal').classList.remove('show');
+  var exportModal = document.getElementById('exportModal');
+  var modalContent = exportModal.querySelector('.modal-content');
+  modalContent.classList.remove('show-content');
+  exportModal.classList.remove('show');
+  
   setTimeout(() => {
-    document.getElementById('exportModal').style.display = 'none';
+    exportModal.style.display = 'none';
   }, 400);
 }
 
