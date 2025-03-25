@@ -1701,6 +1701,46 @@
             max-width: none;
           }
         }
+        
+        .instruction-container {
+          padding: 10px 0;
+          margin-bottom: 20px;
+        }
+        
+        .instruction-item {
+          margin-bottom: 25px;
+          padding: 15px;
+          background-color: rgba(0,0,0,0.02);
+          border-radius: var(--border-radius);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+          transition: all 0.3s ease;
+        }
+        
+        .instruction-item:hover {
+          background-color: rgba(0,0,0,0.03);
+          transform: translateY(-3px);
+          box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .instruction-item h3 {
+          font-size: 1.2rem;
+          color: var(--primary-color);
+          margin-top: 0;
+          margin-bottom: 15px;
+          display: flex;
+          align-items: center;
+        }
+        
+        .instruction-item h3 i {
+          margin-right: 10px;
+          font-size: 1.3rem;
+          color: var(--accent-color);
+        }
+        
+        .instruction-highlight {
+          margin: 15px 0;
+          text-align: center;
+        }
       </style>
 </head>
 <body>
@@ -1737,32 +1777,6 @@
       <button class="disclaimer-toggle" onclick="showDisclaimer()"><i class="fas fa-exclamation-triangle icon"></i>免責聲明</button>
     </div>
 
-    <div id="instructions" style="display: none;">
-      <h2><i class="fas fa-book icon"></i>使用說明</h2>
-      <div class="instruction-item">
-        <h3><i class="fas fa-key icon"></i>1. 輸入邀請碼</h3>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOxDcbwdmBpZGrushwYGBMRKqloorV4xf4Auibo5ZIAhQm3A/viewform?usp=sf_link" target="_blank" class="invite-link">
-          <i class="fas fa-envelope-open-text icon"></i>填寫表單獲取邀請碼
-        </a>
-                      <p>在"邀請碼"欄位中輸入有效的邀請碼。邀請碼每小時自動更新，請確保使用最新的邀請碼。</p>
-      </div>
-      <div class="instruction-item">
-        <h3><i class="fas fa-school icon"></i>2. 選擇學校屬性和類型</h3>
-        <p>從下拉菜單中選擇您感興趣的學校屬性（公立/私立）和類型（普通科/職業類科）。</p>
-      </div>
-      <div class="instruction-item">
-        <h3><i class="fas fa-pencil-alt icon"></i>3. 輸入會考成績</h3>
-        <p>為每個科目（國文、英文、數學、自然、社會）選擇您的會考等級，從A++到C。</p>
-      </div>
-      <div class="instruction-item">
-        <h3><i class="fas fa-pen-fancy icon"></i>4. 選擇作文級分</h3>
-        <p>從0到6級中選擇您的作文成績。</p>
-      </div>
-      <div class="instruction-item">
-        <h3><i class="fas fa-search icon"></i>5. 分析結果</h3>
-        <p>點擊"分析落點"按鈕，系統將根據您的成績計算總積分，並顯示您可能錄取的學校列表。</p>
-      </div>
-    </div>
     <form id="analysisForm">
       <div class="form-group">
           <label for="invitationCode"><i class="fas fa-key icon"></i>邀請碼：</label>
@@ -1981,6 +1995,41 @@
         </div>
       </div>
       <button class="confirm-button" onclick="closeDisclaimer()">我已了解並同意</button>
+    </div>
+  </div>
+  
+  <div id="instructionsModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeInstructions()">&times;</span>
+      <h2><i class="fas fa-book icon"></i> 使用說明</h2>
+      <div class="instruction-container">
+        <div class="instruction-item">
+          <h3><i class="fas fa-key icon"></i>1. 輸入邀請碼</h3>
+          <p>在"邀請碼"欄位中輸入有效的邀請碼。邀請碼每小時自動更新，請確保使用最新的邀請碼。</p>
+          <div class="instruction-highlight">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOxDcbwdmBpZGrushwYGBMRKqloorV4xf4Auibo5ZIAhQm3A/viewform?usp=sf_link" target="_blank" class="invite-link">
+              <i class="fas fa-envelope-open-text icon"></i>填寫表單獲取邀請碼
+            </a>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <h3><i class="fas fa-school icon"></i>2. 選擇學校屬性和類型</h3>
+          <p>從下拉菜單中選擇您感興趣的學校屬性（公立/私立）和類型（普通科/職業類科）。</p>
+        </div>
+        <div class="instruction-item">
+          <h3><i class="fas fa-pencil-alt icon"></i>3. 輸入會考成績</h3>
+          <p>為每個科目（國文、英文、數學、自然、社會）選擇您的會考等級，從A++到C。</p>
+        </div>
+        <div class="instruction-item">
+          <h3><i class="fas fa-pen-fancy icon"></i>4. 選擇作文級分</h3>
+          <p>從0到6級中選擇您的作文成績。</p>
+        </div>
+        <div class="instruction-item">
+          <h3><i class="fas fa-search icon"></i>5. 分析結果</h3>
+          <p>點擊"分析落點"按鈕，系統將根據您的成績計算總積分，並顯示您可能錄取的學校列表。</p>
+        </div>
+      </div>
+      <button class="confirm-button" onclick="closeInstructions()">我已了解</button>
     </div>
   </div>
   

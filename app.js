@@ -27,16 +27,19 @@ function toggleVocationalGroup() {
 }
 
 function toggleInstructions() {
-  var instructions = document.getElementById('instructions');
-  if (instructions.style.display === 'none') {
-    instructions.style.display = 'block';
-    instructions.style.animation = 'fadeIn 0.5s ease-out, slideInUp 0.5s ease-out';
-  } else {
-    instructions.style.animation = 'fadeOut 0.5s ease-out';
-    setTimeout(() => {
-      instructions.style.display = 'none';
-    }, 500);
-  }
+  var instructionsModal = document.getElementById('instructionsModal');
+  instructionsModal.style.display = 'block';
+  setTimeout(() => {
+    instructionsModal.classList.add('show');
+  }, 10);
+}
+
+function closeInstructions() {
+  var modal = document.getElementById('instructionsModal');
+  modal.classList.remove('show');
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 400);
 }
 
 let isDragging = false;
@@ -102,6 +105,10 @@ window.onclick = function(event) {
   var exportModal = document.getElementById('exportModal');
   if (event.target == exportModal) {
     closeExportModal();
+  }
+  var instructionsModal = document.getElementById('instructionsModal');
+  if (event.target == instructionsModal) {
+    closeInstructions();
   }
 }
 
