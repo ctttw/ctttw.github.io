@@ -42,6 +42,9 @@
           -ms-user-select: none;
           user-select: none;
           line-height: 1.6;
+          overflow-x: hidden; 
+          width: 100%;
+          box-sizing: border-box;
         }
       
         .container {
@@ -54,6 +57,7 @@
           margin: 80px auto 20px;
           text-align: center;
           transition: all 0.3s ease;
+          box-sizing: border-box;
         }
         
         .container:hover {
@@ -1610,7 +1614,7 @@
           left: 0;
           width: 100%;
           height: 100%;
-          background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+          background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5%M32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
           opacity: 0.3;
         }
   
@@ -2078,6 +2082,7 @@
             padding: 1.5rem;
             width: 95%;
             margin: 70px auto 15px;
+            box-sizing: border-box;
           }
           
           .identity-cards {
@@ -2106,16 +2111,20 @@
         
         @media (max-width: 480px) {
           .container {
-            width: 92%;
+            width: 95%;
             padding: 1rem 0.8rem;
             border-radius: var(--border-radius);
             margin-top: 60px;
             box-shadow: 0 5px 15px var(--shadow-color);
+            overflow-x: hidden;
           }
           
           select, input[type="text"] {
             padding: 0.6rem 0.8rem;
             font-size: 0.9rem;
+            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
           }
           
           .qr-options {
@@ -2126,11 +2135,13 @@
           .file-input-label, #scanQRCode {
             width: 100%;
             min-width: auto;
+            box-sizing: border-box;
           }
           
           button {
             padding: 0.8rem 1.5rem;
             width: 100%;
+            box-sizing: border-box;
           }
           
           h1 {
@@ -2139,6 +2150,10 @@
           
           #results {
             padding: 1rem 0.8rem;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
           }
           
           .school-group ul {
@@ -2147,6 +2162,8 @@
 
           .identity-card {
             padding: 12px 10px;
+            width: 100%;
+            box-sizing: border-box;
           }
 
           .form-group label {
@@ -2156,6 +2173,7 @@
           .result-card {
             max-width: 100%;
             padding: 20px 15px;
+            box-sizing: border-box;
           }
           
           /* Add these new styles for mobile width fix */
@@ -2169,17 +2187,24 @@
           .school-stats,
           .disclaimer-section,
           .rating-section,
-          .feedback-container textarea {
+          .feedback-container textarea,
+          .modal-content,
+          .analysis-results,
+          .school-group,
+          .result-summary,
+          .export-options {
             max-width: 100%;
             width: 100%;
             box-sizing: border-box;
             margin-left: 0;
             margin-right: 0;
+            overflow-x: hidden;
           }
           
           .header-container {
             width: 95%;
             padding: 0 10px;
+            box-sizing: border-box;
           }
           
           .fullscreen-menu {
@@ -2188,15 +2213,31 @@
           
           .export-options {
             margin: 10px 0;
+            display: flex;
+            flex-direction: column;
           }
           
           .export-option {
             margin: 5px 0;
+            width: 100%;
           }
           
           .modal-content {
-            width: 85%;
+            width: 90%;
             padding: 20px 15px;
+            overflow-x: hidden;
+          }
+          
+          /* Fix horizontal scrolling issues */
+          html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+          }
+          
+          /* Fix table overflows */
+          table {
+            table-layout: fixed;
+            word-wrap: break-word;
           }
         }
       </style>
