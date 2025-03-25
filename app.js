@@ -406,7 +406,7 @@ function displayResults(data) {
                     </table>
                   </div>`;
   
-  // 添加學校統計部分
+  // 添加學校統計部分 - 改為圖卡式設計
   if (eligibleSchools && eligibleSchools.length > 0) {
     // 計算各類型學校的數量
     let schoolsByType = {};
@@ -417,36 +417,35 @@ function displayResults(data) {
       schoolsByType[school.type]++;
     });
     
-    // 生成學校統計HTML
+    // 生成學校統計HTML - 使用卡片設計
     resultsHTML += `<div class="school-stats">
                       <h4><i class="fas fa-chart-pie"></i> 學校統計</h4>
-                      <div class="stats-overview">
-                        <div class="stats-total">
-                          <div class="stats-circle">
-                            <span>${eligibleSchools.length}</span>
-                          </div>
-                          <div class="stats-label">符合條件的學校總數</div>
+                      <div class="stats-total-card">
+                        <div class="stats-total-icon">
+                          <i class="fas fa-school"></i>
                         </div>
-                        <div class="stats-distribution">`;
+                        <div class="stats-total-value">${eligibleSchools.length}</div>
+                        <div class="stats-total-label">符合條件的學校總數</div>
+                      </div>
+                      <div class="stats-cards">`;
     
-    // 添加各類型學校分布統計
+    // 添加各類型學校卡片
     Object.entries(schoolsByType).forEach(([type, count]) => {
       const percentage = Math.round((count / eligibleSchools.length) * 100);
       const typeIcon = getSchoolTypeIcon(type);
-      resultsHTML += `<div class="stats-type-item">
-                        <div class="stats-type-header">
-                          <div class="stats-type-name"><i class="${typeIcon}"></i> ${type}</div>
-                          <div class="stats-type-count">${count} 所 (${percentage}%)</div>
+      const cardColor = getColorForSchoolType(type);
+      
+      resultsHTML += `<div class="stats-card" style="--stats-card-color: ${cardColor.split(',')[0].replace('linear-gradient(90deg', '').trim()}">
+                        <div class="stats-card-icon">
+                          <i class="${typeIcon}"></i>
                         </div>
-                        <div class="stats-progress">
-                          <div class="stats-progress-bar" style="width: ${percentage}%; 
-                            background: ${getColorForSchoolType(type)}"></div>
-                        </div>
+                        <div class="stats-value">${count}</div>
+                        <div class="stats-label">${type}</div>
+                        <div class="stats-percentage">${percentage}%</div>
                       </div>`;
     });
     
     resultsHTML += `</div>
-                  </div>
                 </div>`;
   }
   
@@ -520,7 +519,7 @@ function getSchoolTypeIcon(type) {
   }
 }
 
-// 添加獲取類型顏色的函數
+// 添加獲取類型顏色的函數 - 增加更多顏色變化
 function getColorForSchoolType(type) {
   const colors = {
     '普通科': 'linear-gradient(90deg, #4361ee, #3a0ca3)',
@@ -532,7 +531,11 @@ function getColorForSchoolType(type) {
     '外語群': 'linear-gradient(90deg, #06d6a0, #1b9aaa)',
     '設計群': 'linear-gradient(90deg, #ef476f, #d62246)',
     '餐旅群': 'linear-gradient(90deg, #ff9e00, #ff6d00)',
-    '家政群': 'linear-gradient(90deg, #9d4edd, #7b2cbf)'
+    '家政群': 'linear-gradient(90deg, #9d4edd, #7b2cbf)',
+    '食品群': 'linear-gradient(90deg, #2ec4b6, #20a4f3)',
+    '農業群': 'linear-gradient(90deg, #70e000, #38b000)',
+    '土木與建築群': 'linear-gradient(90deg, #fb8500, #ffb703)',
+    '化工群': 'linear-gradient(90deg, #ff477e, #ff5c8a)'
   };
   
   return colors[type] || 'linear-gradient(90deg, #4cc9f0, #4361ee)';
