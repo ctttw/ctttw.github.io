@@ -1198,3 +1198,44 @@ document.addEventListener('DOMContentLoaded', function() {
   adjustForMobile();
   window.addEventListener('resize', adjustForMobile);
 });
+
+function submitRating() {
+  const rating = document.querySelector('input[name="rating"]:checked');
+  const feedback = document.getElementById('feedbackText').value;
+  
+  if (!rating) {
+    alert('請選擇星級評分');
+    return;
+  }
+  
+  // 記錄用戶評分活動
+  logUserActivity('submit_rating', {
+    rating: rating.value,
+    feedback: feedback
+  });
+  
+  // 發送評分數據到伺服器
+  try {
+    fetch('https://script.google.com/macros/s/AKfycbx5FRSSJwv5NQQDYS14p9xupj3iQj-TPS3vexSFLUESNdkuS9d1d5Ro4b-Wy7IMmYXidw/exec', {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'rating',
+        rating: rating.value,
+        feedback: feedback,
+        timestamp: new Date().toISOString()
+      })
+    });
+  } catch (error) {
+    console.error('Error submitting rating:', error);
+  }
+  
+  // 顯示感謝信息
+  const ratingSection = document.querySelector('.rating-section');
+  ratingSection.innerHTML = `
+    <div class="rating-thanks">
+      <i class="fas fa-heart icon"></i>
+      <h3>感謝您的評分!</h3>
+      <p>您的反饋對我們非常寶貴，我們會繼續努力改進系統。</p>
+    </div>
+  `;
+}
