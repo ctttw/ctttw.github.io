@@ -163,7 +163,7 @@
         button:active {
           transform: translateY(1px);
         }
-      
+        
         #results, #instructions {
           margin-top: 2.5rem;
           text-align: left;
@@ -1046,7 +1046,9 @@
           transition: all 0.3s ease;
           font-weight: 600;
           margin-top: 10px;
-          box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+          font-size: 1rem;
+          text-transform: uppercase;
+          letter-spacing: 1px;
         }
       
         .feedback-container button:hover {
@@ -1608,7 +1610,7 @@
           left: 0;
           width: 100%;
           height: 100%;
-          background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+          background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
           opacity: 0.3;
         }
   
@@ -1645,7 +1647,6 @@
           text-align: center;
           box-shadow: 0 5px 15px var(--shadow-color);
           transition: all 0.3s ease;
-          border-top: 4px solid var(--stats-card-color, var(--accent-color));
           position: relative;
           overflow: hidden;
           animation: fadeInUp 0.5s ease-out forwards;
@@ -1964,6 +1965,113 @@
             font-size: 0.9rem;
           }
         }
+        /* Identity Selection Cards */
+        .identity-selector {
+          margin: 20px 0;
+          text-align: center;
+        }
+        
+        .identity-selector h2 {
+          font-size: 1.6rem;
+          margin-bottom: 10px;
+          color: var(--primary-color);
+        }
+        
+        .identity-intro {
+          font-size: 1rem;
+          color: var(--text-color);
+          margin-bottom: 20px;
+          opacity: 0.8;
+        }
+        
+        .identity-cards {
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+          flex-wrap: wrap;
+          margin-bottom: 20px;
+        }
+        
+        .identity-card {
+          background: var(--card-background);
+          border-radius: var(--border-radius);
+          padding: 15px;
+          width: 100%;
+          max-width: 200px;
+          box-shadow: 0 5px 20px var(--shadow-color);
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+          cursor: pointer;
+          text-align: center;
+          border: 2px solid transparent;
+        }
+        
+        .identity-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 4px;
+          background: linear-gradient(90deg, var(--primary-color), var(--tertiary-color));
+          transition: height 0.3s ease;
+        }
+        
+        .identity-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 30px var(--shadow-color);
+        }
+        
+        .identity-card:hover::before {
+          height: 6px;
+        }
+        
+        .identity-icon {
+          font-size: 2rem;
+          color: var(--primary-color);
+          margin-bottom: 10px;
+          height: 50px;
+          width: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(67, 97, 238, 0.1);
+          border-radius: 50%;
+          margin: 0 auto 15px;
+          transition: all 0.3s ease;
+        }
+        
+        .identity-card:hover .identity-icon {
+          transform: scale(1.1) rotate(10deg);
+        }
+        
+        .identity-card h3 {
+          margin: 0;
+          font-size: 1.3rem;
+          color: var(--text-color);
+          margin-bottom: 5px;
+        }
+        
+        .identity-card p,
+        .identity-features,
+        .select-button {
+          display: none;
+        }
+        
+        /* Mobile responsive for identity cards */
+        @media (max-width: 768px) {
+          .identity-cards {
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+          }
+          
+          .identity-card {
+            max-width: 100%;
+            width: 90%;
+          }
+        }
       </style>
 </head>
 <body>
@@ -1995,6 +2103,50 @@
       <button class="disclaimer-toggle" onclick="showDisclaimer()"><i class="fas fa-exclamation-triangle icon"></i>免責聲明</button>
     </div>
 
+    <div id="identitySelector" class="identity-selector">
+      <h2><i class="fas fa-user-circle"></i> 請選擇您的身分</h2>
+      <p class="identity-intro">為了提供更精確的分析結果，請先選擇您的身分</p>
+      
+      <div class="identity-cards">
+        <div id="identity-student" class="identity-card" onclick="selectIdentity('student')">
+          <div class="identity-icon"><i class="fas fa-user-graduate"></i></div>
+          <h3>學生</h3>
+          <p>正在準備會考的學生</p>
+          <div class="identity-features">
+            <span><i class="fas fa-check"></i> 個人成績分析</span>
+            <span><i class="fas fa-check"></i> 學校推薦</span>
+          </div>
+          <div class="select-button">選擇</div>
+        </div>
+        
+        <div id="identity-parent" class="identity-card" onclick="selectIdentity('parent')">
+          <div class="identity-icon"><i class="fas fa-users"></i></div>
+          <h3>家長</h3>
+          <p>關心孩子升學的家長</p>
+          <div class="identity-features">
+            <span><i class="fas fa-check"></i> 親子對話建議</span>
+            <span><i class="fas fa-check"></i> 選校參考</span>
+          </div>
+          <div class="select-button">選擇</div>
+        </div>
+        
+        <div id="identity-teacher" class="identity-card" onclick="selectIdentity('teacher')">
+          <div class="identity-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+          <h3>老師</h3>
+          <p>指導學生的教師或輔導老師</p>
+          <div class="identity-features">
+            <span><i class="fas fa-check"></i> 班級統計參考</span>
+            <span><i class="fas fa-check"></i> 輔導建議</span>
+          </div>
+          <div class="select-button">選擇</div>
+        </div>
+      </div>
+      
+      <div id="identityConfirmation" class="identity-confirmation">
+        您選擇的身分是: <span id="identityDisplayName"></span>
+      </div>
+    </div>
+
     <div class="form-link-container">
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOxDcbwdmBpZGrushwYGBMRKqloorV4xf4Auibo5ZIAhQm3A/viewform?usp=sf_link" target="_blank" class="form-link-button">
         <i class="fas fa-file-alt"></i> 填寫表單獲取邀請碼
@@ -2002,6 +2154,7 @@
     </div>
 
     <form id="analysisForm">
+      <input type="hidden" id="selectedIdentity" value="">
       <div class="form-group">
           <label for="invitationCode"><i class="fas fa-key icon"></i>邀請碼：</label>
           <input type="text" id="invitationCode" required placeholder="請輸入邀請碼">

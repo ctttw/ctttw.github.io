@@ -26,6 +26,37 @@ function toggleVocationalGroup() {
   }
 }
 
+function selectIdentity(identity) {
+  const cards = document.querySelectorAll('.identity-card');
+  cards.forEach(card => {
+    card.classList.remove('selected');
+  });
+  
+  document.getElementById(`identity-${identity}`).classList.add('selected');
+  document.getElementById('selectedIdentity').value = identity;
+  
+  // 記錄用戶選擇的身分
+  logUserActivity('select_identity', { identity });
+  
+  // 滑動到分析表單
+  document.getElementById('analysisForm').scrollIntoView({ behavior: 'smooth' });
+  
+  // 顯示選擇後的提示
+  const identityNames = {
+    'student': '學生',
+    'parent': '家長',
+    'teacher': '老師'
+  };
+  
+  document.getElementById('identityConfirmation').textContent = `您選擇的身分是: ${identityNames[identity]}`;
+  document.getElementById('identityConfirmation').style.display = 'block';
+  
+  // 添加淡入動畫
+  setTimeout(() => {
+    document.getElementById('identityConfirmation').classList.add('show');
+  }, 100);
+}
+
 function toggleInstructions() {
   var instructionsModal = document.getElementById('instructionsModal');
   instructionsModal.style.display = 'block';
@@ -270,6 +301,14 @@ async function analyzeScores() {
     const currentInvitationCode = generateInvitationCode();
     if (invitationCode !== currentInvitationCode) {
       alert('邀請碼錯誤或已過期，請確認最新的邀請碼。');
+      return;
+    }
+    
+    // 檢查身分是否選擇
+    const selectedIdentity = document.getElementById('selectedIdentity').value;
+    if (!selectedIdentity) {
+      alert('請先選擇您的身分（學生、家長或老師）');
+      document.getElementById('identitySelector').scrollIntoView({ behavior: 'smooth' });
       return;
     }
 
