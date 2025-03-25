@@ -419,7 +419,7 @@ function displayResults(data) {
       schoolsByType[school.type]++;
     });
     
-    // 增強美觀的學校統計區塊
+    // 增強美觀的學校統計區塊，並優化手機版顯示
     resultsHTML += `<div class="school-stats">
                       <h4><i class="fas fa-chart-pie icon"></i> 學校統計概覽</h4>
                       <div class="stats-overview">
@@ -451,15 +451,18 @@ function displayResults(data) {
                   </div>
                   <div class="stats-cards">`;
                         
-    // 為每種學校類型添加增強美觀的卡片
+    // 針對手機版優化卡片顯示
     Object.entries(schoolsByType).forEach(([type, count], index) => {
       const iconClass = getSchoolTypeIcon(type);
       const hue = 200 + (index * 30) % 150; // 產生不同色調的顏色
       
+      // 將學校類型名稱截短處理，避免手機版溢出
+      const displayType = type.length > 10 ? type.substring(0, 9) + "..." : type;
+      
       resultsHTML += `<div class="stats-card" style="--stats-card-color: hsl(${hue}, 70%, 60%)">
                         <div class="stats-card-icon"><i class="${iconClass}"></i></div>
                         <div class="stats-value">${count}</div>
-                        <div class="stats-label">${type}</div>
+                        <div class="stats-label">${displayType}</div>
                       </div>`;
     });
     
@@ -1005,7 +1008,7 @@ function printResults() {
     <div class="footer">
       注意：本分析結果僅供參考，實際錄取情況可能受多種因素影響。
       <br>建議您諮詢學校輔導老師或升學顧問的專業意見，並關注各校的官方網站和招生簡章。
-      <br>© ${new Date().getFullYear()} CTTW 中投區會考落點分析系統
+      <br> CTTW 中投區會考落點分析系統
     </div>
     
     <div class="no-print">
