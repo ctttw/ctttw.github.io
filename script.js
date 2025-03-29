@@ -1,4 +1,3 @@
-// Vocational groups data definition
 const vocationalGroups = {
   '機械群': ['機械科', '鑄造科', '板金科', '機械木模科', '配管科', '模具科', '機電科', '製圖科', '生物產業機電科', '電腦機械製圖科'],
   '動力機械群': ['汽車科', '重機科', '飛機修護科', '動力機械科', '農業機械科', '軌道車輛科'],
@@ -11,13 +10,8 @@ const vocationalGroups = {
   '農業群': ['農場經營科', '園藝科', '森林科', '野生動物保育科', '造園科', '畜產保健科'],
   '食品群': ['食品加工科', '食品科', '水產食品科', '烘焙科'],
   '家政群': ['家政科', '服裝科', '幼兒保育科', '美容科', '時尚模特兒科', '流行服飾科', '時尚造型科', '照顧服務科'],
-  '餐旅群': ['觀光事業科', '餐飲管理科'],
-  '水產群': ['漁業科', '水產養殖科'],
-  '海事群': ['輪機科', '航海科'],
-  '藝術群': ['戲劇科', '音樂科', '舞蹈科', '美術科', '影劇科', '西樂科', '國樂科', '電影電視科', '表演藝術科', '多媒體動畫科', '時尚工藝科']
+  '餐旅群': ['觀光事業科', '餐飲管理科']
 };
-
-// Utility functions and event handlers
 
 function toggleVocationalGroup() {
   const schoolType = document.getElementById('schoolType').value;
@@ -28,189 +22,257 @@ function toggleVocationalGroup() {
     vocationalGroupContainer.style.display = 'block';
   } else {
     vocationalGroupContainer.style.display = 'none';
-    vocationalGroup.value = 'all';
+    vocationalGroup.value = 'all'; // 清空職業類科的選擇，恢復到默認值
   }
 }
 
-function toggleInstructions() {
-  showInstructions();
+function selectIdentity(identity) {
+  const cards = document.querySelectorAll('.identity-card');
+  cards.forEach(card => {
+    card.classList.remove('selected');
+  });
+  
+  document.getElementById(`identity-${identity}`).classList.add('selected');
+  document.getElementById('selectedIdentity').value = identity;
+  
+  // 記錄用戶選擇的身分
+  logUserActivity('select_identity', { identity });
+  
+  // 滑動到分析表單
+  document.getElementById('analysisForm').scrollIntoView({ behavior: 'smooth' });
+  
+  // 顯示選擇後的提示
+  const identityNames = {
+    'student': '學生',
+    'parent': '家長',
+    'teacher': '老師'
+  };
+  
+  const confirmationElement = document.getElementById('identityConfirmation');
+  confirmationElement.textContent = `您選擇的身分是: ${identityNames[identity]}`;
+  confirmationElement.style.display = 'block';
+  
+  // 添加淡入動畫
+  setTimeout(() => {
+    confirmationElement.classList.add('show');
+  }, 100);
 }
 
-function showInstructions() {
-  var modal = document.getElementById('instructionsModal');
-  modal.style.display = 'block';
+function toggleInstructions() {
+  var instructionsModal = document.getElementById('instructionsModal');
+  var modalContent = instructionsModal.querySelector('.modal-content');
+  instructionsModal.style.display = 'block';
+  
+  setTimeout(() => {
+    instructionsModal.classList.add('show');
+    modalContent.classList.add('show-content');
+  }, 10);
 }
 
 function closeInstructions() {
   var modal = document.getElementById('instructionsModal');
-  modal.style.display = 'none';
+  var modalContent = modal.querySelector('.modal-content');
+  modalContent.classList.remove('show-content');
+  modal.classList.remove('show');
+  
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 400);
 }
+
+let isDragging = false;
+let startY;
+let startTop;
 
 function showDisclaimer() {
   var modal = document.getElementById('disclaimerModal');
+  var modalContent = modal.querySelector('.modal-content');
   modal.style.display = 'block';
+  
+  // Add slight delay before adding show class for better animation
+  setTimeout(() => {
+    modal.classList.add('show');
+    modalContent.classList.add('show-content');
+  }, 10);
+  
+  modalContent.addEventListener('mousedown', startDragging);
+  document.addEventListener('mousemove', drag);
+  document.addEventListener('mouseup', stopDragging);
+  
+  modalContent.addEventListener('touchstart', startDragging);
+  document.addEventListener('touchmove', drag);
+  document.addEventListener('touchend', stopDragging);
 }
 
 function closeDisclaimer() {
   var modal = document.getElementById('disclaimerModal');
-  modal.style.display = 'none';
-}
-
-function showInvitationValidationAnimation() {
-  const invitationGroup = document.getElementById('invitationCode').closest('.form-group');
-  if (!invitationGroup) return;
-  invitationGroup.style.position = 'relative';
-  const overlay = document.createElement('div');
-  overlay.id = 'invitationValidationOverlay';
-  overlay.className = 'validation-overlay';
-  overlay.innerHTML = `
-    <div class="validation-spinner"></div>
-    <div class="validation-text">驗證邀請碼中</div>
-    <div style="font-size: 0.8rem; color: rgba(255,255,255,0.9); margin-top: 5px; text-align: center;">
-      <span style="display: inline-block; animation: pulse 1.5s infinite;">連接到伺服器...</span>
-    </div>
-    <div class="validation-progress" style="width: 80%; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; overflow: hidden; margin-top: 10px;">
-      <div style="height: 100%; width: 0%; background: white; border-radius: 2px; animation: progressMove 2s cubic-bezier(0.1, 0.42, 0.85, 1) forwards;"></div>
-    </div>
-  `;
-  invitationGroup.appendChild(overlay);
+  var modalContent = modal.querySelector('.modal-content');
+  modalContent.classList.remove('show-content');
+  modal.classList.remove('show');
   
-  // Add success animation sequence with enhanced visuals
+  // Add delay to match animation duration before hiding
   setTimeout(() => {
-    if (overlay && overlay.parentNode) {
-      const statusText = overlay.querySelector('.validation-text');
-      const subText = overlay.querySelector('div[style*="font-size: 0.8rem"]');
-      if (statusText) {
-        statusText.innerHTML = '驗證成功 <i class="fas fa-check" style="margin-left: 5px; font-size: 0.8em;"></i>';
-        statusText.style.animation = 'pulse 1s infinite';
-      }
-      if (subText) {
-        subText.innerHTML = '<span style="color: #e9ffc2;">邀請碼有效</span>';
-        subText.style.animation = 'fadeInUp 0.5s ease-out forwards';
-      }
-      
-      const checkmark = document.createElement('div');
-      checkmark.innerHTML = '<i class="fas fa-check-circle" style="color: #e9ffc2; font-size: 3rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); animation: popIn 0.5s cubic-bezier(0.26, 1.56, 0.44, 1);"></i>';
-      const spinner = overlay.querySelector('.validation-spinner');
-      if (spinner && spinner.parentNode) {
-        spinner.style.animation = 'fadeOut 0.3s ease forwards';
-        setTimeout(() => {
-          spinner.parentNode.replaceChild(checkmark, spinner);
-          
-          // Add celebration particles effect
-          createParticles(overlay);
-        }, 300);
-      }
-      
-      // Style the progress bar to complete
-      const progressBar = overlay.querySelector('.validation-progress div');
-      if (progressBar) {
-        progressBar.style.width = '100%';
-        progressBar.style.background = '#e9ffc2';
-        progressBar.style.boxShadow = '0 0 8px rgba(233, 255, 194, 0.8)';
-      }
-    }
-  }, 1500);
+    modal.style.display = 'none';
+  }, 400);
 }
 
-function createParticles(container) {
-  for (let i = 0; i < 20; i++) {
-    const particle = document.createElement('div');
-    particle.style.cssText = `
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background: white;
-      border-radius: 50%;
-      pointer-events: none;
-      opacity: 0;
-    `;
-    container.appendChild(particle);
-    
-    const x = Math.random() * 100;
-    const y = Math.random() * 100;
-    const duration = 0.5 + Math.random() * 1;
-    const delay = Math.random() * 0.3;
-    
-    particle.animate([
-      { transform: 'translate(-50%, -50%)', opacity: 1 },
-      { transform: `translate(${x - 50}%, ${y - 50}%) scale(0)`, opacity: 0 }
-    ], {
-      duration: duration * 1000,
-      delay: delay * 1000,
-      easing: 'cubic-bezier(0.1, 0.5, 0.9, 0.1)'
-    });
-    
-    // Remove particle after animation
-    setTimeout(() => particle.remove(), (duration + delay) * 1000);
+function startDragging(e) {
+  isDragging = true;
+  startY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
+  startTop = parseInt(window.getComputedStyle(this).top);
+  this.style.cursor = 'grabbing';
+}
+
+function drag(e) {
+  if (!isDragging) return;
+  e.preventDefault();
+  let modalContent = document.querySelector('.modal-content');
+  let currentY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
+  let deltaY = currentY - startY;
+  modalContent.style.top = `${startTop + deltaY}px`;
+}
+
+function stopDragging() {
+  isDragging = false;
+  document.querySelector('.modal-content').style.cursor = 'grab';
+}
+
+document.querySelectorAll('.modal .close').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    this.closest('.modal').style.display = 'none';
+  });
+});
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  var modal = document.getElementById('disclaimerModal');
+  if (event.target == modal) {
+    closeDisclaimer();
+  }
+  var exportModal = document.getElementById('exportModal');
+  if (event.target == exportModal) {
+    closeExportModal();
+  }
+  var instructionsModal = document.getElementById('instructionsModal');
+  if (event.target == instructionsModal) {
+    closeInstructions();
   }
 }
 
-function hideInvitationValidationAnimation() {
-  const overlay = document.getElementById('invitationValidationOverlay');
-  if (overlay) {
-    overlay.style.animation = 'fadeOut 0.5s ease';
-    setTimeout(() => {
-      overlay.remove();
-    }, 500);
-  }
+function generateInvitationCode() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hour = String(now.getHours()).padStart(2, '0');
+  return `CTTW${year}${month}${day}${hour}`;
 }
 
+// Add showLoading and hideLoading functions
 function showLoading() {
   const loadingOverlay = document.createElement('div');
   loadingOverlay.className = 'loading-overlay';
-  
   loadingOverlay.innerHTML = `
-    <div class="loading-spinner-container">
-      <div class="loading-spinner"></div>
+    <div class="loading-spinner">
+      <div class="spinner-container">
+        <div class="spinner-ring"></div>
+        <div class="spinner-inner">
+          <div class="spinner-circle"></div>
+          <div class="spinner-icon"><i class="fas fa-chart-line"></i></div>
+        </div>
+      </div>
       <div class="loading-text">分析中，請稍候...</div>
-      <div class="loading-progress"></div>
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+        <div class="loading-status">準備中...</div>
+      </div>
       <div class="loading-steps">
-        <div class="loading-step" data-step="1">
-          <i class="fas fa-check-circle"></i>
-          <span>驗證邀請碼</span>
-        </div>
-        <div class="loading-step" data-step="2">
-          <i class="fas fa-check-circle"></i>
-          <span>計算總積分</span>
-        </div>
-        <div class="loading-step" data-step="3">
-          <i class="fas fa-check-circle"></i>
-          <span>分析落點區間</span>
-        </div>
-        <div class="loading-step" data-step="4">
-          <i class="fas fa-check-circle"></i>
-          <span>生成分析報告</span>
-        </div>
+        <div class="step active"><i class="fas fa-cog"></i><span>初始化</span></div>
+        <div class="step"><i class="fas fa-database"></i><span>資料收集</span></div>
+        <div class="step"><i class="fas fa-calculator"></i><span>計算積分</span></div>
+        <div class="step"><i class="fas fa-check-circle"></i><span>完成</span></div>
       </div>
     </div>
   `;
-
   document.body.appendChild(loadingOverlay);
-  
+
+  // Fade in animation
   requestAnimationFrame(() => {
     loadingOverlay.style.display = 'flex';
-    simulateLoadingSteps();
+    loadingOverlay.style.opacity = '0';
+    requestAnimationFrame(() => {
+      loadingOverlay.style.transition = 'opacity 0.3s ease';
+      loadingOverlay.style.opacity = '1';
+      
+      // Animate the progress bar
+      setTimeout(() => animateAnalysisProgress(), 300);
+    });
   });
 }
 
-function simulateLoadingSteps() {
-  const steps = document.querySelectorAll('.loading-step');
-  const stepDelay = 500; // Time between each step
-
-  steps.forEach((step, index) => {
+function animateAnalysisProgress() {
+  const progressFill = document.querySelector('.progress-fill');
+  const loadingStatus = document.querySelector('.loading-status');
+  const loadingSteps = document.querySelectorAll('.loading-steps .step');
+  
+  const statuses = [
+    '準備分析資料...',
+    '收集學校資訊...',
+    '比對成績條件...',
+    '計算會考積分...',
+    '整理結果報表...',
+    '完成！'
+  ];
+  
+  let currentStep = 0;
+  const totalSteps = statuses.length;
+  
+  const updateProgress = () => {
+    if (currentStep >= totalSteps) return;
+    
+    const progress = (currentStep + 1) / totalSteps;
+    progressFill.style.width = `${progress * 100}%`;
+    loadingStatus.textContent = statuses[currentStep];
+    loadingStatus.classList.add('pulse');
+    
+    // Update step indicators
+    loadingSteps.forEach((step, index) => {
+      if (index < Math.floor(currentStep / (totalSteps / loadingSteps.length))) {
+        step.classList.add('active', 'completed');
+        step.classList.remove('current');
+      } else if (index === Math.floor(currentStep / (totalSteps / loadingSteps.length))) {
+        step.classList.add('active', 'current');
+        step.classList.remove('completed');
+      } else {
+        step.classList.remove('active', 'current', 'completed');
+      }
+    });
+    
     setTimeout(() => {
-      step.classList.add('active');
-    }, stepDelay * (index + 1));
-  });
+      loadingStatus.classList.remove('pulse');
+      currentStep++;
+      if (currentStep < totalSteps) {
+        const delay = currentStep === totalSteps - 1 ? 300 : (500 + Math.random() * 500);
+        setTimeout(updateProgress, delay);
+      } else {
+        // Final step animation
+        loadingSteps.forEach((step) => {
+          step.classList.add('active', 'completed');
+          step.classList.remove('current');
+        });
+      }
+    }, 300);
+  };
+  
+  updateProgress();
 }
 
 function hideLoading() {
   const loadingOverlay = document.querySelector('.loading-overlay');
   if (loadingOverlay) {
     loadingOverlay.style.opacity = '0';
-    loadingOverlay.style.transition = 'opacity 0.3s ease';
-    
     setTimeout(() => {
       loadingOverlay.remove();
     }, 300);
@@ -223,18 +285,7 @@ async function logUserActivity(action, details = {}) {
     const screenResolution = `${window.screen.width}x${window.screen.height}`;
     const viewportSize = `${window.innerWidth}x${window.innerHeight}`;
     const timestamp = new Date().toISOString();
-    const language = navigator.language;
-    const platform = navigator.platform;
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const colorDepth = window.screen.colorDepth;
-    const hardwareConcurrency = navigator.hardwareConcurrency || null;
-    const connection = navigator.connection ? {
-      effectiveType: navigator.connection.effectiveType,
-      downlink: navigator.connection.downlink,
-      rtt: navigator.connection.rtt,
-      saveData: navigator.connection.saveData
-    } : {};
-
+    
     const data = {
       timestamp,
       action,
@@ -242,16 +293,11 @@ async function logUserActivity(action, details = {}) {
       screenResolution,
       viewportSize,
       darkMode: document.body.classList.contains('dark-mode'),
-      language,
-      platform,
-      timeZone,
-      colorDepth,
-      hardwareConcurrency,
-      connection,
       ...details
     };
 
-    const response = await fetch('https://script.google.com/macros/s/AKfycbyKpf-7eCHizQsPNYAgtV7MlVKd09pRi2PF0G4QhKUls3OaKd5vdp1e7ASk-ta8w1Bo/exec', {
+    // Send to Google Apps Script endpoint
+    const response = await fetch('https://script.google.com/macros/s/AKfycbx5FRSSJwv5NQQDYS14p9xupj3iQj-TPS3vexSFLUESNdkuS9d1d5Ro4b-Wy7IMmYXidw/exec', {
       method: 'POST',
       body: JSON.stringify(data)
     });
@@ -265,59 +311,29 @@ async function logUserActivity(action, details = {}) {
 }
 
 async function analyzeScores() {
-  const analyzeButton = document.getElementById('analyzeButton');
-  if (analyzeButton) {
-    analyzeButton.disabled = true;
-    analyzeButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 分析中...';
-  }
-
   try {
+    // 檢查邀請碼
     const invitationCode = document.getElementById('invitationCode').value;
-    if (!invitationCode.trim()) {
-      alert("請填寫邀請碼");
-      return;
-    }
-    
-    // Validate invitation code with animation
-    showInvitationValidationAnimation();
-    let validationResponse;
-    try {
-      validationResponse = await fetch('https://script.google.com/a/macros/jiooq.com/s/AKfycbxGOW2caEmqW51hNmTe3Kq24D-UzfhKuhtS3xMP0OB9WNCjxKvwSGU5W4VnszDjfdZw/exec', {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'validateInvitationCode',
-          invitationCode: invitationCode
-        })
-      });
-    } catch (error) {
-      hideInvitationValidationAnimation();
-      throw error;
-    }
-    hideInvitationValidationAnimation();
-
-    if (!validationResponse.ok) {
-      throw new Error('邀請碼驗證失敗');
-    }
-
-    const validationResult = await validationResponse.json();
-    if (!validationResult.valid) {
+    const currentInvitationCode = generateInvitationCode();
+    if (invitationCode !== currentInvitationCode) {
       alert('邀請碼錯誤或已過期，請確認最新的邀請碼。');
       return;
     }
     
-    showLoading();
+    // 檢查身分是否選擇
+    const selectedIdentity = document.getElementById('selectedIdentity').value;
+    if (!selectedIdentity) {
+      alert('請先選擇您的身分（學生、家長或老師）');
+      document.getElementById('identitySelector').scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
 
     const schoolOwnership = document.getElementById('schoolOwnership').value;
     const schoolType = document.getElementById('schoolType').value;
     const vocationalGroup = document.getElementById('vocationalGroup').value;
-    const analysisIdentity = document.getElementById('analysisIdentity').value;
-    
-    // Get selected region from radio buttons
-    const analysisAreaRadio = document.querySelector('input[name="analysisArea"]:checked');
-    const analysisArea = analysisAreaRadio ? analysisAreaRadio.value : '';
 
-    // Updated fields to check
-    const fields = ['analysisIdentity', 'chinese', 'english', 'math', 'science', 'social', 'composition'];
+    // 檢查所有成績欄位是否填寫
+    const fields = ['chinese', 'english', 'math', 'science', 'social', 'composition'];
     let isAllFieldsFilled = true;
     let emptyFields = [];
 
@@ -328,18 +344,10 @@ async function analyzeScores() {
         emptyFields.push(field);
       }
     });
-    
-    // Check if a region is selected
-    if (!analysisArea) {
-      isAllFieldsFilled = false;
-      emptyFields.push('analysisArea');
-    }
 
     if (!isAllFieldsFilled) {
       let errorMessage = '請填寫以下欄位會考成績：\n';
       const fieldNames = {
-        'analysisArea': '請選擇地區',
-        'analysisIdentity': '請選擇身份',
         'chinese': '國文',
         'english': '英文',
         'math': '數學',
@@ -353,7 +361,11 @@ async function analyzeScores() {
       alert(errorMessage);
       return;
     }
-    
+
+    // 顯示加載動畫
+    showLoading();
+
+    // 記錄使用者嘗試分析行為
     await logUserActivity('analyze_scores', {
       scores: {
         chinese: document.getElementById('chinese').value,
@@ -366,12 +378,11 @@ async function analyzeScores() {
       filters: {
         schoolOwnership,
         schoolType,
-        vocationalGroup,
-        analysisIdentity
-      },
-      region: analysisArea
+        vocationalGroup
+      }
     });
 
+    // 準備成績資料
     const scores = {
       chinese: document.getElementById('chinese').value,
       english: document.getElementById('english').value,
@@ -381,17 +392,16 @@ async function analyzeScores() {
       composition: parseInt(document.getElementById('composition').value)
     };
 
-    const response = await fetch('https://script.google.com/macros/s/AKfycbxQD0ENt4twxvuThmgRZ2dbvjKbt38IjRYMCFuPmNXGxXNWyY7VVOGH_vZZFBHlZOaV/exec', {
+    // 請求學校資料
+    const response = await fetch('https://script.google.com/macros/s/AKfycbxz-jXjvbGS-CVA97Z-8IkhcGtMPnSU3BrYS-gPP5VAzHmBBfGn5KMpU-ig2PKDc3bF/exec', {
       method: 'POST',
       body: JSON.stringify({
         scores,
         filters: {
           schoolOwnership,
           schoolType,
-          vocationalGroup,
-          analysisIdentity
-        },
-        region: analysisArea
+          vocationalGroup
+        }
       })
     });
 
@@ -402,158 +412,724 @@ async function analyzeScores() {
     const data = await response.json();
     displayResults(data);
   } catch (error) {
+    // 記錄錯誤活動
     await logUserActivity('analyze_error', { error: error.message });
     alert('發生錯誤：' + error.message);
   } finally {
-    if (analyzeButton) {
-      analyzeButton.disabled = false;
-      analyzeButton.innerHTML = '<i class="fas fa-search icon"></i>分析落點';
-    }
-    setTimeout(hideLoading, 2000);
+    // 隱藏加載動畫
+    hideLoading();
   }
 }
 
-document.getElementById('exportResults').onclick = showExportOptions;
+function displayResults(data) {
+  const { totalPoints, totalCredits, eligibleSchools } = data;
 
+  let resultsHTML = `<div class="analysis-results">`;
+  resultsHTML += `<div class="result-header">
+                    <svg class="result-decorator" width="50" height="50" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" fill="var(--accent-color)" opacity="0.2"></circle>
+                      <path d="M9 12l2 2 4-4" stroke="var(--accent-color)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <h2><i class="fas fa-clipboard-check icon"></i> 分析結果</h2>
+                  </div>`;
+  resultsHTML += `<div class="result-summary">
+                    <div class="result-card">
+                      <i class="fas fa-star icon"></i>
+                      <div class="result-value">${totalPoints}</div>
+                      <div class="result-label">總積分</div>
+                    </div>
+                    <div class="result-card">
+                      <i class="fas fa-award icon"></i>
+                      <div class="result-value">${totalCredits}</div>
+                      <div class="result-label">總積點</div>
+                    </div>
+                  </div>`;
+  // 新增一個顯示使用者輸入成績的詳細區塊，增加結果完整性
+  resultsHTML += `<div class="detailed-scores">
+                    <h3><i class="fas fa-chart-bar icon"></i> 您的成績輸入</h3>
+                    <table class="scores-table">
+                      <tr>
+                        <th>科目</th>
+                        <th>分數</th>
+                      </tr>
+                      <tr><td>國文</td><td>${document.getElementById('chinese').value || '-'}</td></tr>
+                      <tr><td>英文</td><td>${document.getElementById('english').value || '-'}</td></tr>
+                      <tr><td>數學</td><td>${document.getElementById('math').value || '-'}</td></tr>
+                      <tr><td>自然</td><td>${document.getElementById('science').value || '-'}</td></tr>
+                      <tr><td>社會</td><td>${document.getElementById('social').value || '-'}</td></tr>
+                      <tr><td>作文</td><td>${document.getElementById('composition').value || '-'}</td></tr>
+                    </table>
+                  </div>`;
+  
+  // 添加學校統計部分 - 改為圖卡式設計
+  if (eligibleSchools && eligibleSchools.length > 0) {
+    // 計算各類型學校的數量
+    let schoolsByType = {};
+    eligibleSchools.forEach(school => {
+      if (!schoolsByType[school.type]) {
+        schoolsByType[school.type] = 0;
+      }
+      schoolsByType[school.type]++;
+    });
+    
+    // 生成學校統計HTML - 使用卡片設計
+    resultsHTML += `<div class="school-stats">
+                      <h4><i class="fas fa-chart-pie"></i> 學校統計</h4>
+                      <div class="stats-total-card">
+                        <div class="stats-total-icon">
+                          <i class="fas fa-school"></i>
+                        </div>
+                        <div class="stats-total-value">${eligibleSchools.length}</div>
+                        <div class="stats-total-label">符合條件的學校總數</div>
+                      </div>
+                      <div class="stats-cards">`;
+    
+    // 添加各類型學校卡片
+    Object.entries(schoolsByType).forEach(([type, count]) => {
+      const percentage = Math.round((count / eligibleSchools.length) * 100);
+      const typeIcon = getSchoolTypeIcon(type);
+      const cardColor = getColorForSchoolType(type);
+      
+      resultsHTML += `<div class="stats-card" style="--stats-card-color: ${cardColor.split(',')[0].replace('linear-gradient(90deg', '').trim()}">
+                        <div class="stats-card-icon">
+                          <i class="${typeIcon}"></i>
+                        </div>
+                        <div class="stats-value">${count}</div>
+                        <div class="stats-label">${type}</div>
+                        <div class="stats-percentage">${percentage}%</div>
+                      </div>`;
+    });
+    
+    resultsHTML += `</div>
+                </div>`;
+  }
+  
+  resultsHTML += `<div class="result-schools"><h3><i class="fas fa-list-ul icon"></i> 可能錄取的學校</h3>`;
+  if (eligibleSchools && eligibleSchools.length > 0) {
+    let groupedSchools = {};
+    eligibleSchools.forEach(school => {
+      if (!groupedSchools[school.type]) {
+        groupedSchools[school.type] = [];
+      }
+      groupedSchools[school.type].push(school.name);
+    });
+    Object.entries(groupedSchools).forEach(([type, schools]) => {
+      resultsHTML += `<div class="school-group">
+                        <h4>${type}</h4>
+                        <ul>`;
+      schools.forEach((schoolName, index) => {
+        resultsHTML += `<li style="animation-delay: ${index * 0.1}s"><i class="fas fa-check-circle icon"></i>${schoolName}</li>`;
+      });
+      resultsHTML += `</ul></div>`;
+    });
+  } else {
+    resultsHTML += `<p class="no-schools"><i class="fas fa-exclamation-triangle icon"></i> 根據您的成績，暫時沒有符合條件的學校。</p>`;
+  }
+  
+  resultsHTML += `</div></div>`;
+  const resultsElement = document.getElementById('results');
+  resultsElement.innerHTML = resultsHTML;
+  resultsElement.style.display = 'none';
+  setTimeout(() => {
+    resultsElement.style.display = 'block';
+    resultsElement.style.animation = 'fadeInUp 0.8s ease-out forwards';
+    document.getElementById('exportResults').style.display = 'inline-block';
+    document.getElementById('exportResults').style.animation = 'fadeInUp 0.5s ease-out forwards';
+  }, 100);
+  // 儲存最新資料供匯出使用
+  window.latestAnalysisData = data;
+}
+
+// 新增判斷學校類型的圖標函數
+function getSchoolTypeIcon(type) {
+  switch(type) {
+    case '普通科': return 'fas fa-book';
+    case '職業類科': return 'fas fa-tools';
+    case '綜合高中': return 'fas fa-school';
+    case '機械群': return 'fas fa-cogs';
+    case '電機與電子群': return 'fas fa-microchip';
+    case '商業與管理群': return 'fas fa-briefcase';
+    case '外語群': return 'fas fa-language';
+    case '設計群': return 'fas fa-paint-brush';
+    case '餐旅群': return 'fas fa-utensils';
+    case '家政群': return 'fas fa-home';
+    default: return 'fas fa-graduation-cap';
+  }
+}
+
+// 添加獲取類型顏色的函數 - 增加更多顏色變化
+function getColorForSchoolType(type) {
+  const colors = {
+    '普通科': 'linear-gradient(90deg, #4361ee, #3a0ca3)',
+    '職業類科': 'linear-gradient(90deg, #f72585, #7209b7)',
+    '綜合高中': 'linear-gradient(90deg, #4cc9f0, #4895ef)',
+    '機械群': 'linear-gradient(90deg, #3a86ff, #0077b6)',
+    '電機與電子群': 'linear-gradient(90deg, #00b4d8, #0096c7)',
+    '商業與管理群': 'linear-gradient(90deg, #ffd166, #ffaa00)',
+    '外語群': 'linear-gradient(90deg, #06d6a0, #1b9aaa)',
+    '設計群': 'linear-gradient(90deg, #ef476f, #d62246)',
+    '餐旅群': 'linear-gradient(90deg, #ff9e00, #ff6d00)',
+    '家政群': 'linear-gradient(90deg, #9d4edd, #7b2cbf)',
+    '食品群': 'linear-gradient(90deg, #2ec4b6, #20a4f3)',
+    '農業群': 'linear-gradient(90deg, #70e000, #38b000)',
+    '土木與建築群': 'linear-gradient(90deg, #fb8500, #ffb703)',
+    '化工群': 'linear-gradient(90deg, #ff477e, #ff5c8a)'
+  };
+  
+  return colors[type] || 'linear-gradient(90deg, #4cc9f0, #4361ee)';
+}
+
+// 新增匯出格式選菜單相關函式
+function showExportModal() {
+  var exportModal = document.getElementById('exportModal');
+  var modalContent = exportModal.querySelector('.modal-content');
+  exportModal.style.display = 'block';
+  
+  setTimeout(() => {
+    exportModal.classList.add('show');
+    modalContent.classList.add('show-content');
+  }, 10);
+}
+
+function closeExportModal() {
+  var exportModal = document.getElementById('exportModal');
+  var modalContent = exportModal.querySelector('.modal-content');
+  modalContent.classList.remove('show-content');
+  exportModal.classList.remove('show');
+  
+  setTimeout(() => {
+    exportModal.style.display = 'none';
+  }, 400);
+}
+
+function exportAsTXT() {
+  if (!window.latestAnalysisData) {
+    alert("請先進行分析後再匯出！");
+    return;
+  }
+  const { totalPoints, totalCredits, eligibleSchools } = window.latestAnalysisData;
+  const { scores, filters, selectedIdentity } = getCurrentInputData();
+  const schoolStats = getSchoolStatistics(eligibleSchools);
+  const sortedSchools = getSortedSchoolList(eligibleSchools);
+  const timestamp = getFormattedTimestamp();
+  const reportDate = timestamp.split('_')[0];
+  const reportTime = timestamp.split('_')[1];
+
+  // Build the text content using template literals and careful spacing
+  let content = `
+############################################################
+#        CTTW 中投區會考落點分析系統 - 分析報告        #
+############################################################
+
+報 告 日 期 ： ${reportDate}
+報 告 時 間 ： ${reportTime}
+使 用 者 身 分： ${selectedIdentity}
+資 料 來 源 ： https://ctttw.github.io/
+
+==================== [ 分析摘要 ] ====================
+  總積分        ： ${totalPoints}
+  總積點        ： ${totalCredits}
+
+==================== [ 輸入成績 ] ====================
+  國文          ： ${scores.chinese}
+  英文          ： ${scores.english}
+  數學          ： ${scores.math}
+  自然          ： ${scores.science}
+  社會          ： ${scores.social}
+  作文          ： ${scores.composition}
+
+==================== [ 篩選條件 ] ====================
+  學校公私立    ： ${filters.schoolOwnership === 'all' ? '全部' : filters.schoolOwnership}
+  學校類型      ： ${filters.schoolType === 'all' ? '全部' : filters.schoolType}
+  職業群科      ： ${filters.vocationalGroup === 'all' || filters.vocationalGroup === 'N/A' ? '全部 / 不適用' : filters.vocationalGroup}
+
+================= [ 符合學校統計 (共 ${schoolStats.total} 筆) ] =================
+`;
+
+  if (schoolStats.total > 0) {
+    schoolStats.countsByType.forEach(([type, count]) => {
+        // Pad type name for alignment (adjust padding as needed)
+        content += `  ${type.padEnd(12, '　')}： ${count} 間\n`; // Using full-width space for padding
+    });
+  } else {
+    content += `  (無符合條件學校)\n`;
+  }
+
+content += `
+============= [ 符合條件學校列表 (共 ${schoolStats.total} 筆) ] ==============
+`;
+
+  if (schoolStats.total > 0) {
+    let currentType = '';
+    sortedSchools.forEach(school => {
+      if (school.type !== currentType) {
+        currentType = school.type;
+        content += `\n[ ${currentType} ]\n`; // Group by type
+      }
+      content += `  - ${school.name}\n`;
+    });
+  } else {
+    content += `\n  (無符合條件學校)\n`;
+  }
+
+  content += `
+==================== [ 注意事項 ] ====================
+* 本分析結果由 CTTW 系統產生，僅供參考，不保證錄取結果。
+* 實際錄取情況可能受超額比序、招生名額變動等多重因素影響。
+* 請務必查閱官方簡章或洽詢學校輔導老師獲取最準確資訊。
+
+############################################################
+#                         報告結束                         #
+############################################################
+`;
+
+  // Clean up extra leading/trailing whitespace
+  content = content.trim() + '\n'; // Ensure final newline
+
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  triggerDownload(url, `CTTW_落點分析報告_${timestamp}.txt`);
+  closeExportModal();
+  logUserActivity('export_txt', { dataSummary: { points: totalPoints, credits: totalCredits, count: schoolStats.total } });
+}
+
+
+
+
+
+function exportAsCSV() {
+  if (!window.latestAnalysisData) {
+    alert("請先進行分析後再匯出！");
+    return;
+  }
+  const { totalPoints, totalCredits, eligibleSchools } = window.latestAnalysisData;
+  const { scores, filters, selectedIdentity } = getCurrentInputData();
+  const schoolStats = getSchoolStatistics(eligibleSchools);
+  const sortedSchools = getSortedSchoolList(eligibleSchools);
+  const timestamp = getFormattedTimestamp();
+
+  let csvContent = "\uFEFF"; // BOM
+
+  // Section 1: Metadata
+  csvContent += `"報表資訊",\n`;
+  csvContent += `"標題",${quoteField("CTTW 中投區會考落點分析報告")}\n`;
+  csvContent += `"產生時間",${quoteField(timestamp)}\n`;
+  csvContent += `"使用者身分",${quoteField(selectedIdentity)}\n`;
+  csvContent += `"資料來源",${quoteField("https://ctttw.github.io/")}\n\n`;
+
+  // Section 2: Summary
+  csvContent += `"分析摘要",\n`;
+  csvContent += `"項目",數值\n`;
+  csvContent += `"總積分",${quoteField(totalPoints)}\n`;
+  csvContent += `"總積點",${quoteField(totalCredits)}\n\n`;
+
+  // Section 3: Input Scores
+  csvContent += `"輸入成績",\n`;
+  csvContent += `"科目",成績\n`;
+  csvContent += `"國文",${quoteField(scores.chinese)}\n`;
+  csvContent += `"英文",${quoteField(scores.english)}\n`;
+  csvContent += `"數學",${quoteField(scores.math)}\n`;
+  csvContent += `"自然",${quoteField(scores.science)}\n`;
+  csvContent += `"社會",${quoteField(scores.social)}\n`;
+  csvContent += `"作文",${quoteField(scores.composition)}\n\n`;
+
+  // Section 4: Filters
+  csvContent += `"篩選條件",\n`;
+  csvContent += `"條件",選項\n`;
+  csvContent += `"學校公私立",${quoteField(filters.schoolOwnership === 'all' ? '全部' : filters.schoolOwnership)}\n`;
+  csvContent += `"學校類型",${quoteField(filters.schoolType === 'all' ? '全部' : filters.schoolType)}\n`;
+  csvContent += `"職業群科",${quoteField(filters.vocationalGroup === 'all' || filters.vocationalGroup === 'N/A' ? '全部 / 不適用' : filters.vocationalGroup)}\n\n`;
+
+  // Section 5: School Statistics
+  csvContent += `"符合學校統計",\n`;
+  csvContent += `"學校類型",數量\n`;
+  if (schoolStats.total > 0) {
+    schoolStats.countsByType.forEach(([type, count]) => {
+      csvContent += `${quoteField(type)},${quoteField(count)}\n`;
+    });
+    csvContent += `"總計",${quoteField(schoolStats.total)}\n`;
+  } else {
+    csvContent += `"統計結果","無符合條件學校"\n`;
+  }
+  csvContent += "\n";
+
+  // Section 6: School List
+  csvContent += `"符合條件學校列表 (共 ${schoolStats.total} 筆)",\n`;
+  csvContent += `"學校類型",學校名稱\n`;
+  if (schoolStats.total > 0) {
+    sortedSchools.forEach(school => {
+      csvContent += `${quoteField(school.type)},${quoteField(school.name)}\n`;
+    });
+  } else {
+    csvContent += `"列表結果","無符合條件學校"\n`;
+  }
+  csvContent += "\n";
+
+  // Section 7: Disclaimer
+  csvContent += `"注意事項",\n`;
+  csvContent += `${quoteField("本分析結果僅供參考，實際錄取情況可能受多種因素影響。請務必查閱官方簡章或洽詢學校輔導老師獲取最準確資訊。")},\n`;
+  csvContent += "\n";
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  triggerDownload(url, `CTTW_落點分析報告_${timestamp}.csv`);
+  closeExportModal();
+  logUserActivity('export_csv', { dataSummary: { points: totalPoints, credits: totalCredits, count: schoolStats.total } });
+}
+
+
+
+
+function exportAsJSON() {
+  if (!window.latestAnalysisData) {
+    alert("請先進行分析後再匯出！");
+    return;
+  }
+  const { totalPoints, totalCredits, eligibleSchools } = window.latestAnalysisData;
+  const { scores, filters, selectedIdentity } = getCurrentInputData();
+  const schoolStats = getSchoolStatistics(eligibleSchools);
+  const sortedSchools = getSortedSchoolList(eligibleSchools);
+  const timestampISO = getFormattedTimestamp(true); // Use ISO format for JSON standard
+  const timestampReadable = getFormattedTimestamp(); // For display filename
+
+  // Map schools to exclude scores, ensuring sorting is preserved if desired (though order in JSON isn't guaranteed)
+  const schoolsToExport = sortedSchools.map(school => ({
+      name: school.name,
+      type: school.type
+  }));
+
+  // Structure the data logically
+  const exportData = {
+    reportMetadata: {
+      title: "CTTW 中投區會考落點分析報告",
+      source: "https://ctttw.github.io/",
+      reportTimestamp: timestampISO,
+      generatedBy: "CTTW Analysis System",
+      identity: selectedIdentity
+    },
+    analysisInputs: {
+      scores: scores,
+      filters: filters
+    },
+    analysisSummary: {
+      totalPoints: totalPoints,
+      totalCredits: totalCredits,
+      eligibleSchoolCount: schoolStats.total
+    },
+    analysisDetails: {
+       schoolStatisticsByType: Object.fromEntries(schoolStats.countsByType), // Convert sorted array back to object
+       eligibleSchools: schoolsToExport // Use the mapped array without scores
+    },
+    disclaimer: "本分析結果僅供參考，實際錄取情況可能受多種因素影響，請以官方公告為準。"
+  };
+
+  const jsonStr = JSON.stringify(exportData, null, 2); // Pretty print
+  const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  triggerDownload(url, `CTTW_落點分析報告_${timestampReadable}.json`);
+  closeExportModal();
+  logUserActivity('export_json', { dataSummary: { points: totalPoints, credits: totalCredits, count: schoolStats.total } });
+}
+
+
+
+
+
+function printResults() {
+  if (!window.latestAnalysisData) {
+    alert("請先進行分析後再列印！");
+    return;
+  }
+
+  logUserActivity('print_results', { dataSummary: { points: window.latestAnalysisData.totalPoints, credits: window.latestAnalysisData.totalCredits, count: window.latestAnalysisData.eligibleSchools ? window.latestAnalysisData.eligibleSchools.length : 0 } });
+
+  const printWindow = window.open('', '_blank', 'width=800,height=600');
+  const { totalPoints, totalCredits, eligibleSchools } = window.latestAnalysisData;
+  const { scores, filters, selectedIdentity } = getCurrentInputData();
+  const schoolStats = getSchoolStatistics(eligibleSchools);
+  const sortedSchools = getSortedSchoolList(eligibleSchools);
+  const timestamp = getFormattedTimestamp();
+
+  // --- Highly Refined Print CSS (Keep the one from the previous answer) ---
+  const printCSS = `
+    /* --- General Setup --- */
+    @page { size: A4; margin: 15mm 15mm 20mm 15mm; }
+    body { font-family: 'Helvetica Neue', Helvetica, Arial, 'Microsoft JhengHei', '微軟正黑體', sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #fff; font-size: 10pt; }
+    .print-container { width: 100%; margin: 0 auto; padding: 0; }
+    /* --- Typography & Links --- */
+    h1, h2, h3, h4 { margin: 1.2em 0 0.6em 0; font-weight: 600; color: #1a1a1a; page-break-after: avoid; }
+    h1 { font-size: 18pt; text-align: center; margin-bottom: 0.8em; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+    h2 { font-size: 14pt; border-bottom: 1.5px solid #555; padding-bottom: 4px; }
+    h3 { font-size: 12pt; border-bottom: 1px solid #ccc; padding-bottom: 3px; }
+    h4 { font-size: 11pt; color: #0056b3; font-weight: bold; margin: 1em 0 0.5em 0; }
+    p { margin: 0 0 0.8em 0; }
+    a { color: #007bff; text-decoration: none; }
+    a:visited { color: #0056b3; }
+    /* --- Header & Footer --- */
+    .header { text-align: center; margin-bottom: 20px; } /* Remove border here, h1 has it */
+    .subtitle { font-size: 9pt; color: #555; margin-top: -15px; margin-bottom: 20px; } /* Adjust spacing */
+    .footer { margin-top: 30px; text-align: center; font-size: 8pt; color: #777; border-top: 1px solid #ccc; padding-top: 10px; }
+    /* --- Info Box / Watermark --- */
+    .info-box { text-align: left; padding: 10px 15px; background-color: #f1f8ff; border: 1px solid #cbe6ff; border-radius: 4px; margin: 20px 0; font-size: 9pt; color: #334; page-break-inside: avoid; }
+    .info-box strong { color: #0056b3; }
+    /* --- Summary Section --- */
+    .summary { display: flex; justify-content: space-evenly; margin: 25px 0; flex-wrap: wrap; gap: 20px; page-break-inside: avoid; }
+    .summary-card { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 12px 18px; text-align: center; flex: 1; min-width: 140px; }
+    .summary-value { font-size: 20pt; font-weight: bold; color: #28a745; margin-bottom: 2px; line-height: 1.2; }
+    .summary-label { font-size: 9pt; color: #6c757d; text-transform: uppercase; }
+    /* --- Data Tables --- */
+    .data-table { width: 100%; border-collapse: collapse; margin: 15px 0 25px 0; font-size: 9.5pt; page-break-inside: avoid; }
+    .data-table th, .data-table td { padding: 8px 10px; border: 1px solid #ccc; text-align: left; vertical-align: middle; }
+    .data-table thead th { background-color: #e9ecef; font-weight: 600; text-align: center; color: #333; }
+    .data-table tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+    .data-table td:first-child { font-weight: 500; color: #444; width: 20%; text-align: right; padding-right: 15px; } /* Adjust label width */
+    .data-table.center-cells td { text-align: center; }
+    .data-table.center-cells td:first-child { text-align: center; width: auto; } /* Override for score table labels */
+    .filter-table td:first-child { width: 25%; } /* Specific width for filter labels */
+    /* --- School Statistics --- */
+    .stats-section { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 15px 20px; margin: 25px 0; page-break-inside: avoid; }
+    /* stats-title uses h3 */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-top: 15px; }
+    .stat-item { background: white; border-radius: 4px; padding: 8px; text-align: center; border: 1px solid #ddd; }
+    .stat-value { font-size: 14pt; font-weight: bold; color: #007bff; display: block; margin-bottom: 2px; }
+    .stat-label { font-size: 8pt; color: #555; line-height: 1.2; }
+    /* --- School List Section --- */
+    .schools-section { margin-top: 25px; }
+    /* school-type-heading uses h4 */
+    .school-list { list-style-type: none; padding-left: 5px; margin: 5px 0 15px 0; font-size: 9.5pt; /* Removed columns: 2; often problematic */ }
+    .school-item { padding: 4px 0 4px 12px; position: relative; page-break-inside: avoid; border-bottom: 1px dotted #eee; } /* Add subtle border back */
+    .school-item:last-child { border-bottom: none; }
+    .school-item::before { content: '›'; position: absolute; left: 0; top: 3px; color: #007bff; font-weight: bold; font-size: 1.1em; }
+    /* No Schools Message */
+    .no-schools { text-align: center; padding: 20px; background: #fff8f8; border: 1px dashed #f5c6cb; border-radius: 4px; color: #721c24; font-style: italic; margin: 20px 0; font-size: 9.5pt; }
+    /* --- Print-Specific Adjustments --- */
+    @media print {
+      body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .no-print { display: none !important; }
+      .summary-card, .stats-section, .stat-item { box-shadow: none; }
+      a { text-decoration: underline; text-decoration-thickness: 0.5px; text-underline-offset: 2px; }
+       p, li { orphans: 3; widows: 3; }
+    }
+  `;
+
+  // --- Build Print HTML Content ---
+  let printContent = `
+  <!DOCTYPE html>
+  <html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8">
+    <title>中投區會考落點分析報告 - CTTW</title>
+    <style>${printCSS}</style>
+  </head>
+  <body>
+    <div class="print-container">
+      <div class="header">
+        <h1>中投區會考落點分析報告</h1>
+        <div class="subtitle">由 CTTW 系統產生 | 分析時間: ${timestamp} | 使用者: ${selectedIdentity}</div>
+      </div>
+
+      <div class="info-box">
+        <strong>重要提醒：</strong>本分析結果由 CTTW 中投區會考落點分析系統 (<a href="https://ctttw.github.io/" target="_blank">https://ctttw.github.io/</a>) 生成，<strong>僅供參考</strong>。
+        實際錄取情況可能受超額比序、招生名額變動等多重因素影響。請務必以<strong>官方公告</strong>及<strong>各校招生簡章</strong>為最終依據。建議諮詢學校輔導老師獲取專業意見。
+      </div>
+
+      <h2>分析摘要</h2>
+      <div class="summary">
+        <div class="summary-card">
+          <div class="summary-value">${totalPoints}</div>
+          <div class="summary-label">總積分</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-value">${totalCredits}</div>
+          <div class="summary-label">總積點</div>
+        </div>
+      </div>
+
+      <h2>輸入成績與條件</h2>
+      <table class="data-table center-cells">
+        <thead>
+          <tr><th>國文</th><th>英文</th><th>數學</th><th>自然</th><th>社會</th><th>作文</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${scores.chinese}</td><td>${scores.english}</td><td>${scores.math}</td>
+            <td>${scores.science}</td><td>${scores.social}</td><td>${scores.composition}</td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="data-table filter-table">
+         <tbody>
+            <tr><td>學校公私立</td><td>${filters.schoolOwnership === 'all' ? '全部' : filters.schoolOwnership}</td></tr>
+            <tr><td>學校類型</td><td>${filters.schoolType === 'all' ? '全部' : filters.schoolType}</td></tr>
+            <tr><td>職業群科</td><td>${filters.vocationalGroup === 'all' || filters.vocationalGroup === 'N/A' ? '全部 / 不適用' : filters.vocationalGroup}</td></tr>
+         </tbody>
+      </table>`;
+
+  // Add School Statistics if available
+  if (schoolStats.total > 0) {
+    printContent += `
+      <div class="stats-section">
+        <h3>符合學校統計 (共 ${schoolStats.total} 筆資料)</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value">${schoolStats.total}</span>
+            <span class="stat-label">總計</span>
+          </div>
+    `;
+    schoolStats.countsByType.forEach(([type, count]) => {
+      printContent += `
+        <div class="stat-item">
+          <span class="stat-value">${count}</span>
+          <span class="stat-label">${type}</span>
+        </div>`;
+    });
+    printContent += `
+        </div>
+      </div>`;
+  }
+
+  // Add School List
+  printContent += `<div class="schools-section"><h2>可能錄取的學校列表</h2>`;
+  if (schoolStats.total > 0) {
+    let currentType = '';
+    sortedSchools.forEach(school => {
+        // Insert type heading when type changes
+        if (school.type !== currentType) {
+            if (currentType !== '') { // Close previous list if not the first type
+                printContent += `</ul>`;
+            }
+            currentType = school.type;
+            // Find count for this type
+            const typeCount = schoolStats.countsByType.find(([t]) => t === currentType)?.[1] || 0;
+            printContent += `<h4>${currentType} (${typeCount} 間)</h4><ul class="school-list">`;
+        }
+        printContent += `<li class="school-item">${school.name}</li>`;
+    });
+    if (currentType !== '') { // Close the last list
+        printContent += `</ul>`;
+    }
+  } else {
+    printContent += `<div class="no-schools">根據您輸入的成績與篩選條件，目前系統中無符合的學校建議。</div>`;
+  }
+  printContent += `</div> <!-- End Schools Section -->`;
+
+  printContent += `
+      <div class="footer">
+        --- 報告結束 ---
+        <br>CTTW 落點分析系統 | 祝您升學順利！
+      </div>
+
+      <div class="no-print" style="text-align:center; margin-top: 20px; padding: 15px; background: #eee; border-radius: 5px;">
+        <p style="margin:0 0 10px 0; font-weight: bold;">準備列印...</p>
+        <button onclick="window.print()" style="padding: 8px 18px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 10pt;">立即列印</button>
+        <button onclick="window.close()" style="padding: 8px 18px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 10pt; margin-left: 10px;">關閉視窗</button>
+      </div>
+    </div> <!-- End Print Container -->
+  </body>
+  </html>`;
+
+  printWindow.document.open();
+  printWindow.document.write(printContent);
+  printWindow.document.close();
+
+  setTimeout(() => {
+    try {
+      printWindow.focus();
+      printWindow.print();
+    } catch (e) {
+      console.error("Error triggering print:", e);
+    }
+  }, 500);
+
+  closeExportModal();
+}
+
+// 共用的下載觸發函式
+function triggerDownload(url, fileName) {
+  const a = document.createElement('a');
+  a.style.display = 'none';
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// 初始顯示免責聲明
 window.onload = function() {
   showDisclaimer();
-};
-
-document.oncontextmenu = function () {
-  return false;
-};
-
-document.body.onkeydown = function(e) {
-  var keyCode = e.keyCode || e.which || e.charCode;
-  if (
-    keyCode === 123 ||
-    (e.ctrlKey && e.shiftKey && (keyCode === 73 || keyCode === 74 || keyCode === 67)) ||
-    (e.ctrlKey && keyCode === 85)
-  ) {
-    e.preventDefault();
-    return false;
-  }
-};
-
-(function() {
-  var threshold = 160;
-  setInterval(function() {
-    if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
-      document.body.innerHTML = "<h1>禁止使用開發者工具</h1>";
-      throw "開發者工具被禁用";
-    }
-  }, 1000);
-})();
-
-let userRating = 0;
-
-function initRating() {
-  const stars = document.querySelectorAll("#starsContainer .star");
-  
-  stars.forEach((star, index) => {
-    star.addEventListener("click", function() {
-      userRating = Number(this.getAttribute("data-value"));
-      updateStarDisplay(userRating);
-      
-      stars.forEach((s, i) => {
-        if (i <= index) {
-          s.style.animationDelay = `${i * 0.1}s`;
-          s.classList.add('active');
-        }
-      });
-    });
-    
-    star.addEventListener("mouseover", function() {
-      const rating = Number(this.getAttribute("data-value"));
-      stars.forEach((s, i) => {
-        if (i < rating) {
-          s.style.transform = `scale(${1 + (rating - i) * 0.1})`;
-        } else {
-          s.style.transform = 'scale(1)';
-        }
-      });
-    });
-    
-    star.addEventListener("mouseout", function() {
-      stars.forEach(s => {
-        s.style.transform = s.classList.contains('active') ? 'scale(1.2)' : 'scale(1)';
-      });
-    });
-  });
-
-  const submitRatingButton = document.getElementById("submitRating");
-  submitRatingButton.addEventListener("click", async function() {
-    if (userRating === 0) {
-      alert("請選擇評分星數！");
-      return;
-    }
-    
-    this.disabled = true;
-    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 提交中...';
-    
-    try {
-      await logUserActivity("user_rating", { rating: userRating });
-      
-      const ratingMsg = document.getElementById("ratingMessage");
-      ratingMsg.textContent = "感謝您的評分！您的意見對我們很重要。";
-      ratingMsg.classList.add('show');
-      ratingMsg.style.display = "block";
-      
-      this.innerHTML = '<i class="fas fa-check-circle"></i> 評分成功';
-      this.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
-    } catch (error) {
-      console.error('Rating submission error:', error);
-      this.disabled = false;
-      this.innerHTML = '<i class="fas fa-paper-plane"></i> 重新提交';
-      alert('評分提交失敗，請稍後再試！');
-    }
-  });
-}
-
-function updateStarDisplay(rating) {
-  const stars = document.querySelectorAll("#starsContainer .star");
-  stars.forEach((star, index) => {
-    if (index < rating) {
-      star.classList.add("active");
-    } else {
-      star.classList.remove("active");
-    }
-  });
 }
 
 function toggleMenu() {
   var menu = document.getElementById("fullscreenMenu");
-  var overlay = document.getElementById("menuOverlay");
   menu.classList.toggle("show");
-  overlay.classList.toggle("show");
-  
+  document.body.style.overflow = menu.classList.contains("show") ? "hidden" : "auto";
+
+  // 添加連結的動畫延遲
   var links = menu.getElementsByTagName('a');
   for (var i = 0; i < links.length; i++) {
     links[i].style.animationDelay = (i * 0.1) + 's';
+    links[i].style.animation = menu.classList.contains("show") ? 
+      'slideInRight 0.5s ease-out forwards' : 'none';
+  }
+  
+  // 添加菜單轉場特效
+  const menuIcon = document.querySelector('.menu-icon i');
+  if (menu.classList.contains("show")) {
+    menuIcon.classList.remove('fa-bars');
+    menuIcon.classList.add('fa-times');
+    // 記錄菜單打開行為
+    logUserActivity('open_menu');
+  } else {
+    menuIcon.classList.remove('fa-times');
+    menuIcon.classList.add('fa-bars');
+    // 記錄菜單關閉行為
+    logUserActivity('close_menu');
   }
 }
 
-function closeMenu() {
-  var menu = document.getElementById("fullscreenMenu");
-  var overlay = document.getElementById("menuOverlay");
-  menu.classList.remove("show");
-  overlay.classList.remove("show");
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const isDarkMode = document.body.classList.contains('dark-mode');
+  localStorage.setItem('darkMode', isDarkMode);
+  updateDarkModeIcon(isDarkMode);
+  
+  // Log dark mode toggle
+  logUserActivity('toggle_dark_mode', { enabled: isDarkMode });
 }
 
-document.addEventListener('click', function(event) {
-  var menu = document.getElementById("fullscreenMenu");
-  var menuIcon = document.querySelector(".menu-icon");
-  if (menu.classList.contains('show') && !menu.contains(event.target) && !menuIcon.contains(event.target)) {
-    closeMenu();
-  }
-});
+function updateDarkModeIcon(isDarkMode) {
+  const icon = document.querySelector('#darkModeToggle i');
+  icon.style.transform = 'scale(0)';
+  
+  setTimeout(() => {
+    if (isDarkMode) {
+      icon.classList.remove('fa-moon');
+      icon.classList.add('fa-sun');
+    } else {
+      icon.classList.remove('fa-sun');
+      icon.classList.add('fa-moon');
+    }
+    icon.style.transform = 'scale(1)';
+  }, 150);
+}
+
+// 檢查用戶之前的深色模式偏好
+const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+if (savedDarkMode) {
+  document.body.classList.add('dark-mode');
+}
+updateDarkModeIcon(savedDarkMode);
+
+// 添加事件監聽器
+document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
 
 const html5QrCode = new Html5Qrcode("qr-reader");
 const qrConfig = { fps: 10, qrbox: { width: 250, height: 250 } };
 
 document.getElementById('scanQRCode').addEventListener('click', () => {
   const qrReader = document.getElementById('qr-reader');
-  if (qrReader.style.display === 'none' || qrReader.style.display === '') {
+  if (qrReader.style.display === 'none') {
     qrReader.style.display = 'block';
     html5QrCode.start({ facingMode: "environment" }, qrConfig, onScanSuccess);
   } else {
@@ -567,7 +1143,7 @@ function onScanSuccess(decodedText, decodedResult) {
   html5QrCode.stop();
   document.getElementById('qr-reader').style.display = 'none';
   document.getElementById('qr-result').textContent = `您的邀請碼是：${decodedText}`;
-
+  
   logUserActivity('qr_scan_success', { invitationCode: decodedText });
 }
 
@@ -604,1232 +1180,182 @@ document.getElementById('fileInput').addEventListener('change', event => {
   }
 });
 
-function toggleDarkMode() {
-  document.body.classList.toggle('dark-mode');
-  const isDarkMode = document.body.classList.contains('dark-mode');
-  localStorage.setItem('darkMode', isDarkMode);
-  
-  const icon = document.querySelector('#darkModeToggle i');
-  icon.classList.add('transitioning');
-  
-  setTimeout(() => {
-    if (isDarkMode) {
-      icon.classList.remove('fa-moon');
-      icon.classList.add('fa-sun');
-    } else {
-      icon.classList.remove('fa-sun');
-      icon.classList.add('fa-moon');
-    }
-    
-    setTimeout(() => {
-      icon.classList.remove('transitioning');
-    }, 600);
-  }, 300);
-
-  logUserActivity('toggle_dark_mode', { enabled: isDarkMode });
+// 防止複製和右鍵
+document.oncontextmenu = function (){
+  return false;
 }
 
-const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-if (savedDarkMode) {
-  document.body.classList.add('dark-mode');
-  const icon = document.querySelector('#darkModeToggle i');
-  icon.classList.remove('fa-moon');
-  icon.classList.add('fa-sun');
+document.body.onkeydown = function(e){
+  var keyCode = e.keyCode || e.which || e.charCode;
+  var ctrlKey = e.ctrlKey || e.metaKey;
+  if(ctrlKey && (keyCode == 83 || keyCode == 85 || keyCode == 73)) {
+    e.preventDefault();
+    return false;
+  } else if(keyCode && keyCode == 123){
+    return false;
+  }
 }
 
-document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
-
-document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-function displayResults(data) {
-  const { totalPoints, totalCredits, eligibleSchools } = data;
-
-  let results = `
-    <div class="results-container">
-      <div class="results-header">
-        <h2><i class="fas fa-clipboard-check icon"></i>分析結果總覽</h2>
-        <div class="results-summary">
-          <div class="result-card total-points">
-            <i class="fas fa-star icon"></i>
-            <div class="result-value">${totalPoints}</div>
-            <div class="result-label">總積分</div>
-          </div>
-          ${totalCredits !== null ? `
-          <div class="result-card total-credits">
-            <i class="fas fa-award icon"></i>
-            <div class="result-value">${totalCredits}</div>
-            <div class="result-label">總積點</div>
-          </div>
-          ` : ''}
-          <div class="result-card schools-count">
-            <i class="fas fa-school icon"></i>
-            <div class="result-value">${eligibleSchools ? eligibleSchools.length : 0}</div>
-            <div class="result-label">符合條件學校數</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="results-details">
-        <h3><i class="fas fa-chart-bar icon"></i>成績分析</h3>
-        <div class="scores-summary">
-          <div class="score-item">
-            <span class="score-label">國文：</span>
-            <span class="score-value ${getScoreClass(document.getElementById('chinese').value)}">
-              ${document.getElementById('chinese').value}
-            </span>
-          </div>
-          <div class="score-item">
-            <span class="score-label">英文：</span>
-            <span class="score-value ${getScoreClass(document.getElementById('english').value)}">
-              ${document.getElementById('english').value}
-            </span>
-          </div>
-          <div class="score-item">
-            <span class="score-label">數學：</span>
-            <span class="score-value ${getScoreClass(document.getElementById('math').value)}">
-              ${document.getElementById('math').value}
-            </span>
-          </div>
-          <div class="score-item">
-            <span class="score-label">自然：</span>
-            <span class="score-value ${getScoreClass(document.getElementById('science').value)}">
-              ${document.getElementById('science').value}
-            </span>
-          </div>
-          <div class="score-item">
-            <span class="score-label">社會：</span>
-            <span class="score-value ${getScoreClass(document.getElementById('social').value)}">
-              ${document.getElementById('social').value}
-            </span>
-          </div>
-          <div class="score-item">
-            <span class="score-label">作文：</span>
-            <span class="score-value composition-score">
-              ${document.getElementById('composition').value} 級分
-            </span>
-          </div>
-        </div>`;
+// Add touch event handlers for mobile devices
+function setupMobileInteractions() {
+  // Fix for 300ms delay on touch devices
+  document.addEventListener('touchstart', function() {}, {passive: true});
   
-  if (eligibleSchools && eligibleSchools.length > 0) {
-    let groupedSchools = {};
-    eligibleSchools.forEach(school => {
-      if (!groupedSchools[school.type]) {
-        groupedSchools[school.type] = [];
-      }
-      groupedSchools[school.type].push(school);
+  // Handle mobile navigation better
+  document.querySelectorAll('.fullscreen-menu a').forEach(link => {
+    link.addEventListener('touchstart', function() {
+      this.classList.add('active-touch');
     });
-  
-    results += `
-      <div class="schools-analysis">
-        <h3><i class="fas fa-university icon"></i>學校分析</h3>
-        <div class="school-type-summary">
-          ${Object.entries(groupedSchools).map(([type, schools]) => `
-            <div class="school-type-card">
-              <div class="school-type-header">
-                <i class="fas fa-building icon"></i>
-                <h4>${type}</h4>
-                <span class="school-count">${schools.length}所</span>
-              </div>
-              <div class="school-list">
-                ${schools.map(school => `
-                  <div class="school-item">
-                    <div class="school-name">
-                      <i class="fas fa-graduation-cap icon"></i>
-                      ${school.name}
-                      ${school.ownership ? `<span class="school-ownership">【${school.ownership}】</span>` : ''}
-                    </div>
-                    <div class="school-details">
-                      ${school.lastYearCutoff ? `
-                        <span class="cutoff-score">
-                          <i class="fas fa-chart-line icon"></i>
-                          去年最低錄取: ${school.lastYearCutoff}
-                        </span>
-                      ` : ''}
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-      
-      <div class="analysis-notes">
-        <h3><i class="fas fa-info-circle icon"></i>分析說明</h3>
-        <ul>
-          <li><i class="fas fa-lightbulb icon"></i>建議同時考慮學校特色、地理位置等因素</li>
-          <li><i class="fas fa-book icon"></i>請詳閱各校招生簡章了解詳細資訊</li>
-          <li><i class="fas fa-comments icon"></i>建議諮詢師長意見做為參考</li>
-        </ul>
-      </div>`;
-  } else {
-    results += `
-      <div class="no-results">
-        <i class="fas fa-search icon"></i>
-        <p>根據您的成績，暫時沒有符合條件的學校。</p>
-        <ul class="suggestions">
-          <li>嘗試調整篩選條件</li>
-          <li>考慮更多類型的學校</li>
-          <li>諮詢老師獲取更多建議</li>
-        </ul>
-      </div>`;
-  }
-  
-  results += '<div class="data-update-time">資料更新時間：' + new Date().toLocaleString('zh-TW') + '</div>';
-  
-  results += '</div></div>';
-  
-  const resultsElement = document.getElementById('results');
-  resultsElement.innerHTML = results;
-  resultsElement.style.display = 'none';
-  
-  setTimeout(() => {
-    resultsElement.style.display = 'block';
-    resultsElement.style.animation = 'fadeIn 0.5s ease-out';
-    document.getElementById('exportResults').style.display = 'inline-block';
-  }, 100);
-}
-
-function getScoreClass(score) {
-  const scoreClasses = { 'A++': 'score-excellent', 'A+': 'score-great', 'A': 'score-good', 'B++': 'score-above-average', 'B+': 'score-average', 'B': 'score-below-average', 'C': 'score-needs-improvement' };
-  return scoreClasses[score] || '';
-}
-
-function showExportOptions() {
-  const exportMenu = document.createElement('div');
-  exportMenu.className = 'export-menu';
-  exportMenu.innerHTML = `
-    <div class="export-menu-content">
-      <h3><i class="fas fa-file-export"></i> 選擇匯出格式</h3>
-      <button onclick="exportResults('txt')">
-        <i class="fas fa-file-alt"></i> 文字檔 (.txt)
-      </button>
-      <button onclick="exportResults('pdf')">
-        <i class="fas fa-file-pdf"></i> PDF檔 (.pdf)
-      </button>
-      <button onclick="exportResults('excel')" class="excel-export-btn">
-        <i class="fas fa-file-excel"></i> Excel檔 (.xlsx)
-      </button>
-      <button onclick="exportResults('json')">
-        <i class="fas fa-file-code"></i> JSON檔 (.json)
-      </button>
-      <button onclick="exportResults('print')">
-        <i class="fas fa-print"></i> 直接列印
-      </button>
-      <button onclick="closeExportMenu()" class="cancel-button">
-        <i class="fas fa-times"></i> 取消
-      </button>
-    </div>
-  `;
-  document.body.appendChild(exportMenu);
-  
-  requestAnimationFrame(() => {
-    exportMenu.classList.add('show');
-  });
-}
-
-async function exportResults(format = 'txt') {
-  logUserActivity('export_results', { format });
-  const resultsElement = document.getElementById('results');
-  const resultsText = resultsElement.innerText;
-  
-  const now = new Date();
-  const dateTime = now.toLocaleString('zh-TW', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-  });
-  
-  const watermark =
-    "********************************\n" +
-    "*                              *\n" +
-    "*  會考落點分析系統  *\n" +
-    "*       以下資料僅供參考      *\n" +
-    "*                              *\n" +
-    `*   產生時間: ${dateTime}   *\n` +
-    "*                              *\n" +
-    "********************************\n\n";
-  
-  const contentWithWatermark = watermark + resultsText;
-  
-  switch (format) {
-    case 'txt':
-      exportTxt(contentWithWatermark);
-      break;
-    case 'pdf':
-      await exportPdf(contentWithWatermark);
-      break;
-    case 'json':
-      exportJson(resultsText);
-      break;
-    case 'excel':
-      exportExcel();
-      break;
-    case 'print':
-      printResults();
-      break;
-  }
-}
-
-function exportTxt(content) {
-  const watermarkUrl = "\n\n網站: https://tyctw.github.io/spare/";
-  const blob = new Blob([content + watermarkUrl], { type: 'text/plain;charset=utf-8' });
-  downloadFile(blob, '會考落點分析結果.txt');
-}
-
-async function exportPdf(content) {
-  if (!window.jsPDF) {
-    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-  }
-  
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  
-  // Add PDF header with logo and styled title
-  doc.setFillColor(42, 157, 143);
-  doc.rect(0, 0, 210, 20, 'F');
-  doc.setTextColor(255);
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.text('會考落點分析結果', 105, 12, { align: 'center' });
-  
-  // Add generation timestamp
-  const timestamp = new Date().toLocaleString('zh-TW');
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'italic');
-  doc.text(`產生時間: ${timestamp}`, 105, 20, { align: 'center' });
-  
-  // Add main content with improved styling
-  doc.setTextColor(0);
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
-  
-  const splitText = doc.splitTextToSize(content, 180);
-  let y = 30;
-  
-  // Add decorative element
-  doc.setDrawColor(233, 196, 106);
-  doc.setLineWidth(0.5);
-  doc.line(15, 25, 195, 25);
-  
-  splitText.forEach(line => {
-    // Check if line is a heading (like "分析結果總覽")
-    if (line.includes('總覽') || line.includes('分析') || line.includes('符合條件')) {
-      doc.setFont('helvetica', 'bold');
-      doc.setFillColor(244, 241, 222);
-      doc.rect(15, y-5, 180, 8, 'F');
-      doc.setTextColor(42, 157, 143);
-      y += 2;
-    } else {
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(0);
-    }
-    
-    if (y > 280) {
-      doc.addPage();
-      // Add header to new page
-      doc.setFillColor(42, 157, 143);
-      doc.rect(0, 0, 210, 20, 'F');
-      doc.setTextColor(255);
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'bold');
-      doc.text('會考落點分析結果', 105, 12, { align: 'center' });
-      doc.setTextColor(0);
-      doc.setFontSize(12);
-      doc.setFont('helvetica', 'normal');
-      // Add decorative element to new page
-      doc.setDrawColor(233, 196, 106);
-      doc.setLineWidth(0.5);
-      doc.line(15, 25, 195, 25);
-      y = 30;
-    }
-    doc.text(line, 15, y);
-    y += 7;
-  });
-  
-  // Add watermark URL and QR code to each page
-  const pageCount = doc.internal.getNumberOfPages();
-  doc.setFontSize(10);
-  doc.setTextColor(150);
-  
-  // Generate QR code for the site URL
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=40x40&data=https://tyctw.github.io/spare/`;
-  
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    // Add footer with styled URL
-    doc.setDrawColor(42, 157, 143);
-    doc.setLineWidth(0.5);
-    doc.line(15, 280, 195, 280);
-    
-    // Add styled page numbers
-    doc.setFillColor(42, 157, 143);
-    doc.circle(195, 285, 5, 'F');
-    doc.setTextColor(255);
-    doc.setFont('helvetica', 'bold');
-    doc.text(i.toString(), 195, 287, { align: 'center' });
-    
-    // Add watermark text
-    doc.setTextColor(100);
-    doc.setFont('helvetica', 'italic');
-    doc.text('網站: https://tyctw.github.io/spare/', 105, 285, { align: 'center' });
-    
-    // Add footer design element
-    doc.setDrawColor(233, 196, 106);
-    doc.setLineWidth(0.3);
-    doc.line(15, 282, 195, 282);
-  }
-  
-  // Using image is optional but make it more aesthetic - QR code on the first page
-  await loadQRCodeToPDF(doc, qrUrl, 1);
-  
-  doc.save('會考落點分析結果.pdf');
-}
-
-// Helper function to load QR code to PDF
-async function loadQRCodeToPDF(doc, qrUrl, page) {
-  try {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.crossOrigin = 'Anonymous';
-      img.onload = function() {
-        try {
-          doc.setPage(page);
-          doc.addImage(img, 'PNG', 20, 260, 20, 20);
-          resolve();
-        } catch (e) {
-          console.error('Error adding image to PDF:', e);
-          resolve(); // Still resolve to allow PDF generation
-        }
-      };
-      img.onerror = function() {
-        console.error('Failed to load QR code image');
-        resolve(); // Still resolve to allow PDF generation
-      };
-      img.src = qrUrl;
+    link.addEventListener('touchend', function() {
+      this.classList.remove('active-touch');
+      setTimeout(() => toggleMenu(), 100);
     });
-  } catch (e) {
-    console.error('Error in QR code loading:', e);
-    return Promise.resolve(); // Continue without the QR code
-  }
+  });
+  
+  // Add scrolling for long modals on mobile
+  document.querySelectorAll('.modal-content').forEach(modal => {
+    modal.addEventListener('touchmove', function(e) {
+      e.stopPropagation();
+    }, {passive: true});
+  });
 }
 
-function printResults() {
-  logUserActivity('print_results');
+// Initialize mobile optimizations
+document.addEventListener('DOMContentLoaded', function() {
+  setupMobileInteractions();
   
-  const resultContent = document.getElementById('results').innerHTML;
-  const originalTitle = document.title;
-  const printStyles = `
-    <style>
-      @media print {
-        body { 
-          font-family: 'Noto Sans TC', sans-serif;
-          color: #264653;
-          background: white;
-          margin: 0;
-          padding: 0;
-        }
-        .results-container {
-          background: white;
-          box-shadow: none;
-          padding: 20px;
-          margin: 0;
-        }
-        .result-card {
-          border: 1px solid #ddd;
-          page-break-inside: avoid;
-          background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-          color: #264653;
-          box-shadow: none;
-          transform: none !important;
-        }
-        .school-type-card {
-          page-break-inside: avoid;
-          border: 1px solid #ddd;
-          margin-bottom: 20px;
-          background: white;
-          box-shadow: none;
-          transform: none !important;
-        }
-        .school-item {
-          page-break-inside: avoid;
-          border-left: 3px solid #2a9d8f;
-          background: #f9f9f9;
-          margin: 8px 0;
-          transition: none;
-        }
-        .school-name {
-          font-weight: bold;
-          color: #2a9d8f;
-        }
-        .no-print {
-          display: none !important;
-        }
-        h1, h2, h3 {
-          color: #2a9d8f;
-        }
-        @page {
-          size: A4;
-          margin: 2cm;
-        }
-        footer {
-          position: fixed;
-          bottom: 0;
-          width: 100%;
-          text-align: center;
-          font-size: 0.8rem;
-          color: #777;
-          padding: 10px 0;
-          border-top: 1px solid #ddd;
-        }
-        .watermark {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%) rotate(-45deg);
-          font-size: 4rem;
-          color: rgba(0,0,0,0.03);
-          font-weight: bold;
-          z-index: -1;
-          pointer-events: none;
-          width: 100%;
-          text-align: center;
-        }
-        
-        /* Enhanced print styling */
-        .print-header {
-          text-align: center;
-          border-bottom: 3px solid #2a9d8f;
-          padding-bottom: 20px;
-          margin-bottom: 30px;
-          position: relative;
-        }
-        .print-header:after {
-          content: '';
-          position: absolute;
-          bottom: -6px;
-          left: 0;
-          width: 100%;
-          height: 1px;
-          background: #e9c46a;
-        }
-        .print-logo {
-          font-size: 3rem;
-          color: #2a9d8f;
-          margin-bottom: 10px;
-          display: block;
-        }
-        .print-title {
-          font-size: 2.2rem;
-          color: #2a9d8f;
-          margin: 0;
-          letter-spacing: 2px;
-        }
-        .print-subtitle {
-          font-size: 1rem;
-          color: #666;
-          margin: 8px 0 0 0;
-          font-style: italic;
-        }
-        .print-timestamp {
-          text-align: right;
-          font-style: italic;
-          color: #666;
-          margin-bottom: 30px;
-          border-bottom: 1px dashed #ddd;
-          padding-bottom: 15px;
-        }
-        .print-section {
-          margin-bottom: 30px;
-          position: relative;
-        }
-        .print-section:after {
-          content: '';
-          position: absolute;
-          bottom: -15px;
-          left: 0;
-          width: 100%;
-          height: 1px;
-          background: #f0f0f0;
-        }
-        .print-section-title {
-          font-size: 1.4rem;
-          color: #2a9d8f;
-          border-left: 5px solid #2a9d8f;
-          padding-left: 15px;
-          margin-bottom: 20px;
-          background: #f9f9f9;
-          padding: 10px 15px;
-          border-radius: 0 5px 5px 0;
-        }
-        .print-footer-page {
-          font-size: 0.8rem;
-          text-align: right;
-          color: #999;
-          position: fixed;
-          bottom: 5mm;
-          right: 5mm;
-        }
-        .print-qr {
-          text-align: center;
-          margin: 40px 0 30px;
-          padding-top: 20px;
-          border-top: 1px dashed #eee;
-        }
-        .print-qr img {
-          width: 120px;
-          height: 120px;
-          border: 1px solid #eee;
-          padding: 5px;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .print-qr-text {
-          font-size: 0.9rem;
-          color: #666;
-          margin-top: 10px;
-          font-style: italic;
-        }
-        .print-decoration {
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 150px;
-          height: 150px;
-          background: linear-gradient(135deg, transparent 75%, rgba(42, 157, 143, 0.1) 75%);
-          z-index: -1;
-        }
-        
-        .print-school-list {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 15px;
-        }
-        
-        .print-scores {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 10px;
-          margin: 20px 0;
-        }
-        
-        .print-score-item {
-          background: #f9f9f9;
-          padding: 10px;
-          border-radius: 5px;
-          text-align: center;
-          border: 1px solid #eee;
-        }
-        
-        .print-score-label {
-          font-weight: 500;
-          color: #666;
-        }
-        
-        .print-score-value {
-          font-size: 1.2rem;
-          font-weight: bold;
-          color: #2a9d8f;
-          margin-top: 5px;
-        }
-        
-        /* Print watermark on each page */
-        .print-page-watermark {
-          position: fixed;
-          bottom: 5mm;
-          left: 0;
-          width: 100%;
-          text-align: center;
-          font-size: 0.75rem;
-          color: #999;
-        }
-        
-        /* Gentle page break decorations */
-        .page-break-after {
-          page-break-after: always;
-          position: relative;
-        }
-        
-        .page-break-after::after {
-          content: '';
-          display: block;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, #ddd, transparent);
-          width: 80%;
-          margin: 30px auto 0;
-        }
-      }
-    </style>`;
+  // Adjust UI based on screen size
+  const adjustForMobile = () => {
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      // Adjust for mobile viewport
+      document.querySelectorAll('.form-group select, .form-group input[type="text"]')
+        .forEach(el => el.setAttribute('data-size', 'mobile'));
+    }
+  };
   
-  const printWindow = window.open('', '_blank');
+  adjustForMobile();
+  window.addEventListener('resize', adjustForMobile);
+});
+
+function submitRating() {
+  const rating = document.querySelector('input[name="rating"]:checked');
+  const feedback = document.getElementById('feedbackText').value;
   
-  if (!printWindow) {
-    alert('請允許開啟彈出視窗以啟用列印功能');
+  if (!rating) {
+    alert('請選擇星級評分');
     return;
   }
   
-  const now = new Date();
-  const formattedDate = now.toLocaleString('zh-TW');
-  
-  // Generate QR code for the site URL
-  const qrCodeURL = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://tyctw.github.io/spare/`;
-  
-  // Enhanced score presentation
-  const scores = {
-    chinese: document.getElementById('chinese').value,
-    english: document.getElementById('english').value,
-    math: document.getElementById('math').value,
-    science: document.getElementById('science').value,
-    social: document.getElementById('social').value,
-    composition: document.getElementById('composition').value
-  };
-  
-  // Get total scores
-  const totalPoints = document.querySelector('.total-points .result-value')?.textContent || "";
-  const totalCredits = document.querySelector('.total-credits .result-value')?.textContent || "";
-  
-  // Process schools for better printing
-  const schools = Array.from(document.querySelectorAll('.school-item')).map(school => {
-    return {
-      name: school.querySelector('.school-name')?.textContent.trim() || "",
-      type: getSchoolParentType(school),
-      ownership: getSchoolOwnership(school),
-      cutoff: school.querySelector('.cutoff-score')?.textContent.trim() || ""
-    };
+  // 記錄用戶評分活動
+  logUserActivity('submit_rating', {
+    rating: rating.value,
+    feedback: feedback
   });
   
-  // Group schools by type for better organization
-  const schoolsByType = {};
-  schools.forEach(school => {
-    if (!schoolsByType[school.type]) {
-      schoolsByType[school.type] = [];
-    }
-    schoolsByType[school.type].push(school);
-  });
-  
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>會考落點分析結果</title>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-      ${printStyles}
-    </head>
-    <body>
-      <div class="print-decoration"></div>
-      <div class="watermark">會考落點分析系統</div>
-      
-      <div class="print-header">
-        <span class="print-logo"><i class="fas fa-chart-line"></i></span>
-        <h1 class="print-title">會考落點分析結果</h1>
-        <p class="print-subtitle">本分析結果僅供參考，請以各校最新招生簡章為準</p>
-      </div>
-      
-      <div class="print-timestamp">
-        分析時間: ${formattedDate}
-      </div>
-      
-      <div class="print-section">
-        <h2 class="print-section-title"><i class="fas fa-star"></i> 成績總覽</h2>
-        
-        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-          <div style="background: #f4f1de; padding: 15px; border-radius: 10px; width: 30%; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-            <div style="font-size: 0.9rem; color: #666;">總積分</div>
-            <div style="font-size: 2rem; font-weight: bold; color: #2a9d8f;">${totalPoints}</div>
-          </div>
-          
-          ${totalCredits ? `
-          <div style="background: #f4f1de; padding: 15px; border-radius: 10px; width: 30%; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-            <div style="font-size: 0.9rem; color: #666;">總積點</div>
-            <div style="font-size: 2rem; font-weight: bold; color: #2a9d8f;">${totalCredits}</div>
-          </div>
-          ` : ''}
-          
-          <div style="background: #f4f1de; padding: 15px; border-radius: 10px; width: 30%; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-            <div style="font-size: 0.9rem; color: #666;">符合學校數</div>
-            <div style="font-size: 2rem; font-weight: bold; color: #2a9d8f;">${schools.length}</div>
-          </div>
-        </div>
-        
-        <h3 style="margin-top: 25px; color: #264653; font-size: 1.2rem; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-          <i class="fas fa-graduation-cap"></i> 各科成績
-        </h3>
-        
-        <div class="print-scores">
-          <div class="print-score-item">
-            <div class="print-score-label">國文</div>
-            <div class="print-score-value">${scores.chinese}</div>
-          </div>
-          <div class="print-score-item">
-            <div class="print-score-label">英文</div>
-            <div class="print-score-value">${scores.english}</div>
-          </div>
-          <div class="print-score-item">
-            <div class="print-score-label">數學</div>
-            <div class="print-score-value">${scores.math}</div>
-          </div>
-          <div class="print-score-item">
-            <div class="print-score-label">自然</div>
-            <div class="print-score-value">${scores.science}</div>
-          </div>
-          <div class="print-score-item">
-            <div class="print-score-label">社會</div>
-            <div class="print-score-value">${scores.social}</div>
-          </div>
-          <div class="print-score-item">
-            <div class="print-score-label">作文</div>
-            <div class="print-score-value">${scores.composition} 級分</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="page-break-after"></div>
-      
-      <div class="print-section">
-        <h2 class="print-section-title"><i class="fas fa-school"></i> 符合條件的學校</h2>
-        
-        ${Object.entries(schoolsByType).map(([type, typeSchools]) => `
-          <div style="margin-bottom: 30px;">
-            <h3 style="color: #264653; font-size: 1.2rem; background: #e9f4f3; padding: 8px 15px; border-radius: 5px; display: flex; align-items: center; justify-content: space-between;">
-              <span><i class="fas fa-building"></i> ${type}</span>
-              <span style="font-size: 0.9rem; background: #2a9d8f; color: white; padding: 3px 10px; border-radius: 15px;">${typeSchools.length}所</span>
-            </h3>
-            
-            <div class="print-school-list">
-              ${typeSchools.map(school => `
-                <div style="border: 1px solid #eee; border-left: 3px solid #2a9d8f; padding: 10px; border-radius: 5px; background: #f9f9f9; margin-bottom: 10px;">
-                  <div style="font-weight: bold; color: #264653; margin-bottom: 5px;">
-                    <i class="fas fa-graduation-cap" style="color: #2a9d8f; margin-right: 5px;"></i>
-                    ${school.name}
-                  </div>
-                  <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #666; margin-top: 5px;">
-                    <span>${school.ownership}</span>
-                    <span>${school.cutoff}</span>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `).join('')}
-      </div>
-      
-      <div class="print-qr">
-        <img src="${qrCodeURL}" alt="網站 QR 碼">
-        <div class="print-qr-text">掃描 QR 碼訪問會考落點分析系統</div>
-      </div>
-      
-      <div class="print-page-watermark">
-        會考落點分析系統 | https://tyctw.github.io/spare/
-      </div>
-      
-      <div class="print-footer-page">頁 <span class="pageNumber"></span></div>
-      
-      <script>
-        window.onload = function() {
-          // Add page numbers
-          const style = document.createElement('style');
-          style.innerHTML = '@page { counter-increment: page; }';
-          document.head.appendChild(style);
-          
-          const pageNumbers = document.querySelectorAll('.pageNumber');
-          pageNumbers.forEach(el => {
-            el.textContent = '1';
-          });
-          
-          window.print();
-          setTimeout(() => {
-            window.close();
-          }, 1000);
-        }
-      </script>
-    </body>
-    </html>
-  `);
-  
-  printWindow.document.close();
-}
-
-function toggleIdentitySelector() {
-  const identityOptions = document.querySelectorAll('.identity-option .identity-input');
-  identityOptions.forEach(option => {
-    if (option.checked) {
-      document.getElementById('analysisIdentity').value = option.value;
-    }
-  });
-}
-
-function applyExcelStyling(worksheet, range) {
-  // Prettier column widths based on expected content
-  const colWidths = [8, 35, 15, 15, 20, 15];
-  worksheet['!cols'] = [];
-  for (let i = 0; i <= range.e.c; i++) {
-    worksheet['!cols'][i] = { wch: colWidths[i] || 15 };
-  }
-  
-  // Enhanced styling for title
-  const titleCell = XLSX.utils.encode_cell({r: 0, c: 0});
-  if(worksheet[titleCell]) {
-    worksheet[titleCell].s = {
-      font: { bold: true, sz: 18, color: { rgb: "2A9D8F" } },
-      alignment: { horizontal: "center", vertical: "center" },
-      border: {
-        bottom: { style: "medium", color: { rgb: "E9C46A" } }
-      },
-      fill: { patternType: "solid", fgColor: { rgb: "F4F1DE" } }
-    };
-  }
-  
-  // Style all cells with more aesthetically pleasing designs
-  for (let R = range.s.r; R <= range.e.r; ++R) {
-    for (let C = range.s.c; C <= range.e.c; ++C) {
-      const cell = XLSX.utils.encode_cell({r: R, c: C});
-      if(!worksheet[cell]) continue;
-      
-      if (R !== 0 || C !== 0) { // Skip title cell as we styled it already
-        // Base style for all cells
-        worksheet[cell].s = {
-          font: { name: "Arial", sz: 11 },
-          alignment: { vertical: "center", wrapText: true },
-          border: {
-            top: { style: "thin", color: { rgb: "DDDDDD" } },
-            bottom: { style: "thin", color: { rgb: "DDDDDD" } },
-            left: { style: "thin", color: { rgb: "DDDDDD" } },
-            right: { style: "thin", color: { rgb: "DDDDDD" } }
-          }
-        };
-        
-        // Style section headers (in summary sheet)
-        if (R === 6 || (R === 7 && C === 0)) {
-          worksheet[cell].s.font = { bold: true, sz: 12, color: { rgb: "FFFFFF" } };
-          worksheet[cell].s.fill = { patternType: "solid", fgColor: { rgb: "2A9D8F" } };
-          worksheet[cell].s.alignment = { horizontal: "center", vertical: "center" };
-          worksheet[cell].s.border = {
-            top: { style: "medium", color: { rgb: "264653" } },
-            bottom: { style: "medium", color: { rgb: "264653" } },
-            left: { style: "medium", color: { rgb: "264653" } },
-            right: { style: "medium", color: { rgb: "264653" } }
-          };
-        }
-        
-        // Style column headers in data section
-        if (R === 7 && C > 0) {
-          worksheet[cell].s.font = { bold: true, color: { rgb: "264653" } };
-          worksheet[cell].s.fill = { patternType: "solid", fgColor: { rgb: "E9C46A" } };
-          worksheet[cell].s.alignment = { horizontal: "center" };
-        }
-        
-        // Style date and total score rows with accent colors
-        if (R >= 2 && R <= 4) {
-          if (C === 0) {
-            worksheet[cell].s.font = { bold: true, color: { rgb: "264653" } };
-            worksheet[cell].s.fill = { patternType: "solid", fgColor: { rgb: "F4F1DE" } };
-          } else if (C === 1) {
-            worksheet[cell].s.font = { bold: true, sz: 12, color: { rgb: "2A9D8F" } };
-            worksheet[cell].s.alignment = { horizontal: "center" };
-          }
-        }
-        
-        // Style the score data with alternate row colors and better alignment
-        if (R >= 8) {
-          // Set text alignment based on column type
-          if (C === 0) { // Serial number
-            worksheet[cell].s.alignment.horizontal = "center";
-          } else if (C === 1) { // School name
-            worksheet[cell].s.alignment.horizontal = "left";
-            worksheet[cell].s.font.bold = true;
-          } else { // Other data columns
-            worksheet[cell].s.alignment.horizontal = "center";
-          }
-          
-          // Alternate row background colors
-          worksheet[cell].s.fill = {
-            patternType: "solid",
-            fgColor: { rgb: R % 2 ? "F8F9FA" : "FFFFFF" }
-          };
-          
-          // Special formatting for match status column
-          if (C === 5) { // Match status column
-            const cellValue = worksheet[cell].v;
-            if (cellValue && cellValue.toString().includes('★★★')) {
-              worksheet[cell].s.font.color = { rgb: "107C10" }; // Green for very suitable
-              worksheet[cell].s.fill.fgColor = { rgb: "E8F5E9" };
-            } else if (cellValue && cellValue.toString().includes('★★')) {
-              worksheet[cell].s.font.color = { rgb: "0078D7" }; // Blue for suitable
-              worksheet[cell].s.fill.fgColor = { rgb: "E3F2FD" };
-            } else if (cellValue && cellValue.toString().includes('★')) {
-              worksheet[cell].s.font.color = { rgb: "D83B01" }; // Orange for just suitable
-              worksheet[cell].s.fill.fgColor = { rgb: "FFF3E0" };
-            }
-          }
-        }
-      }
-    }
-  }
-  
-  // Add thin border to the entire table
-  const borderStyle = { style: "thin", color: { rgb: "BBBBBB" } };
-  if (range.e.r > 0 && range.e.c > 0) {
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-      for (let C = range.s.c; C <= range.e.c; ++C) {
-        const cell = XLSX.utils.encode_cell({r: R, c: C});
-        if (!worksheet[cell]) continue;
-        
-        worksheet[cell].s = worksheet[cell].s || {};
-        
-        // Only set borders that haven't been styled yet
-        if (!worksheet[cell].s.border.top) worksheet[cell].s.border.top = borderStyle;
-        if (!worksheet[cell].s.border.bottom) worksheet[cell].s.border.bottom = borderStyle;
-        if (!worksheet[cell].s.border.left) worksheet[cell].s.border.left = borderStyle;
-        if (!worksheet[cell].s.border.right) worksheet[cell].s.border.right = borderStyle;
-      }
-    }
-  }
-}
-
-function closeExportMenu() {
-  const exportMenu = document.querySelector('.export-menu');
-  if (exportMenu) {
-    exportMenu.classList.remove('show');
-    setTimeout(() => exportMenu.remove(), 300);
-  }
-}
-
-async function exportExcel() {
-  showLoading();
-  
+  // 發送評分數據到伺服器
   try {
-    // Load required libraries if not already loaded
-    if (!window.XLSX) {
-      await loadScript('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js');
-    }
-    
-    // Get the scores and analysis results
-    const scores = {
-      chinese: document.getElementById('chinese').value,
-      english: document.getElementById('english').value,
-      math: document.getElementById('math').value,
-      science: document.getElementById('science').value,
-      social: document.getElementById('social').value,
-      composition: document.getElementById('composition').value
-    };
-    
-    // Create workbook with fancy styling
-    const wb = XLSX.utils.book_new();
-    wb.Props = {
-      Title: "會考落點分析結果",
-      Subject: "落點分析",
-      Author: "會考落點分析系統",
-      CreatedDate: new Date()
-    };
-    
-    // Create summary worksheet with enhanced styling
-    const summaryData = [
-      ["會考落點分析結果"],
-      [],
-      ["產生日期", new Date().toLocaleDateString('zh-TW')],
-      ["總積分", document.querySelector('.total-points .result-value')?.textContent || ""],
-      ["總積點", document.querySelector('.total-credits .result-value')?.textContent || ""],
-      [],
-      ["成績摘要"],
-      ["科目", "成績", "積分"],
-      ["國文", scores.chinese, getScoreValue(scores.chinese)],
-      ["英文", scores.english, getScoreValue(scores.english)],
-      ["數學", scores.math, getScoreValue(scores.math)],
-      ["自然", scores.science, getScoreValue(scores.science)],
-      ["社會", scores.social, getScoreValue(scores.social)],
-      ["作文", `${scores.composition} 級分`, scores.composition]
-    ];
-    
-    const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
-    
-    // Style the summary sheet
-    const summaryRange = XLSX.utils.decode_range(summaryWs['!ref']);
-    applyExcelStyling(summaryWs, summaryRange);
-    
-    // Merge title cell
-    summaryWs['!merges'] = [{ s: {r: 0, c: 0}, e: {r: 0, c: 2} }];
-    
-    // Add the summary worksheet to the workbook
-    XLSX.utils.book_append_sheet(wb, summaryWs, "分析摘要");
-    
-    // Create schools worksheet with enhanced styling
-    const schoolsData = [
-      ["序號", "學校名稱", "類型", "屬性", "最低分數", "符合度"]
-    ];
-    
-    // Get eligible schools
-    const schoolElements = document.querySelectorAll('.school-item');
-    schoolElements.forEach((school, index) => {
-      const schoolName = school.querySelector('.school-name')?.textContent.trim() || "";
-      const schoolType = getSchoolParentType(school);
-      const schoolOwnership = getSchoolOwnership(school);
-      const cutoffScore = school.querySelector('.cutoff-score')?.textContent.trim() || "";
-      
-      // Add score match indicator (new column)
-      const totalScore = parseInt(document.querySelector('.total-points .result-value')?.textContent || "0");
-      const cutoffValue = parseInt(cutoffScore.replace(/[^0-9]/g, '') || "0");
-      const scoreGap = totalScore - cutoffValue;
-      let matchStatus = "適合";
-      
-      if (scoreGap >= 5) matchStatus = "非常適合 ★★★";
-      else if (scoreGap >= 3) matchStatus = "很適合 ★★";
-      else if (scoreGap >= 1) matchStatus = "適合 ★";
-      else matchStatus = "剛好符合";
-      
-      schoolsData.push([index + 1, schoolName, schoolType, schoolOwnership, cutoffScore, matchStatus]);
+    fetch('https://script.google.com/macros/s/AKfycbx5FRSSJwv5NQQDYS14p9xupj3iQj-TPS3vexSFLUESNdkuS9d1d5Ro4b-Wy7IMmYXidw/exec', {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'rating',
+        rating: rating.value,
+        feedback: feedback,
+        timestamp: new Date().toISOString()
+      })
     });
-    
-    const schoolsWs = XLSX.utils.aoa_to_sheet(schoolsData);
-    
-    // Style the schools sheet
-    const schoolsRange = XLSX.utils.decode_range(schoolsWs['!ref']);
-    applyExcelStyling(schoolsWs, schoolsRange);
-    
-    // Make header row bold with enhanced styling
-    for (let C = schoolsRange.s.c; C <= schoolsRange.e.c; ++C) {
-      const cell = XLSX.utils.encode_cell({r: 0, c: C});
-      if(!schoolsWs[cell]) continue;
-      schoolsWs[cell].s = { 
-        font: { bold: true, color: { rgb: "FFFFFF" } },
-        fill: { patternType: "solid", fgColor: { rgb: "2a9d8f" } },
-        alignment: { horizontal: "center", vertical: "center" },
-        border: {
-          top: { style: "medium", color: { auto: 1 } },
-          bottom: { style: "medium", color: { auto: 1 } },
-          left: { style: "medium", color: { auto: 1 } },
-          right: { style: "medium", color: { auto: 1 } }
-        }
-      };
-    }
-    
-    // Set custom column widths
-    schoolsWs['!cols'] = [
-      { wch: 6 },  // 序號
-      { wch: 30 }, // 學校名稱
-      { wch: 15 }, // 類型
-      { wch: 12 }, // 屬性
-      { wch: 20 }, // 最低分數
-      { wch: 18 }  // 符合度
-    ];
-    
-    // Add the schools worksheet to the workbook
-    XLSX.utils.book_append_sheet(wb, schoolsWs, "符合學校");
-    
-    // Add recommendations sheet with enhanced styling
-    const recommendationsData = [
-      ["會考落點分析建議"],
-      [],
-      ["根據您的成績，以下是一些建議："],
-      [],
-      ["1. 參考多方資訊，不要僅依賴本分析結果"],
-      ["2. 諮詢學校輔導老師或升學顧問的專業意見"],
-      ["3. 密切關注各校的官方網站和招生簡章"],
-      ["4. 考慮學校特色、地理位置等因素"],
-      [],
-      ["重要提醒：本分析結果僅供參考，實際錄取情況可能因多種因素而有所不同"]
-    ];
-    
-    const recWs = XLSX.utils.aoa_to_sheet(recommendationsData);
-    
-    // Style the recommendations sheet
-    const recRange = XLSX.utils.decode_range(recWs['!ref']);
-    applyExcelStyling(recWs, recRange);
-    
-    // Add the recommendations worksheet to the workbook
-    XLSX.utils.book_append_sheet(wb, recWs, "建議事項");
-    
-    // Add watermark worksheet with enhanced styling
-    const watermarkData = [
-      ["會考落點分析系統 - https://tyctw.github.io/spare/"],
-      ["產生日期: " + new Date().toLocaleDateString('zh-TW')],
-      ["  會考落點分析系統. All rights reserved."],
-      ["此分析結果僅供參考，請依各校最新招生簡章為準"]
-    ];
-    
-    const watermarkWs = XLSX.utils.aoa_to_sheet(watermarkData);
-    
-    // Apply special styling to watermark sheet
-    const watermarkRange = XLSX.utils.decode_range(watermarkWs['!ref']);
-    for (let R = watermarkRange.s.r; R <= watermarkRange.e.r; ++R) {
-      for (let C = watermarkRange.s.c; C <= watermarkRange.e.c; ++C) {
-        const cell = XLSX.utils.encode_cell({r: R, c: C});
-        if(!watermarkWs[cell]) continue;
-        
-        watermarkWs[cell].s = {
-          font: R === 0 ? 
-            { bold: true, sz: 14, color: { rgb: "2a9d8f" } } : 
-            { italic: true, sz: 11, color: { rgb: "777777" } },
-          alignment: { horizontal: "center", vertical: "center" }
-        };
-      }
-    }
-    
-    // Set watermark sheet column width
-    watermarkWs['!cols'] = [{ wch: 100 }];
-    
-    XLSX.utils.book_append_sheet(wb, watermarkWs, "關於系統");
-    
-    // Create and download the Excel file
-    XLSX.writeFile(wb, "會考落點分析結果.xlsx");
-    
-    logUserActivity('export_excel_success');
   } catch (error) {
-    console.error("Excel export error:", error);
-    alert("Excel 匯出失敗，請確認您的瀏覽器支援此功能");
-    logUserActivity('export_excel_error', { error: error.message });
-  } finally {
-    hideLoading();
+    console.error('Error submitting rating:', error);
   }
+  
+  // 顯示感謝信息
+  const ratingSection = document.querySelector('.rating-section');
+  ratingSection.innerHTML = `
+    <div class="rating-thanks">
+      <i class="fas fa-heart icon"></i>
+      <h3>感謝您的評分!</h3>
+      <p>您的反饋對我們非常寶貴，我們會繼續努力改進系統。</p>
+    </div>
+  `;
 }
 
-function getScoreValue(score) {
-  const scoreValues = { 'A++': 6, 'A+': 6, 'A': 6, 'B++': 4, 'B+': 4, 'B': 4, 'C': 2 };
-  return scoreValues[score] || 0;
+
+
+
+// Helper function to get current form inputs and scores
+function getCurrentInputData() {
+  const scores = {
+    chinese: document.getElementById('chinese').value || 'N/A',
+    english: document.getElementById('english').value || 'N/A',
+    math: document.getElementById('math').value || 'N/A',
+    science: document.getElementById('science').value || 'N/A',
+    social: document.getElementById('social').value || 'N/A',
+    composition: document.getElementById('composition').value || 'N/A'
+  };
+  const filters = {
+    schoolOwnership: document.getElementById('schoolOwnership').value,
+    schoolType: document.getElementById('schoolType').value,
+    vocationalGroup: document.getElementById('vocationalGroup').style.display === 'block' ? document.getElementById('vocationalGroup').value : 'N/A'
+  };
+  // Ensure identity value is fetched correctly
+  const identityElement = document.getElementById('selectedIdentity');
+  const selectedIdentity = identityElement ? (identityElement.value || '未選擇') : '未知'; // Added check for element existence
+
+  return { scores, filters, selectedIdentity };
 }
 
-function getSchoolParentType(schoolElement) {
-  // Navigate up to find the school-type-card
-  const parentCard = schoolElement.closest('.school-type-card');
-  if (parentCard) {
-    const typeHeader = parentCard.querySelector('.school-type-header h4');
-    if (typeHeader) {
-      return typeHeader.textContent.trim();
+// Helper function to safely quote CSV fields if necessary
+function quoteField(field) {
+  if (field === null || typeof field === 'undefined') {
+    return '""';
+  }
+  const stringField = String(field);
+  if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+    const escapedField = stringField.replace(/"/g, '""');
+    return `"${escapedField}"`;
+  }
+  return stringField;
+}
+
+// Helper function to get current timestamp for filenames/reports
+function getFormattedTimestamp(iso = false) {
+    const now = new Date();
+    if (iso) {
+        return now.toISOString();
     }
-  }
-  return "";
+    const dateTime = now.toLocaleString('zh-TW', {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+    });
+    // Replace slashes and spaces for filenames/consistency
+    return dateTime.replace(/\//g, '-').replace(' ', '_');
 }
 
-function getSchoolOwnership(schoolElement) {
-  const ownershipElem = schoolElement.querySelector('.school-ownership');
-  if (ownershipElem) {
-    return ownershipElem.textContent.replace(/[\[\]【】]/g, '').trim();
-  }
-  return "";
+// Helper function to get sorted school stats
+function getSchoolStatistics(eligibleSchools) {
+    if (!eligibleSchools || eligibleSchools.length === 0) {
+        return { countsByType: {}, total: 0 };
+    }
+    let schoolsByType = {};
+    eligibleSchools.forEach(school => {
+      schoolsByType[school.type] = (schoolsByType[school.type] || 0) + 1;
+    });
+    // Return sorted stats and total
+    return {
+        countsByType: Object.entries(schoolsByType).sort(([typeA], [typeB]) => typeA.localeCompare(typeB, 'zh-Hant')),
+        total: eligibleSchools.length
+    };
 }
 
-function downloadFile(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.style.display = 'none';
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  URL.revokeObjectURL(url);
-  a.remove();
-}
-
-async function loadScript(url) {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = url;
-    script.onload = resolve;
-    script.onerror = reject;
-    document.head.appendChild(script);
-  });
+// Helper function to get sorted school list
+function getSortedSchoolList(eligibleSchools) {
+    if (!eligibleSchools || eligibleSchools.length === 0) {
+        return [];
+    }
+    // Create a copy before sorting to avoid modifying the original data
+    return [...eligibleSchools].sort((a, b) => {
+        const typeCompare = a.type.localeCompare(b.type, 'zh-Hant');
+        if (typeCompare !== 0) return typeCompare;
+        return a.name.localeCompare(b.name, 'zh-Hant');
+    });
 }
