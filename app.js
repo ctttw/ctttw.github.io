@@ -673,10 +673,21 @@ function exportAsJSON() {
     composition: document.getElementById('composition').value
   };
   
+  // 創建一個不含各校錄取分數的資料副本
+  const { eligibleSchools, totalPoints, totalCredits } = window.latestAnalysisData;
+  
+  // 只包含學校名稱和類型，不包含錄取分數
+  const simplifiedSchools = eligibleSchools.map(school => ({
+    name: school.name,
+    type: school.type
+  }));
+  
   // 合併成績和分析結果
   const exportData = {
-    ...window.latestAnalysisData,
+    totalPoints,
+    totalCredits,
     scores,
+    eligibleSchools: simplifiedSchools,
     exportTime: new Date().toISOString(),
     source: "CTTW 中投區會考落點分析系統"
   };
