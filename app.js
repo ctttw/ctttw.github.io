@@ -66,6 +66,17 @@ function toggleInstructions() {
   setTimeout(() => {
     instructionsModal.classList.add('show');
     modalContent.classList.add('show-content');
+    
+    // 應用步驟動畫
+    const steps = instructionsModal.querySelectorAll('.instruction-step');
+    steps.forEach((step, index) => {
+      setTimeout(() => {
+        step.classList.add('animated');
+      }, 100 * index);
+    });
+    
+    // 初始化步驟導航功能
+    initStepNavigation();
   }, 10);
 }
 
@@ -77,7 +88,92 @@ function closeInstructions() {
   
   setTimeout(() => {
     modal.style.display = 'none';
+    // 重置步驟高亮
+    resetStepsHighlight();
   }, 400);
+}
+
+// 初始化使用說明步驟的導航功能
+function initStepNavigation() {
+  const instructionSteps = document.querySelectorAll('.instruction-step');
+  const instructionItems = document.querySelectorAll('.instruction-item');
+  
+  // 為每個步驟添加點擊事件
+  instructionSteps.forEach((step, index) => {
+    step.addEventListener('click', () => {
+      // 移除所有步驟的激活狀態
+      instructionSteps.forEach(s => s.classList.remove('active'));
+      // 激活當前點擊的步驟
+      step.classList.add('active');
+      
+      // 滾動到相應的內容區域
+      if (instructionItems[index]) {
+        instructionItems[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // 添加高亮效果
+        instructionItems.forEach(item => item.classList.remove('highlight'));
+        setTimeout(() => {
+          instructionItems[index].classList.add('highlight');
+        }, 300);
+      }
+    });
+  });
+  
+  // 滾動監聽，更新步驟指示器
+  const instructionContainer = document.querySelector('.instruction-container');
+  if (instructionContainer) {
+    instructionContainer.addEventListener('scroll', debounce(() => {
+      updateActiveStepOnScroll(instructionContainer, instructionItems, instructionSteps);
+    }, 100));
+  }
+}
+
+// 基於滾動位置更新活動步驟
+function updateActiveStepOnScroll(container, items, steps) {
+  const containerRect = container.getBoundingClientRect();
+  let activeIndex = 0;
+  
+  items.forEach((item, index) => {
+    const itemRect = item.getBoundingClientRect();
+    // 檢查項目是否在可視區域中
+    if (itemRect.top < containerRect.bottom && itemRect.bottom > containerRect.top) {
+      // 如果項目中心點在容器中心區域
+      if (Math.abs((itemRect.top + itemRect.bottom) / 2 - (containerRect.top + containerRect.bottom) / 2) < 100) {
+        activeIndex = index;
+      }
+    }
+  });
+  
+  // 更新步驟指示器
+  steps.forEach((step, index) => {
+    step.classList.toggle('active', index === activeIndex);
+  });
+}
+
+// 重置步驟高亮
+function resetStepsHighlight() {
+  const instructionItems = document.querySelectorAll('.instruction-item');
+  const instructionSteps = document.querySelectorAll('.instruction-step');
+  
+  instructionItems.forEach(item => item.classList.remove('highlight'));
+  
+  // 僅激活第一個步驟
+  instructionSteps.forEach((step, index) => {
+    step.classList.toggle('active', index === 0);
+  });
+}
+
+// 防抖函數
+function debounce(func, wait) {
+  let timeout;
+  return function() {
+    const context = this;
+    const args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      func.apply(context, args);
+    }, wait);
+  };
 }
 
 let isDragging = false;

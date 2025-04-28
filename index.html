@@ -2574,6 +2574,360 @@
             max-width: 280px;
           }
         }
+
+        /* 新增美化使用說明的樣式 */
+        .instruction-container {
+          padding: 15px 0;
+          max-height: 70vh;
+          overflow-y: auto;
+          scrollbar-width: thin;
+          scrollbar-color: var(--accent-color) rgba(0,0,0,0.1);
+        }
+
+        .instruction-container::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .instruction-container::-webkit-scrollbar-track {
+          background: rgba(0,0,0,0.05);
+          border-radius: 10px;
+        }
+
+        .instruction-container::-webkit-scrollbar-thumb {
+          background: var(--accent-color);
+          border-radius: 10px;
+        }
+
+        .instruction-item {
+          background: var(--background-color);
+          border-radius: var(--border-radius);
+          padding: 20px;
+          margin-bottom: 20px;
+          box-shadow: 0 5px 15px var(--shadow-color);
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+          border-left: 4px solid var(--primary-color);
+          animation: slideInRight 0.5s ease both;
+        }
+
+        .instruction-item:nth-child(odd) {
+          border-left-color: var(--tertiary-color);
+          animation: slideInLeft 0.5s ease both;
+        }
+
+        .instruction-item:nth-child(1) { animation-delay: 0.1s; }
+        .instruction-item:nth-child(2) { animation-delay: 0.2s; }
+        .instruction-item:nth-child(3) { animation-delay: 0.3s; }
+        .instruction-item:nth-child(4) { animation-delay: 0.4s; }
+        .instruction-item:nth-child(5) { animation-delay: 0.5s; }
+
+        .instruction-item:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px var(--shadow-color);
+        }
+
+        .instruction-item::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 100px;
+          height: 100px;
+          background: linear-gradient(135deg, transparent 50%, rgba(67, 97, 238, 0.05) 50%);
+          border-radius: 0 0 0 100px;
+          z-index: 0;
+        }
+
+        .instruction-item h3 {
+          display: flex;
+          align-items: center;
+          color: var(--primary-color);
+          font-size: 1.3rem;
+          margin-top: 0;
+          margin-bottom: 15px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .instruction-item:nth-child(odd) h3 {
+          color: var(--tertiary-color);
+        }
+
+        .instruction-item h3 i {
+          margin-right: 10px;
+          background: rgba(67, 97, 238, 0.1);
+          width: 35px;
+          height: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          transition: all 0.3s ease;
+        }
+
+        .instruction-item:hover h3 i {
+          transform: rotate(10deg) scale(1.1);
+          background: linear-gradient(135deg, var(--primary-color), var(--tertiary-color));
+          color: white;
+          box-shadow: 0 5px 10px rgba(67, 97, 238, 0.3);
+        }
+
+        .instruction-item p {
+          color: var(--text-color);
+          margin-bottom: 15px;
+          line-height: 1.6;
+          position: relative;
+          z-index: 1;
+          padding-left: 25px;
+          border-left: 2px solid rgba(67, 97, 238, 0.2);
+        }
+
+        .instruction-highlight {
+          margin: 20px 0 10px;
+          text-align: center;
+        }
+
+        .confirm-button {
+          background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+          color: white;
+          border: none;
+          padding: 12px 25px;
+          border-radius: 50px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-weight: 600;
+          margin-top: 10px;
+          display: block;
+          width: 100%;
+          max-width: 250px;
+          margin: 20px auto 0;
+          font-size: 1.1rem;
+          box-shadow: 0 5px 15px rgba(76, 201, 240, 0.3);
+        }
+
+        .confirm-button:hover {
+          background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+          transform: translateY(-3px);
+          box-shadow: 0 8px 20px rgba(76, 201, 240, 0.4);
+        }
+
+        .instruction-progress {
+          display: flex;
+          justify-content: space-between;
+          margin: 30px 0 20px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .instruction-progress::before {
+          content: '';
+          position: absolute;
+          top: 25px;
+          left: 0;
+          width: 100%;
+          height: 4px;
+          background: rgba(0,0,0,0.1);
+          z-index: -1;
+        }
+
+        .instruction-step {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 20%;
+          position: relative;
+        }
+
+        .instruction-step-icon {
+          width: 50px;
+          height: 50px;
+          background: var(--background-color);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.2rem;
+          color: var(--text-color);
+          margin-bottom: 10px;
+          box-shadow: 0 5px 15px var(--shadow-color);
+          transition: all 0.3s ease;
+          border: 3px solid transparent;
+          position: relative;
+          z-index: 2;
+        }
+
+        .instruction-step-icon::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 100%;
+          width: calc(100% - 50px);
+          height: 4px;
+          background: rgba(0,0,0,0.1);
+          transform: translateY(-50%);
+          z-index: 1;
+        }
+
+        .instruction-step:last-child .instruction-step-icon::after {
+          display: none;
+        }
+
+        .instruction-step.active .instruction-step-icon {
+          background: linear-gradient(135deg, var(--primary-color), var(--tertiary-color));
+          color: white;
+          transform: scale(1.1);
+          border-color: white;
+          box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .instruction-step.active + .instruction-step .instruction-step-icon::after {
+          background: linear-gradient(to right, var(--tertiary-color), rgba(0,0,0,0.1));
+        }
+
+        .instruction-step-label {
+          font-size: 0.85rem;
+          color: var(--text-color);
+          text-align: center;
+          font-weight: 500;
+          transition: all 0.3s ease;
+        }
+
+        .instruction-step.active .instruction-step-label {
+          color: var(--primary-color);
+          font-weight: 600;
+        }
+
+        .modal-content h2 {
+          text-align: center;
+          margin-bottom: 25px;
+          padding-bottom: 15px;
+          border-bottom: 2px solid var(--input-border);
+          color: var(--primary-color);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .modal-content h2 i {
+          margin-right: 10px;
+          font-size: 1.8rem;
+          background: linear-gradient(135deg, var(--primary-color), var(--tertiary-color));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        /* 移動端適配 */
+        @media (max-width: 768px) {
+          .instruction-progress {
+            display: none;
+          }
+          
+          .instruction-item {
+            padding: 15px;
+          }
+          
+          .instruction-item h3 {
+            font-size: 1.2rem;
+          }
+          
+          .instruction-item h3 i {
+            width: 30px;
+            height: 30px;
+            font-size: 0.9rem;
+          }
+          
+          .instruction-item p {
+            font-size: 0.95rem;
+            padding-left: 15px;
+          }
+          
+          .confirm-button {
+            padding: 10px 20px;
+            font-size: 1rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .instruction-item {
+            padding: 12px;
+            margin-bottom: 15px;
+          }
+          
+          .instruction-item h3 {
+            font-size: 1.1rem;
+          }
+          
+          .instruction-item p {
+            font-size: 0.9rem;
+            padding-left: 10px;
+          }
+          
+          .instruction-container {
+            padding: 10px 0;
+          }
+          
+          .confirm-button {
+            max-width: 100%;
+          }
+        }
+
+        /* 添加高亮和動畫效果 */
+        .instruction-item.highlight {
+          border-left-width: 6px;
+          background-color: rgba(67, 97, 238, 0.05);
+          transform: translateY(-5px) scale(1.02);
+          box-shadow: 0 12px 30px var(--shadow-color);
+          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .instruction-item.highlight h3 {
+          color: var(--primary-color);
+        }
+
+        .instruction-item.highlight h3 i {
+          background: linear-gradient(135deg, var(--primary-color), var(--tertiary-color));
+          color: white;
+          transform: rotate(10deg) scale(1.1);
+          box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .instruction-step.animated {
+          animation: stepBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes stepBounce {
+          0% { transform: translateY(20px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* 添加卡片波浪動畫效果 */
+        .instruction-item::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 6px;
+          background: linear-gradient(90deg, var(--primary-color), var(--tertiary-color), var(--accent-color), var(--tertiary-color), var(--primary-color));
+          background-size: 200% 100%;
+          border-bottom-left-radius: var(--border-radius);
+          border-bottom-right-radius: var(--border-radius);
+          opacity: 0;
+          transition: opacity 0.5s ease;
+        }
+
+        .instruction-item:hover::after,
+        .instruction-item.highlight::after {
+          opacity: 1;
+          animation: wave 2s linear infinite;
+        }
+
+        @keyframes wave {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 200% 50%; }
+        }
       </style>
 </head>
 <body>
@@ -2942,35 +3296,66 @@
   <div id="instructionsModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeInstructions()">&times;</span>
-      <h2><i class="fas fa-book icon"></i> 使用說明</h2>
+      <h2><i class="fas fa-book-open"></i> 使用說明</h2>
+      
+      <div class="instruction-progress">
+        <div class="instruction-step active">
+          <div class="instruction-step-icon"><i class="fas fa-key"></i></div>
+          <div class="instruction-step-label">輸入邀請碼</div>
+        </div>
+        <div class="instruction-step">
+          <div class="instruction-step-icon"><i class="fas fa-school"></i></div>
+          <div class="instruction-step-label">選擇學校</div>
+        </div>
+        <div class="instruction-step">
+          <div class="instruction-step-icon"><i class="fas fa-pencil-alt"></i></div>
+          <div class="instruction-step-label">輸入成績</div>
+        </div>
+        <div class="instruction-step">
+          <div class="instruction-step-icon"><i class="fas fa-pen-fancy"></i></div>
+          <div class="instruction-step-label">作文級分</div>
+        </div>
+        <div class="instruction-step">
+          <div class="instruction-step-icon"><i class="fas fa-search"></i></div>
+          <div class="instruction-step-label">分析結果</div>
+        </div>
+      </div>
+      
       <div class="instruction-container">
         <div class="instruction-item">
-          <h3><i class="fas fa-key icon"></i>1. 輸入邀請碼</h3>
-          <p>在"邀請碼"欄位中輸入有效的邀請碼。邀請碼每小時自動更新，請確保使用最新的邀請碼。</p>
+          <h3><i class="fas fa-key"></i> 輸入邀請碼</h3>
+          <p>在"邀請碼"欄位中輸入有效的邀請碼。邀請碼定期更新，請確保使用最新的邀請碼以獲取準確的分析結果。</p>
           <div class="instruction-highlight">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSfOxDcbwdmBpZGrushwYGBMRKqloorV4xf4Auibo5ZIAhQm3A/viewform?usp=sf_link" target="_blank" class="invite-link">
               <i class="fas fa-envelope-open-text icon"></i>填寫表單獲取邀請碼
             </a>
           </div>
         </div>
+        
         <div class="instruction-item">
-          <h3><i class="fas fa-school icon"></i>2. 選擇學校屬性和類型</h3>
-          <p>從下拉菜單中選擇您感興趣的學校屬性（公立/私立）和類型（普通科/職業類科）。</p>
+          <h3><i class="fas fa-school"></i> 選擇學校屬性和類型</h3>
+          <p>從下拉菜單中選擇您感興趣的學校屬性（公立/私立）和類型（普通科/職業類科）。如選擇職業類科，還可以進一步選擇感興趣的職業群別，以獲得更精確的推薦。</p>
         </div>
+        
         <div class="instruction-item">
-          <h3><i class="fas fa-pencil-alt icon"></i>3. 輸入會考成績</h3>
-          <p>為每個科目（國文、英文、數學、自然、社會）選擇您的會考等級，從A++到C。</p>
+          <h3><i class="fas fa-pencil-alt"></i> 輸入會考成績</h3>
+          <p>為每個科目（國文、英文、數學、自然、社會）選擇您的會考等級，從A++到C。請務必確保輸入的成績準確無誤，以獲得最佳的分析結果。</p>
         </div>
+        
         <div class="instruction-item">
-          <h3><i class="fas fa-pen-fancy icon"></i>4. 選擇作文級分</h3>
-          <p>從0到6級中選擇您的作文成績。</p>
+          <h3><i class="fas fa-pen-fancy"></i> 選擇作文級分</h3>
+          <p>從0到6級中選擇您的作文成績。作文成績對於某些學校的錄取有顯著影響，請確保正確輸入。</p>
         </div>
+        
         <div class="instruction-item">
-          <h3><i class="fas fa-search icon"></i>5. 分析結果</h3>
-          <p>點擊"分析落點"按鈕，系統將根據您的成績計算總積分，並顯示您可能錄取的學校列表。</p>
+          <h3><i class="fas fa-search"></i> 分析結果</h3>
+          <p>點擊"分析落點"按鈕，系統將根據您的成績計算總積分，並顯示您可能錄取的學校列表。分析結果將包括可能錄取的學校，按照學校類型和落點機率進行分類。分析完成後，您可以選擇匯出或列印結果以供參考。</p>
         </div>
       </div>
-      <button class="confirm-button" onclick="closeInstructions()">我已了解</button>
+      
+      <button class="confirm-button" onclick="closeInstructions()">
+        <i class="fas fa-check-circle"></i> 我已了解
+      </button>
     </div>
   </div>
   
