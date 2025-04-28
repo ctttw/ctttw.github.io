@@ -253,6 +253,10 @@ window.onclick = function(event) {
   if (event.target == instructionsModal) {
     closeInstructions();
   }
+  var allAnnouncementsModal = document.getElementById('allAnnouncementsModal');
+  if (event.target == allAnnouncementsModal) {
+    closeAllAnnouncementsModal();
+  }
 }
 
 function generateInvitationCode() {
@@ -1153,7 +1157,19 @@ function triggerDownload(url, fileName) {
 
 // 初始顯示免責聲明
 window.onload = function() {
+  // 初始化本地存儲
+  if (!localStorage.getItem('cttw_read_announcements')) {
+    localStorage.setItem('cttw_read_announcements', '{}');
+  }
+  
+  // 初始化公告系統
+  initializeAnnouncements();
+  
+  // 顯示免責聲明
   showDisclaimer();
+  
+  // 可選：從伺服器獲取公告
+  // fetchAnnouncements();
 }
 
 function toggleMenu() {
@@ -1454,4 +1470,402 @@ function getSortedSchoolList(eligibleSchools) {
         if (typeCompare !== 0) return typeCompare;
         return a.name.localeCompare(b.name, 'zh-Hant');
     });
+}
+
+// 公告輪播系統
+const announcements = [
+  {
+    id: 1,
+    title: '系統公告: 會考成績分析系統正式上線',
+    icon: 'fas fa-certificate',
+    date: '2024-04-28',
+    content: '<p>我們很高興地宣布中投區會考落點分析系統正式上線！本系統提供最準確的學校錄取分析，幫助學生及家長做出最佳選擇。</p><p>新功能包括：精準的積分計算、詳細的學校統計、全面的報表匯出。</p>',
+    tags: ['important', 'new'],
+    isRead: false
+  },
+
+  {
+    id: 2,
+    title: '新增功能: 多種格式匯出報表',
+    icon: 'fas fa-file-export',
+    date: '2025-04-20',
+    content: '<p>系統新增多種格式的報表匯出功能，包括 TXT、CSV、JSON 格式，以及列印友善的版本。</p><p>您可以在分析完成後點擊「匯出結果」按鈕，選擇最適合您的格式保存或分享。</p>',
+    tags: ['update'],
+    isRead: false
+  }
+];
+
+let currentAnnouncementIndex = 0;
+let autoplayInterval;
+let isAutoplayPaused = false;
+let readAnnouncements = {}; // 存儲已讀公告的ID
+
+// 初始化公告功能
+function initializeAnnouncements() {
+  const contentContainer = document.getElementById('announcementContent');
+  const indicatorsContainer = document.getElementById('announcementIndicators');
+  const totalAnnouncementsElement = document.getElementById('totalAnnouncements');
+  
+  // 載入本地儲存的已讀狀態
+  loadReadAnnouncementsState();
+  
+  // 如果沒有公告，顯示空訊息
+  if (!announcements || announcements.length === 0) {
+    contentContainer.innerHTML = '<div class="announcement-empty">目前沒有系統公告</div>';
+    return;
+  }
+  
+  // 更新總公告數量
+  if (totalAnnouncementsElement) {
+    totalAnnouncementsElement.textContent = announcements.length;
+  }
+  
+  // 創建公告內容元素
+  announcements.forEach((announcement, index) => {
+    // 更新已讀狀態
+    announcement.isRead = readAnnouncements[announcement.id] || false;
+    
+    // 創建公告項目
+    const announcementItem = document.createElement('div');
+    announcementItem.className = `announcement-item ${index === 0 ? 'active' : ''} ${announcement.isRead ? 'read' : ''}`;
+    announcementItem.dataset.id = announcement.id;
+    
+    // 標籤 HTML
+    let tagsHtml = '';
+    if (announcement.tags && announcement.tags.length > 0) {
+      announcement.tags.forEach(tag => {
+        tagsHtml += `<span class="announcement-tag ${tag}">${tag === 'important' ? '重要' : (tag === 'new' ? '新增' : '更新')}</span>`;
+      });
+    }
+    
+    // 設置公告內容
+    announcementItem.innerHTML = `
+      <div class="announcement-title">
+        <i class="${announcement.icon}"></i>
+        ${announcement.title}
+        <span class="announcement-date">${announcement.date}</span>
+      </div>
+      <div class="announcement-body">
+        ${announcement.content}
+      </div>
+      <div class="announcement-tags">
+        ${tagsHtml}
+      </div>
+    `;
+    
+    contentContainer.appendChild(announcementItem);
+    
+    // 創建指示器
+    const indicator = document.createElement('div');
+    indicator.className = `announcement-indicator ${index === 0 ? 'active' : ''}`;
+    indicator.addEventListener('click', () => {
+      showAnnouncement(index);
+    });
+    indicatorsContainer.appendChild(indicator);
+  });
+  
+  // 綁定導航按鈕事件
+  document.getElementById('prevAnnouncement').addEventListener('click', showPreviousAnnouncement);
+  document.getElementById('nextAnnouncement').addEventListener('click', showNextAnnouncement);
+  
+  // 綁定底部動作欄事件
+  document.getElementById('showAllAnnouncements').addEventListener('click', showAllAnnouncementsModal);
+  document.getElementById('markAsRead').addEventListener('click', markCurrentAnnouncementAsRead);
+  
+  const pauseButton = document.getElementById('pauseAutoplay');
+  pauseButton.addEventListener('click', toggleAutoplay);
+  
+  // 設置自動輪播
+  startAutoplay();
+  
+  // 滑鼠懸停時暫停輪播，離開時繼續
+  const announcementContainer = document.getElementById('announcementCarousel');
+  announcementContainer.addEventListener('mouseenter', () => {
+    if (!isAutoplayPaused) {
+      stopAutoplay();
+    }
+  });
+  announcementContainer.addEventListener('mouseleave', () => {
+    if (!isAutoplayPaused) {
+      startAutoplay();
+    }
+  });
+  
+  // 初始化全部公告模態窗口
+  initializeAllAnnouncementsModal();
+}
+
+// 顯示指定索引的公告
+function showAnnouncement(index) {
+  // 確保索引在有效範圍內
+  if (index < 0) {
+    index = announcements.length - 1;
+  } else if (index >= announcements.length) {
+    index = 0;
+  }
+  
+  const items = document.querySelectorAll('.announcement-item');
+  const indicators = document.querySelectorAll('.announcement-indicator');
+  const currentIndexElement = document.getElementById('currentAnnouncementIndex');
+  
+  // 處理前一個、當前和下一個的樣式
+  items.forEach((item, i) => {
+    item.classList.remove('active', 'prev', 'next');
+    
+    if (i === index) {
+      item.classList.add('active');
+    } else if (i === (index - 1 + announcements.length) % announcements.length) {
+      item.classList.add('prev');
+    } else if (i === (index + 1) % announcements.length) {
+      item.classList.add('next');
+    }
+  });
+  
+  // 更新指示器狀態
+  indicators.forEach((indicator, i) => {
+    indicator.classList.toggle('active', i === index);
+  });
+  
+  // 更新當前索引
+  currentAnnouncementIndex = index;
+  
+  // 更新頁碼顯示
+  if (currentIndexElement) {
+    currentIndexElement.textContent = index + 1;
+  }
+  
+  // 記錄用戶活動 - 查看公告
+  logUserActivity('view_announcement', { id: announcements[index].id, title: announcements[index].title });
+}
+
+// 顯示下一個公告
+function showNextAnnouncement() {
+  showAnnouncement((currentAnnouncementIndex + 1) % announcements.length);
+}
+
+// 顯示上一個公告
+function showPreviousAnnouncement() {
+  showAnnouncement((currentAnnouncementIndex - 1 + announcements.length) % announcements.length);
+}
+
+// 開始自動輪播
+function startAutoplay() {
+  // 先清除可能存在的定時器
+  stopAutoplay();
+  
+  // 設置新的定時器，每 5 秒切換一次
+  autoplayInterval = setInterval(showNextAnnouncement, 5000);
+  isAutoplayPaused = false;
+  
+  // 更新暫停按鈕圖標
+  const pauseButton = document.getElementById('pauseAutoplay');
+  if (pauseButton) {
+    pauseButton.innerHTML = '<i class="fas fa-pause"></i>';
+    pauseButton.title = '暫停自動輪播';
+    pauseButton.classList.remove('active');
+  }
+}
+
+// 停止自動輪播
+function stopAutoplay() {
+  if (autoplayInterval) {
+    clearInterval(autoplayInterval);
+    autoplayInterval = null;
+  }
+}
+
+// 切換自動輪播狀態
+function toggleAutoplay() {
+  const pauseButton = document.getElementById('pauseAutoplay');
+  
+  if (isAutoplayPaused) {
+    startAutoplay();
+    pauseButton.innerHTML = '<i class="fas fa-pause"></i>';
+    pauseButton.title = '暫停自動輪播';
+    pauseButton.classList.remove('active');
+  } else {
+    stopAutoplay();
+    isAutoplayPaused = true;
+    pauseButton.innerHTML = '<i class="fas fa-play"></i>';
+    pauseButton.title = '繼續自動輪播';
+    pauseButton.classList.add('active');
+  }
+  
+  // 記錄用戶活動
+  logUserActivity('toggle_autoplay', { status: isAutoplayPaused ? 'paused' : 'playing' });
+}
+
+// 標記當前公告為已讀
+function markCurrentAnnouncementAsRead() {
+  const currentAnnouncement = announcements[currentAnnouncementIndex];
+  if (currentAnnouncement) {
+    currentAnnouncement.isRead = true;
+    readAnnouncements[currentAnnouncement.id] = true;
+    
+    // 更新 UI
+    const announcementItems = document.querySelectorAll('.announcement-item');
+    if (announcementItems[currentAnnouncementIndex]) {
+      announcementItems[currentAnnouncementIndex].classList.add('read');
+    }
+    
+    // 更新模態窗口中的項目
+    const modalItems = document.querySelectorAll('.all-announcements-item');
+    modalItems.forEach(item => {
+      if (parseInt(item.dataset.id) === currentAnnouncement.id) {
+        item.classList.add('read');
+      }
+    });
+    
+    // 儲存已讀狀態到本地儲存
+    saveReadAnnouncementsState();
+    
+    // 記錄用戶活動
+    logUserActivity('mark_announcement_read', { id: currentAnnouncement.id, title: currentAnnouncement.title });
+  }
+}
+
+// 儲存已讀狀態到本地儲存
+function saveReadAnnouncementsState() {
+  try {
+    localStorage.setItem('cttw_read_announcements', JSON.stringify(readAnnouncements));
+  } catch (error) {
+    console.error('Error saving read state:', error);
+  }
+}
+
+// 從本地儲存載入已讀狀態
+function loadReadAnnouncementsState() {
+  try {
+    const savedState = localStorage.getItem('cttw_read_announcements');
+    if (savedState) {
+      readAnnouncements = JSON.parse(savedState);
+    }
+  } catch (error) {
+    console.error('Error loading read state:', error);
+    readAnnouncements = {};
+  }
+}
+
+// 初始化全部公告模態窗口
+function initializeAllAnnouncementsModal() {
+  const allAnnouncementsList = document.getElementById('allAnnouncementsList');
+  if (!allAnnouncementsList) return;
+  
+  // 清空列表
+  allAnnouncementsList.innerHTML = '';
+  
+  // 添加所有公告
+  announcements.forEach((announcement, index) => {
+    // 標籤 HTML
+    let tagsHtml = '';
+    if (announcement.tags && announcement.tags.length > 0) {
+      announcement.tags.forEach(tag => {
+        tagsHtml += `<span class="announcement-tag ${tag}">${tag === 'important' ? '重要' : (tag === 'new' ? '新增' : '更新')}</span>`;
+      });
+    }
+    
+    const listItem = document.createElement('li');
+    listItem.className = `all-announcements-item ${announcement.isRead ? 'read' : ''}`;
+    listItem.dataset.id = announcement.id;
+    listItem.dataset.index = index;
+    
+    listItem.innerHTML = `
+      <div class="announcement-item-icon">
+        <i class="${announcement.icon}"></i>
+      </div>
+      <div class="announcement-item-content">
+        <div class="announcement-item-title">${announcement.title}</div>
+        <div class="announcement-item-meta">
+          <span class="announcement-item-date">${announcement.date}</span>
+          <div class="announcement-item-tags">
+            ${tagsHtml}
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // 點擊公告項目查看對應的公告
+    listItem.addEventListener('click', () => {
+      showAnnouncement(index);
+      closeAllAnnouncementsModal();
+    });
+    
+    allAnnouncementsList.appendChild(listItem);
+  });
+}
+
+// 顯示所有公告模態窗口
+function showAllAnnouncementsModal() {
+  const modal = document.getElementById('allAnnouncementsModal');
+  if (!modal) return;
+  
+  // 更新列表，確保已讀狀態是最新的
+  initializeAllAnnouncementsModal();
+  
+  modal.style.display = 'block';
+  setTimeout(() => {
+    modal.classList.add('show');
+    modal.querySelector('.modal-content').classList.add('show-content');
+  }, 10);
+  
+  // 記錄用戶活動
+  logUserActivity('view_all_announcements');
+}
+
+// 關閉所有公告模態窗口
+function closeAllAnnouncementsModal() {
+  const modal = document.getElementById('allAnnouncementsModal');
+  if (!modal) return;
+  
+  modal.classList.remove('show');
+  modal.querySelector('.modal-content').classList.remove('show-content');
+  
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 400);
+}
+
+// 新增公告 (用於動態添加新公告)
+function addAnnouncement(announcement) {
+  if (!announcement) return;
+  
+  // 添加到公告數組
+  announcements.unshift(announcement);
+  
+  // 重新初始化公告顯示
+  const contentContainer = document.getElementById('announcementContent');
+  const indicatorsContainer = document.getElementById('announcementIndicators');
+  contentContainer.innerHTML = '';
+  indicatorsContainer.innerHTML = '';
+  
+  // 重新初始化公告
+  initializeAnnouncements();
+  
+  // 顯示最新的公告
+  showAnnouncement(0);
+}
+
+// 從伺服器獲取公告 (如果需要)
+async function fetchAnnouncements() {
+  try {
+    const response = await fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?action=getAnnouncements');
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.announcements && data.announcements.length > 0) {
+        // 更新公告數據
+        announcements.length = 0;
+        data.announcements.forEach(announcement => announcements.push(announcement));
+        
+        // 重新初始化公告顯示
+        const contentContainer = document.getElementById('announcementContent');
+        const indicatorsContainer = document.getElementById('announcementIndicators');
+        contentContainer.innerHTML = '';
+        indicatorsContainer.innerHTML = '';
+        
+        initializeAnnouncements();
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching announcements:', error);
+  }
 }
