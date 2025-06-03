@@ -393,7 +393,7 @@ async function logUserActivity(action, details = {}) {
     };
 
     // Send to Google Apps Script endpoint
-    const response = await fetch('https://script.google.com/macros/s/AKfycbx5FRSSJwv5NQQDYS14p9xupj3iQj-TPS3vexSFLUESNdkuS9d1d5Ro4b-Wy7IMmYXidw/exec', {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbwcvU7uRRN7uKemM-qjNxCgFPY7P0yOUmlDADjq9UIc0PN9f9z12AZd1-v2UNEN-tE/exec', {
       method: 'POST',
       body: JSON.stringify(data)
     });
