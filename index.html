@@ -2928,6 +2928,29 @@
           0% { background-position: 0% 50%; }
           100% { background-position: 200% 50%; }
         }
+
+        /* Contact info styling */
+        .contact-info {
+          margin-top: 20px;
+          padding: 15px;
+          background: rgba(67, 97, 238, 0.05);
+          border-radius: var(--border-radius);
+          font-size: 0.9rem;
+          color: var(--text-color);
+          border-left: 3px solid var(--primary-color);
+        }
+        
+        .contact-info a {
+          color: var(--primary-color);
+          text-decoration: none;
+          font-weight: 500;
+          transition: all 0.3s ease;
+        }
+        
+        .contact-info a:hover {
+          color: var(--tertiary-color);
+          text-decoration: underline;
+        }
       </style>
 </head>
 <body>
@@ -3190,9 +3213,9 @@
         <label for="star1" title="很差"><i class="fas fa-star"></i></label>
       </div>
       <div class="feedback-container">
-        <textarea id="feedbackText" placeholder="請告訴我們您的想法或建議..."></textarea>
         <button type="button" onclick="submitRating()"><i class="fas fa-paper-plane icon"></i>提交評分</button>
       </div>
+      <p class="contact-info">如果對錄取分數資料有任何問題，請聯繫：<a href="mailto:cttw.analyze@gmail.com">cttw.analyze@gmail.com</a></p>
     </div>
 
 <div class="copyright">

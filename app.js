@@ -1336,7 +1336,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function submitRating() {
   const rating = document.querySelector('input[name="rating"]:checked');
-  const feedback = document.getElementById('feedbackText').value;
   
   if (!rating) {
     alert('請選擇星級評分');
@@ -1345,8 +1344,7 @@ function submitRating() {
   
   // 記錄用戶評分活動
   logUserActivity('submit_rating', {
-    rating: rating.value,
-    feedback: feedback
+    rating: rating.value
   });
   
   // 發送評分數據到伺服器
@@ -1356,7 +1354,6 @@ function submitRating() {
       body: JSON.stringify({
         action: 'rating',
         rating: rating.value,
-        feedback: feedback,
         timestamp: new Date().toISOString()
       })
     });
@@ -1371,6 +1368,7 @@ function submitRating() {
       <i class="fas fa-heart icon"></i>
       <h3>感謝您的評分!</h3>
       <p>您的反饋對我們非常寶貴，我們會繼續努力改進系統。</p>
+      <p class="contact-info">如果對路區分數資料有任何問題，請聯繫：<a href="mailto:cttw.analyze@gmail.com">cttw.analyze@gmail.com</a></p>
     </div>
   `;
 }
