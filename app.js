@@ -411,7 +411,15 @@ async function analyzeScores() {
     // 檢查邀請碼
     const invitationCode = document.getElementById('invitationCode').value;
     const currentInvitationCode = generateInvitationCode();
-    if (invitationCode !== currentInvitationCode) {
+    const validPrefixes = ['TYCTW', 'TW', 'CTTW', 'KHTW', 'CHCTW'];
+    const currentDate = `${currentInvitationCode.slice(4)}`; // 取得當前日期時間部分
+    
+    // 檢查是否有任何一個前綴配上當前日期時間
+    const isValidCode = validPrefixes.some(prefix => 
+      invitationCode === `${prefix}${currentDate}`
+    );
+    
+    if (!isValidCode) {
       alert('邀請碼錯誤或已過期，請確認最新的邀請碼。');
       return;
     }
