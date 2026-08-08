@@ -932,6 +932,164 @@
         .modal.show::before {
           opacity: 1;
         }
+
+        /* 系統停止維護通知彈窗 */
+        #maintenanceModal {
+          background: rgba(12, 18, 46, 0.72);
+          backdrop-filter: blur(12px);
+        }
+
+        #maintenanceModal .modal-content {
+          width: min(88%, 480px);
+          margin: 12vh auto;
+          padding: 0;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.34);
+          border-radius: 24px;
+          background: #fff;
+          box-shadow: 0 28px 70px rgba(8, 14, 41, 0.38);
+        }
+
+        #maintenanceModal .maintenance-banner {
+          position: relative;
+          min-height: 84px;
+          padding: 20px 28px;
+          overflow: hidden;
+          color: #fff;
+          background: linear-gradient(135deg, #35227d 0%, #5269df 54%, #2eb5cf 100%);
+        }
+
+        #maintenanceModal .maintenance-banner::after {
+          content: '';
+          position: absolute;
+          width: 230px;
+          height: 230px;
+          right: -90px;
+          bottom: -145px;
+          border: 28px solid rgba(255, 255, 255, 0.13);
+          border-radius: 50%;
+        }
+
+        #maintenanceModal .maintenance-icon {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 44px;
+          height: 44px;
+          border-radius: 14px;
+          background: rgba(255, 255, 255, 0.18);
+          box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.32);
+          font-size: 1.2rem;
+        }
+
+        #maintenanceModal .maintenance-content {
+          padding: 28px 32px 32px;
+          text-align: center;
+        }
+
+        #maintenanceModal .maintenance-label {
+          display: inline-block;
+          margin-bottom: 10px;
+          padding: 4px 11px;
+          border-radius: 50px;
+          color: #4c5ecc;
+          background: #eef1ff;
+          font-size: 0.76rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+        }
+
+        #maintenanceModal h2 {
+          margin: 0 0 10px;
+          color: #252b4a;
+          font-size: 1.65rem;
+        }
+
+        #maintenanceModal .maintenance-content p {
+          margin: 0;
+          color: #69718c;
+          font-size: 1rem;
+          line-height: 1.75;
+        }
+
+        #maintenanceModal .maintenance-link {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          width: 100%;
+          margin-top: 24px;
+          padding: 14px 20px;
+          box-sizing: border-box;
+          border-radius: 14px;
+          color: #fff;
+          background: linear-gradient(135deg, #4b5fd3, #2badd1);
+          box-shadow: 0 10px 20px rgba(61, 106, 210, 0.25);
+          font-size: 1.05rem;
+          font-weight: 700;
+          text-decoration: none;
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        #maintenanceModal .maintenance-link:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 14px 26px rgba(61, 106, 210, 0.35);
+        }
+
+        #maintenanceModal .maintenance-link i {
+          transition: transform 0.25s ease;
+        }
+
+        #maintenanceModal .maintenance-link:hover i {
+          transform: translateX(4px);
+        }
+
+        #maintenanceModal .maintenance-dismiss {
+          margin: 18px 0 0;
+          color: #8b91a6;
+          background: transparent;
+          border: 0;
+          cursor: pointer;
+          font: inherit;
+          font-size: 0.9rem;
+        }
+
+        #maintenanceModal .maintenance-dismiss:hover {
+          color: #4c5ecc;
+        }
+
+        #maintenanceModal .close {
+          top: 16px;
+          right: 16px;
+          color: #fff;
+          background: rgba(255, 255, 255, 0.16);
+        }
+
+        #maintenanceModal .close:hover {
+          background: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 480px) {
+          #maintenanceModal .modal-content {
+            width: calc(100% - 32px);
+            margin: 9vh auto;
+          }
+
+          #maintenanceModal .maintenance-banner {
+            min-height: 72px;
+            padding: 18px 22px;
+          }
+
+          #maintenanceModal .maintenance-content {
+            padding: 24px;
+          }
+
+          #maintenanceModal h2 {
+            font-size: 1.45rem;
+          }
+        }
         
         /* Responsive modal fixes */
         @media (max-width: 768px) {
@@ -3290,28 +3448,6 @@
     </div>
   </div>
 
-  <div class="announcement">
-    <div class="announcement-header">
-      <i class="fas fa-exclamation-circle"></i>
-      重要公告
-    </div>
-    <div class="announcement-content">
-      <div class="announcement-section">
-        <h4>分數計算與資訊來源</h4>
-        <p>本系統依據公開之會考標準與中投區校系資料進行比對與推算，僅供參考，實際錄取結果仍以各校公告為準。</p>
-      </div>
-      <div class="announcement-section">
-        <h4>無廣告、非營利性</h4>
-        <p>本平台無投放任何廣告，亦無蒐集個資牟利之行為，純粹由志工團隊或學生自主開發，旨在幫助同學更方便了解升學資訊。</p>
-      </div>
-      <div class="announcement-section">
-        <h4>鼓勵使用者反饋</h4>
-        <p>若您發現資料有誤、系統有異常，歡迎透過留言或表單反映，我們將盡快查證與修正。</p>
-      </div>
-      <p>請大家理性使用，也感謝每一位給予建設性回饋的使用者。</p>
-    </div>
-  </div>
-
   <div class="container">
     <h1><i class="fas fa-chart-line icon"></i>中投區會考落點分析系統</h1>
     <div class="instruction-buttons">
@@ -3571,6 +3707,24 @@
   </div>
 </div>
   
+  <div id="maintenanceModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeMaintenanceModal()">&times;</span>
+      <div class="maintenance-banner">
+        <div class="maintenance-icon"><i class="fas fa-arrow-right-arrow-left"></i></div>
+      </div>
+      <div class="maintenance-content">
+        <span class="maintenance-label">SERVICE UPDATE</span>
+        <h2>我們搬家了！</h2>
+        <p>此系統已停止維護。新版服務已準備就緒，將持續為您提供協助。</p>
+        <a class="maintenance-link" href="https://tyctw.github.io/spare/" target="_blank" rel="noopener noreferrer">
+          前往新版服務 <i class="fas fa-arrow-right"></i>
+        </a>
+        <button class="maintenance-dismiss" type="button" onclick="closeMaintenanceModal()">暫時留在此頁</button>
+      </div>
+    </div>
+  </div>
+
   <div id="disclaimerModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>

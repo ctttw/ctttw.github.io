@@ -212,6 +212,28 @@ function closeDisclaimer() {
   }, 400);
 }
 
+function showMaintenanceModal() {
+  var modal = document.getElementById('maintenanceModal');
+  var modalContent = modal.querySelector('.modal-content');
+  modal.style.display = 'block';
+
+  setTimeout(() => {
+    modal.classList.add('show');
+    modalContent.classList.add('show-content');
+  }, 10);
+}
+
+function closeMaintenanceModal() {
+  var modal = document.getElementById('maintenanceModal');
+  var modalContent = modal.querySelector('.modal-content');
+  modalContent.classList.remove('show-content');
+  modal.classList.remove('show');
+
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 400);
+}
+
 function startDragging(e) {
   isDragging = true;
   startY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
@@ -241,6 +263,10 @@ document.querySelectorAll('.modal .close').forEach(function(btn) {
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
+  var maintenanceModal = document.getElementById('maintenanceModal');
+  if (event.target == maintenanceModal) {
+    closeMaintenanceModal();
+  }
   var modal = document.getElementById('disclaimerModal');
   if (event.target == modal) {
     closeDisclaimer();
@@ -1159,9 +1185,9 @@ function triggerDownload(url, fileName) {
   URL.revokeObjectURL(url);
 }
 
-// 初始顯示免責聲明
+// 初始顯示系統停止維護通知
 window.onload = function() {
-  showDisclaimer();
+  showMaintenanceModal();
 }
 
 function toggleMenu() {
